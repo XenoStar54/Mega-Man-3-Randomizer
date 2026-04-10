@@ -1,0 +1,122 @@
+Damage Table enemy ID's (different than HP ID's)
+NOTE: These offsets are for an original mm3 rom,
+
+In Megaman Odyssey, they are located at
+3F010 - 3F10F, everything is still the same, just 3Fxxx, not 14xxx
+________________________
+Sparkman Stage
+
+14017 - robot eye
+14088 - spark trap
+14089 - spark trap (wide)
+14045 - Sparker | 1401F - Sparkers little flying sparks
+14016 - The cannonball guy | 1403D - Cannonball thrown by the guy throwing them/Unused Gorilla sprite 
+14030 - Metool Bulldozer
+14072 - Piece of Trash
+14040 - Bolt
+14053 - Sparkmans tiny sparks | 140C8 - Sparkmans large spark | 140E2 - Sparkman
+
+________________________
+Snakeman Stage
+
+14012 - Jumping Spark
+1409F - Snake Head's bullet, Giant Snake Head's bullet, upside down snake head's bullet
+1405E - Snake Head, Upside down snake head
+14099 - Giant Snake
+14013 - Flying object with eyes and propeller | 14014 - The head of it when it drops to the ground
+14018 - The guy that runs with a pitchfork thing | 14019 The pitchfork
+14025 - The creature climbing up and down ladders
+1401A - Bullet Cloud
+140E4 - Snakeman | 140CA - Snakemans mini snakes
+_________________________
+Needleman Stage
+14046 - Mini Needles from Hedgehog | 1403A - Hedgehog
+1401E - Metool | 1401F - Metools bullet
+14022 - Launcher Cannon | 14023 - Launcher Cannon's red balls
+1401D - Flying Mosquito
+14043 - Needle (Down/Up) 
+14031 - Fly
+140D0 - Needleman | 140BF - Needlemans needles | 140D7 - Needlemans head that detaches from body
+__________________________
+Topman Stage
+14047 - Jumping creature (hard to shoot)
+14052 - Top Guy's tops | 14057 - Top Guy
+1409A - Giant Cat | 1409D - Giant Cats balls of Yarn | 1409E - Giant Cats fleas 
+140D2 - Topman | 140D5 - Topmans tops
+_________________________
+Shadowman Stage
+1402B - Bullet Shooters bullets (don't know the official name of this enemy | 1401C - Bullet Shooters bullets (close range) | 14015 - Bullet Shooter
+14062 - Protoman | 1402B - Protomans bullets
+1405A - Static Bulb (non-move) | 1405B - Static Bulb (move)
+14044 - Gernade Guy | 14065 - Gernade Guys explosion
+14059 - Parachute Guy
+140D8 - Shadowmans sliding | 140D3 - Shadowman | 140D6 - Shadowmans blades
+__________________________
+Magnetman Stage
+1402A - Magnet Guy
+14085 - Missle Launcher's Missles | 14083 - Missle Launcher
+140D1 - Magnetman | 140D4 - Magnetman's missles
+____________________________
+Geminiman Stage
+14035 - Space creature (gemini/dark gemini) | 14036 - Space creatures flames
+14065 - Penguin's exploding eggs (explosion) | 1402D - Penguins eggs (non-explosion) | 1405C - Penguin
+14037 - Flying fish
+14056 - Large penguin's mini penguins | 1403B - Large Penguin (handle)
+14038 - Submarine | 14039 - Submarines missle (non explosion) | 14064 - Submarines missle (explosion)
+140E6 - Geminiman | 140E7 - Geminimans clone | 14050 - Geminimans bullet | 140C9 - Geminimans Lazer |  
+_______________________________
+Hardman Stage
+1403E - Mamma Wasp | 1404B - Mamma Wasp's bees | 1403F Mamma Wasp's bee hive (drops to the ground before opening)
+14042 - Ground trap (hardman, dr wily 2)
+1403C - Gorilla 
+140E0 - Hardman | 140E1 - Hardmans knuckles
+______________________________
+Dark Sparkman Stage
+14026 - Creature climbing up and down ladders (2nd form)
+140B3 - Metalman | 140B8 - Metalmans metals
+140C6 - Quickmans boomerangs | 140C2 - Quickman
+_______________________________
+Dark Needleman Stage
+140C7 - Airmans tornados | 140C3 - Airman
+1410C - Giant Metool | 1407D - Giant Metools small metools | 1401F Giant Metools balls
+1405D - Flying Metool
+140B2 - Crashman | 140B7 - Crashmans Crash Bomb | 14064 - Crashmans Crash Bomb (explosion)
+______________________________
+Dark Geminiman Stage
+14027 - Creature climbing ladders + ground level (3rd form)
+140B0 - Flashman | 140B4 - Flashmans bullets
+14028 - Creature climbing ladders + ground level (4th form)
+1402E - Submarine (2) (dark gemini only) | 14055 - Submarine (2)'s missle (non explosion)
+14051 - Bubblemans bullets | 140C5 - Bubblemans bubble lead | 140C0 - Bubbleman 
+________________________________
+Dark Shadowman Stage
+140B9 - Woodman Leaf Sheild | 1404C - Woodmans Leaf Sheild (when thrown towards you) | 140B1 - Woodman | 140B5 - Woodmans leaves (when going up into the air) | 140B6 Woodmans leaves (when falling to the ground)
+140C4 - Heatmans flames | 140C1 - Heatman
+_______________________________
+Breakman (protoman) Stage
+14063 - Breakman | 1402B - Breakmans bullets
+_________________________________
+Dr Wily 1
+1404D - Flying Penguin fish (dr wily 1 only)
+14100 - Wily Boss 1 | 14101 - Wily Boss 1 (turtle) | 14102 - Wily Boss 1 (shell) | 
+__________________________________
+Dr Wily 2
+140F1 - Black Devil Boss (flying body parts) | 1409F - Black Devil's bullets | 140F0 - Black Devil Boss (full body) | 140F2 - Black Devil Boss (full body parts flying across screen)
+______________________________
+Dr Wily 3 
+14105 - Megaman Replicator | 1409F - Megaman Replicators bullets
+_________________________________
+Dr Wily 4
+1401B - Trash throwing guy (flying piece of trash) | 1401C - Trash Throwing guy (flying piece of trash broken pieces) | 1402F - Trash throwing guy
+_________________________________
+Dr Wily 5
+140FD - Dr Wily 1 - blue feet | 140F3 - Dr Wily 1 - lower part of machine | 
+140F5 - Dr Wily 1 - Blue cannon | 140F4 - Dr Wily 1 - Blue cannons white orb
+
+140F6 - Dr Wily 2 - bullets 
+_________________________________
+Dr Wily 6
+1401C - Gammas bullets | 14061 - Gammas bullets (close range) | 140F8 - Gamma
+14060 - Dr Wily 3 gamma (large bullets) | 140F9 - Dr Wily 3 gamma (touching machine)
+
+___________________________________

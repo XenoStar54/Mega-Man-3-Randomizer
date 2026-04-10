@@ -1,0 +1,173 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fswiss\fcharset0 Arial;}}
+{\colortbl ;\red0\green0\blue255;\red0\green0\blue0;\red255\green0\blue0;}
+{\*\generator Msftedit 5.41.15.1515;}\viewkind4\uc1\pard\qc\ul\f0\fs28 Sprite Data\par
+\ulnone\fs20 The following is a list of the enemy/sprite/boss IDs for Megaman 3 with included known information.\par
+\pard\par
+\tab In a hex editor, open up in ROM Viewing Mode. (FCEUXD recommended), and you may find different sets of Sprite Data. Below is what I've currently found so far\par
+\par
+\b $010 - $10F\b0  - Directional facing table/misc. For telling if the sprite will allow you to walk through it, act as a wall, if it's behind/in front of foreground, etc\par
+\par
+\b $310 - $40F \b0 - Data Table for pointing to sprite tile id information. In conjunction with $F835\par
+\par
+\b $0410 - $050F | Use $04FF (RAM Breakpoint) \b0 - HP Values for Sprites \cf1\b NOTE\cf0\b0 :\cf2  \i $0478 - $047F \i0 Doc Robot HP (all values happen to say FF, so I'm  not sure yet if it's meant to ..or if it's really 1C which is the initial  value for a boss HP. \par
+\cf0\fs28\par
+\b\fs20 $0510 - $060F\b0  - The speed values at which a sprite moves. Does not affect any other types of properties though. \cf3\b Warning\cf0\b0 : Depending on a type of enemy, boss, or item, if a value is set too high or too low, game may glitch by displaying the sprite on the screen for a split second and completely disappearing, or not move at all, or other strange effects. But generally setting a value between 01 to 0A will either make it move faster or slower. \par
+\par
+\b $0610 - $070F -\b0  Another speed related sprite table. Affects how fast a sprite can move\par
+\par
+\b $2040 - $2107(??) - \b0 Sprite Palettes. No other known info yet. This may extend a little bit longer or end a little earlier because somewhere aroud $2150 is different information.\par
+\par
+\b $2210 - 22D7(??) - \b0 SPR-Chr Banks to use for each Sprite CHR Set\b  \b0 Either ends at $22D7 or $240F. Not positive yet.\b\par
+\b0\par
+\b $14012 - $14111 | Use $00A2 (RAM Breakpoint)\b0 - The damage data table for the amount of damage that enemies and bosses do to Megaman (not what you do to them, see my notepad file titled: Enemy ID's for Damage) \par
+\par
+\b $14112 - $14A0F |  Use $04FF (RAM Breakpoint)- \b0 The damage data tables for the amount of damage you do to enemies and bosses with weapons and the P cannon. Refer to the enemy ID's below for which sprite you're modifying the damage for. 14112 is for e00, 13, is for e01, 14, etc. (because $02 is added from the original values found from other data such as HP, speed, etc ....it's just how the game was programmed)\par
+\tab  - $14112 - $14211 \cf3 P Cannon (non-elemental)\cf0  damage table for enemies and bosses.\par
+\tab  - $14212 - $14311 \cf3 Needle Cannon (non-elemental)\cf0  damage table for enemies and bosses.\par
+\tab  - $14312 - $14411 \cf3 Necro Absorb (Dark element) \cf0 damage table for enemies and bosses.\par
+\tab  - $14412 - $14511 \cf3 Duplex Illusion (Psychic element)\cf0  damage table for enemies and bosses.\par
+\tab  - $14512 - $14611 \cf3 Hard Knuckle\cf0  damage table for enemies and bosses.\par
+\tab  - $14612 - $14711 \cf3 Top Spin (Wind/Flying element)\cf0  damage table for enemies and bosses.\par
+\tab  - $14712 - $14811 \cf3 Search Snake (Ground element)\cf0  damage table for enemies and bosses.\par
+\tab  - $14812 - $14911 \cf3 Tri-Wave (Lightning element)\cf0  damage table for enemies and bosses. \cf1\b NOTE\cf0\b0 :  There's 2 ways this weapon works. And it's ONLY affective for spark shock.  If value = 58 then enemy is shocked. If value = 0 then it ricochets off.  Any other hex value acts as if it did actual damage.\par
+\tab  - $14912 - $14A0F \cf3 Pyro Blast (Fire element)\cf0  damage table for  enemies and bosses.\par
+\tab  - $3C710 - $3C80F \cf3 Mega Buster (non-elemental) \cf0 damage table for enemies and bosses\fs28\par
+ \par
+\pard\qc\fs20\par
+\pard The values with 4xx are all HP ..i don't know why but I just decided to put them there.\par
+00 - e00 (jumping spark) $0410 \tab\tab\tab                     \par
+\pard\ri-1800 01 - e01 $0411 \tab\tab\tab\tab\tab\tab         \par
+\pard 02 - e02\tab  $0412 \tab\tab\tab\tab\tab\tab        \par
+03 - e03 (guy that throws small black cannonballs) - $0413 \par
+\pard\ri-1350 04 - e04 $0414 - HP\par
+\pard 05 - e05 (the thing that climbs up and down ladders) - $0415 \par
+06 - Bullet Cloud - $0416 \par
+07 - ??? \par
+08 - e08 (the mosquito that flies towards you) $0418 \par
+09 - Metool - $0419 \par
+0A - Launcher Cannon (ball shooter) $041A \par
+0B - Cloud Platform $041B \par
+0C - e0C - $041C \par
+0D - e0D - $041D \par
+0E - Submarine (2) - $041E   \par
+0F - Magnet Guy - $041F \par
+10 - ??? \par
+11 - e11 (trash throwing monster) $0421 \par
+12 - Metool Bulldozer: $0422 \par
+13 - Fly (large jumping robot eye) $0423 \par
+14 - e14 $0424 \par
+15 - e15 (similiar to 14) $0425 \par
+16 - Magnet Force (Left) $0426 \par
+17 - ???\par
+18 - e18 (space like creature droping flames) - $0428 \par
+19 - Unknown\par
+1A - Submarine (1) - $042A\par
+1B - Hedgehog $042B\par
+1C - Penguin (Handle) $042C\par
+1D - Gorilla $042D \par
+1E - Gorilla 2 (unused) $042E\par
+1F - Momma Wasp $042F\par
+20 - Bolt $0430\par
+21 - e21 (traps in hardman stage) \par
+22 - Needle (Downward) \par
+23 - Needle (Upward)\par
+24 - Sparker $0434\par
+25 - Magnet Animation (Left)\par
+26 - e26 $0436\par
+27 - Top Platform $0437\par
+28-2B - ???\par
+2C - Fish $043C\par
+2D - Sparkman Platforms $043D\par
+2E-30 ???\par
+31 - Magnet Animation (Right)\par
+32 - Flying fish (Gemini Stages little bubbles) $0442\par
+33 - Megaman Replicator Boss $0443\par
+34-35 - ???\par
+36 - Robot Eye: $0446, $0546 - walking speed [08 = default] \par
+37 - Grenade Guy $0447\par
+38 - Parachute Guy $0448\par
+39 - Dark Bulb (static) $0449\par
+3A - Dark Bulb $044A\par
+3B - Penguin $044B\par
+3C - Flying Metool $044C\par
+3D - Magnet Force (Right) \par
+3E - Protoman (battle) $044E\par
+3F - ??\par
+40-46 - ???\par
+47 - Needleman $0457\par
+48 - Magnetman $0458\par
+49 - Geminiman $0459\par
+4A - Hardman $045A\par
+4B - Topman $045B\par
+4C - Snakeman $045C\par
+4D - Sparkman $045D\par
+4E - Shadowman $045E\par
+4F - Megaman Sprite \par
+\par
+Items (still sprites):\par
+50 - Large Energy Capsule\par
+51 - Smal Energy Capsule\par
+52 - Big Weapon Capsule\par
+53 - Smal Weapon Capsule\par
+54 - E-Box\par
+55 - Extra Life\par
+56 - Random Container\par
+\par
+Back to enemies/bosses:\par
+57 - Giant Metool $0467\par
+58 - Wheel (Left) \par
+59 - Wheel (Right)\par
+5A - Trap Platform\par
+5B - ???\par
+5C - Missile Launcher Guy $046C\par
+5D - Wall (breakable by Hard Knuckle)\par
+5E - Wily 1 Boss\par
+5F - Wily 1 Boss (Currents)\par
+60 - Snake Head $0470\par
+61 - Snake Head (upsidedown) $0471\par
+62 - Top Guy $0472 \par
+63 - Piece of Trash $0473\par
+64 - Sparking Trap: $0574 - speed of trap moving back and forth (NOT the spark delay) [08 = default]\par
+65 - Sparking Trap (Wide) \par
+66 - Giant Snake (Body) \par
+67 - Giant Snake (Init) \par
+68 - Gamma/Flashman $0478\par
+69 - Gamma/Bubbleman $0479\par
+6A - Gamma/Quickman $047A\par
+6B - Gamma/Woodman $047B\par
+6C - Gamma/Crashman $047C\par
+6D - Gamma/Airman $047D\par
+6E - Gamma/Metalman $047E\par
+6F - Gamma/Heatman $047F\par
+70 - Giant Snake (Eye)\par
+71 - Giant Snake (Mounth) $0481\par
+72 - Giant Cat (Eyes) $0482\par
+73 - Giant Cat (Body)\par
+74 - Seal (Geminiman Stage)\par
+75 - Giant Cat (Tail)\par
+76 - Giant Cat (Body2)\par
+77 - Giant Cat (Init)\par
+78 - Protoman (Opens Geminiman Seal)\par
+79 - Wily Battle 2 Spr. A\par
+7A - Wily Battle 2 Spr. B\par
+7B - Wily Battle 2 Spr. C\par
+7C - Wily Battle 2 Spr. D\par
+7D - Wily Battle 2 Spr. E\par
+7E - Wily Battle 2 Spr. F\par
+7F - Wily Battle 2 Spr. G\par
+80 - Wily Battle 2 Spr. H\par
+81 - Black Devil Boss $0491\par
+82 - Wily Battle 1 Spr. A\par
+83 - Wily Battle 1 Spr. B\par
+84 - Wily Battle 1 Spr. C\par
+85 - Wily Battle 1 Spr. D\par
+86 - Wily Battle 1 Spr. E\par
+87 - Wily Battle 1 Spr. F\par
+88 - Wily Battle 1 Spr. G\par
+89 - Wily Battle 1 Spr. H\par
+8A - Teleporter\par
+8B - 8D - Moving lifts\par
+\pard\qr\par
+\pard\par
+}
+ 

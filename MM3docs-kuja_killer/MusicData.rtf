@@ -1,0 +1,437 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fswiss\fcharset0 Arial;}{\f1\froman\fcharset0 Times New Roman;}{\f2\fswiss\fprq2\fcharset0 Arial;}}
+{\colortbl ;\red0\green0\blue255;\red0\green0\blue0;\red255\green0\blue0;\red0\green128\blue0;}
+{\*\generator Msftedit 5.41.15.1507;}\viewkind4\uc1\pard\qc\ul\f0\fs28 Megaman 3 Music/Sound\par
+\ulnone\fs20 The music and sounds effects for Megaman 3. This will contain very detailed information of the locations of every single song and sound effect in the games whole Music/Sound Engine. I do NOT know how to work with the formats or create new music at the momment, just how to find stuff and document it all myself.\par
+\par
+\pard\par
+In the Hex Editor for FCEUXD, open in ROM Viewing mode.\par
+\par
+\b $2C010 - $30E4B\b0  - The beginning/end of the entire NSF.\par
+\tab\b - $2CA50\b0  - # of songs/sound effects the game will allow\par
+\tab - \b $2CA53 - ???\b0  - Song Address Table Pointers\par
+\tab\cf1\b NOTE: \cf2\b0 Forumla for Song Address Pointers: ($2C010 + [2 byte pointer] - $8000)\par
+__________________________________________________________________________________\par
+\cf3\ul\b Music/Data Channels:\par
+\cf1\ulnone NOTE: \cf2\b0 Sound Effects will not have any details as it's currently unknown to me. So only the offset range for sound effects will be listed, with no other information\par
+Thanks to Matrixz for teaching me how to get a start on figuring out the format for locating songs. \par
+I've documented the following myself:\par
+ \par
+\b $2CCAD - $2D0EE\b0  - Intro Beginning \cf1\b [Total Length: 442 Bytes]\cf2\b0\par
+\tab - $2CCAE, $2CCAF: Square 1 Pointers\par
+\tab - $2CCB0, $2CCB1: Square 2 Pointers\par
+\tab - $2CCB2, $2CCB3: Triangle Pointers\par
+\tab - $2CCB4, $2CCB5: Noise Pointers\par
+\tab\tab\b - $2CCB6 - $2CE37:\b0  Square 1 begin/end (182 bytes)\par
+\tab\tab\b - $2CE38 - $2CF36:\b0  Square 2 begin/end (FF bytes)\par
+\tab\tab\b - $2CF37 - $2D09E:\b0  Triangle begin/end (168 bytes)\par
+\tab\tab\b - $2D09F - $2D0EE:\b0  Noise begin/end (50 bytes)\par
+\par
+\b $2D0EF - $2D5A9\b0  - Needleman \cf1\ul\b [Total Length: 4BB Bytes]\cf2\ulnone\b0\par
+\tab - $2D0F0, $2D0F1: \cf3 Square 1 Pointers\cf2\par
+\tab - $2D0F2, $2D0F3: \cf3 Square 2 Pointers\cf2\par
+\tab - $2D0F4, $2D0F5: \cf3 Triangle Pointers\cf2\par
+\tab - $2D0F6, $2D0F7: \cf3 Noise Pointers\cf2\par
+\tab\tab\b - $2D0F8 - $2D240:\b0  Square 1 begin/end (148 bytes)\par
+\tab\tab\b - $2D241 - $2D3A0:\b0  Square 2 begin/end (15F bytes)\par
+\tab\tab\b - $2D3A1 - $2D4C0:\b0  Triangle begin/end (11F bytes)\par
+\tab\tab\b - $2D4C1 - $2D5A9:\b0  Noise begin/end (E8 bytes)\par
+\par
+\b $2D5AA - $2D602 (Part 1) | $2D6FB - 2DA15 (Part 2) -\b0  Magnetman \cf1\ul\b [Total Length: 374 Bytes]\cf2\ulnone\b0\par
+\tab - $2D5AB, $2D5AC: \cf3 Square 1 Pointers\cf2\par
+\tab - $2D5AD, $2D5AE: \cf3 Square 2 Pointers\cf2\par
+\tab - $2D5AF, $2D5B0: \cf3 Triangle Pointers\cf2\par
+\tab - $2D5B1, $2D5B2: \cf3 Noise Pointers\cf2\par
+\tab\tab\b - $2D5B3 - $2D602:\b0  Square 1 begin/end (4F bytes)\par
+\tab\tab\b - $2D603 - $2D6FA:\b0  \cf4\b UNKNOWN (not included in total length)\cf2\b0\par
+\tab\tab\b - $2D6FB - $2D856:\b0  Square 2 begin/end (15C bytes)\par
+\tab\tab\b - $2D857 - $2D9A2:\b0  Triangle begin/end (14B bytes)\par
+\tab\tab\b - $2D9A3 - $2DA15:\b0  Noise begin/end ( 72 bytes)\par
+\par
+\b $2DA16 - $2DBC2 (Part 1) | $2DBEA - $2DCE6 (Part 2) -\b0  Geminiman \cf1\ul\b [Total Length: 2AA Bytes]\cf2\ulnone\b0\par
+\tab - $2DA17, $2DA18: \cf3 Square 1 Pointers\cf2\par
+\tab - $2DA19, $2DA1A: \cf3 Square 2 Pointers\cf2\par
+\tab - $2DA1B, $2DA1C: \cf3 Triangle Pointers\cf2\par
+\tab - $2DA1D, $2DA1E: \cf3 Noise Pointers\cf2\par
+\tab\tab\b - $2DA1F - $2DAF9:\b0  Square 1 begin/end (DA bytes)\par
+\tab\tab\b - $2DAFA - $2DBC2:\b0  Square 2 begin/end (C8 bytes)\par
+\tab\tab\b - $2DBC3 - $2DBE9:\b0  \cf4\b UNKNOWN (not included in total length)\cf2\b0\par
+\tab\tab\b - $2DBEA - $2DC6A:\b0  Triangle begin/end (80 bytes)\par
+\tab\tab\b - $2DC6B - $2DCE6:\b0  Noise begin/end (7B bytes)\par
+\par
+\b $2DCE7 - $2E0CD -\b0  Hardman \cf1\ul\b [Total Length: 3E7 Bytes]\cf2\ulnone\b0\par
+\tab - $2DCE8, $2DCE9: \cf3 Square 1 Pointers\cf2\par
+\tab - $2DCEA, $2DCEB: \cf3 Square 2 Pointers\cf2\par
+\tab - $2DCEC, $2DCED: \cf3 Triangle Pointers\cf2\par
+\tab - $2DCEE, $2DCEF: \cf3 Noise Pointers\cf2\par
+\tab\tab\b - $2DCF0 - $2DE02:\b0  Square 1 begin/end (112 bytes)\par
+\tab\tab\b - $2DE03 - $2DF66:\b0  Square 2 begin/end (163 bytes)\par
+\tab\tab\b - $2DF67 - $2E05D:\b0  Triangle begin/end (F6 bytes)\par
+\tab\tab\b - $2E05E - $2E0CD\b0 : Noise begin/end (6F bytes)\par
+\par
+\b $2E0CE - $2E322 (Part 1) | $2E390 - $2E423 (Part 2) -\b0  Topman \cf1\ul\b [Total Length: 2E9 Bytes]\cf2\ulnone\b0\par
+\tab - $2E0CF, $2E0D0: \cf3 Square 1 Pointers\cf2\par
+\tab - $2E0D1, $2E0D2: \cf3 Square 2 Pointers\cf2\par
+\tab - $2E0D3, $2E0D4: \cf3 Triangle Pointers\cf2\par
+\tab - $2E0D5, $2E0D6: \cf3 Noise Pointers\cf2\par
+\tab\tab\b - $2E0D7 - $2E1E0:\b0  Square 1 begin/end\par
+\tab\tab\b - $2E1E1 - $2E2F0:\b0  Square 2 begin/end\par
+\tab\tab\b - $2E2F1 - $2E322:\b0  Triangle begin/end\par
+\tab\tab\b - $2E323 - $2E38F:\b0  \cf4\b UNKNOWN (not included in total length) \par
+\cf2\b0\tab\tab\b - $2E390 - $2E423:\b0  Noise begin/end\par
+\par
+\b $2E424 - 2E4B7 (Part 1) | $2E58D - $2E7D0 (Part 2) -\b0  Snakeman \cf1\ul\b [Total Length: 2D8 Bytes]\cf2\ulnone\b0\par
+\tab - $2E425, $2E426: \cf3 Square 1 Pointers\cf2\par
+\tab - $2E427, $2E428: \cf3 Square 2 Pointers\cf2\par
+\tab - $2E429, $2E42A: \cf3 Triangle Pointers\cf2\par
+\tab - $2E42B, $2E42C: \cf3 Noise Pointers\cf2\par
+\tab\tab\b - $2E42D - $2E4B7:\b0  Square 1 begin/end\par
+\tab\tab\b - $2E4B8 - $2E58C:\b0  \cf4\b UNKNOWN (not included in total length) \cf2\b0\par
+\tab\tab\b - $2E58D - $2E68C:\b0  Square 2 begin/end\par
+\tab\tab\b - $2E68D - $2E770:\b0  Triangle begin/end\par
+\tab\tab\b - $2E771 - $2E7D0:\b0  Noise begin/end\par
+\par
+\b $2E7D1\b0  \b - $2EAD1 -\b0  Sparkman/Doc Robot Sparkman \cf1\ul\b [Total Length: 2F8 Bytes]\ulnone\b0\par
+\cf2\tab - $2E7D2, $2E7D3: \cf3 Square 1 Pointers\cf0  \par
+\tab - $2E7D4, $2E7D5: \cf3 Square 2 Pointers\cf0\par
+\tab - $2E7D6, $2E7D7: \cf3 Triangle Pointers\cf0\par
+\tab - $2E7D8, $2E7D9: \cf3 Noise Pointers\cf0\par
+\tab\tab\b - $2E7DA - $2E8A8:\b0  Square 1 begin/end \par
+\tab\tab\b - $2E8A9 - $2E948:\b0  Square 2 begin/end\par
+\tab\tab\b - $2E949 - $2EA79:\b0  Triangle begin/end\par
+\tab\tab\b - $2EA7A - $2EAD1:\b0  Noise begin/end\par
+\par
+\b $2EAD2 - $2EDF4 \b0 - Shadown/Doc Robot Shadownman \cf1\ul\b [Total Length: 323 Bytes]\cf0\ulnone\b0\par
+\tab - $2EAD3, $2EAD4: \cf3 Square 1 Pointers\cf0\par
+\tab - $2EAD5, $2EAD6: \cf3 Square 2 Pointers\cf0\par
+\tab - $2EAD7, $2EAD8: \cf3 Triangle Pointers\cf0\par
+\tab - $2EAD9, $2EADA: \cf3 Noise Pointers\cf0\par
+\tab\tab\b - $2EADB - $2EC11:\b0  Square 1 begin/end\par
+\tab\tab\b - $2EC12 - $2ED2B:\b0  Square 2 begin/end\par
+\tab\tab\b - $2ED2C - $2EDB5:\b0  Triangle begin/end\par
+\tab\tab\b - $2EDB6 - $2EDF4:\b0  Noise begin/end\par
+\par
+\b $2EDF5 - $2F132\b0  - Dr Wily Music 1 \cf1\ul\b [Total Length: 33E Bytes]\par
+\cf0\ulnone\b0\tab -$2EDF6, $2EDF7: \cf3 Square 1 Pointers\cf0\par
+\tab -$2EDF8, $2EDF9: \cf3 Square 2 Pointers\cf0\par
+\tab -$2EDFA, $2EDFB: \cf3 Triangle Pointers\cf0\par
+\tab -$2EDFC, $2EDFD: \cf3 Noise Pointers\cf0\par
+\tab\tab\b - $2EDFE - $2EEEE:\b0  Square 1 begin/end\par
+\tab\tab\b - $2EEEF - $2EFB0:\b0  Square 2 begin/end\par
+\tab\tab\b - $2EFB1 - $2F100:\b0  Triangle begin/end\par
+\tab\tab\b - $2F101 - $2F132:\b0  Noise begin/end\par
+\par
+\b $2F133 - $2F283 (Part 1) | $2F2B3 - $2F2D4 (Part 2)\b0  - Dr Wily Music 2 \cf1\ul\b [Total Length: 173 Bytes] (1A8 including the unknown parts described below)\par
+\cf0\ulnone\b0\tab -$2F134, $2F135: \cf3 Square 1 Pointers\cf0\par
+\tab -$2F136, $2F137: \cf3 Square 2 Pointers\cf0\par
+\tab -$2F138, $2F139: \cf3 Triangle Pointers\cf0\par
+\tab -$2F13A, $2F13B: \cf3 Noise Pointers\cf0\par
+\tab\tab\b - $2F13C - $2F1E5:\b0  Square 1 begin/end\par
+\tab\tab\b - $2F1E6 - $2F269:\b0  Square 2 begin/end\par
+\tab\tab\b - $2F26A - $2F283:\b0  Triangle begin/end\par
+\tab\tab\b - $2F284 - $2F2B2:\b0  \cf4\b UNKNOWN \cf0\b0\par
+\tab\tab\b - $2F2B3 - $2F2D4:\b0  Noise begin/end\par
+\tab\tab\b - $2F2D5 - $2F2DA:\b0  \cf4\b UNKNOWN\cf0\b0\par
+\par
+\b $2F2DB - $2F425\b0  - Dr Wily Music 3 \cf1\ul\b [Total Length: 14B Bytes]\cf0\ulnone\b0\par
+\tab -$2F2DC, $2F2DD: \cf3 Square 1 Pointers\cf0\par
+\tab -$2F2DE, $2F2DF: \cf3 Square 2 Pointers\cf0\par
+\tab -$2F2E0, $2F2E1: \cf3 Triangle Pointers\cf0\par
+\tab -$2F2E2, $2F2E3: \cf3 Noise Pointers\par
+\tab\tab\cf2\b - $2F2E4 - $2F338:\b0  Square 1 begin/end\par
+\tab\tab\b - $2F339 - $2F396:\b0  Square 2 begin/end\par
+\tab\tab\b - $2F397 - $2F3E1:\b0  Triangle begin/end\par
+\tab\tab\b - $2F3E2 - 2F425:\b0  Noise begin/end\par
+\par
+\b $2F426 - $2F604 -\b0  Boss Music 1 (regular) \cf1\ul\b [Total Length: 1E0 Bytes]\par
+\cf2\ulnone\b0\tab -$2F427, $2F428: \cf3 Square 1 Pointers\cf2\par
+\tab -$2F429, $2F42A: \cf3 Square 2 Pointers\cf2\par
+\tab -$2F42B, $2F42C: \cf3 Triangle Pointers\cf2\par
+\tab -$2F42D, $2F42E: \cf3 Noise Pointers\cf2\par
+\tab\tab\b - $2F42F - $2F505: \b0 Square 1 begin/end\par
+\tab\tab\b - $2F506 - $2F568:\b0  Square 2 begin/end\par
+\tab\tab\b - $2F569 - $2F5B4:\b0  Triangle begin/end\par
+\tab\tab\b - $2F5B5 - $2F605:\b0  Noise begin/end \par
+\par
+\b $2F606 - $2F83A\b0  - Boss Music 2 (Dr wily levels) \cf1\ul\b [Total Length: 235 Bytes]\par
+\cf2\ulnone\b0\tab -$2F607, $2F608: \cf3 Square 1 Pointers\cf2\par
+\tab -$2F609, $2F60A: \cf3 Square 2 Pointers\cf2\par
+\tab -$2F60B, $2F60C: \cf3 Triangle Pointers\cf2\par
+\tab -$2F60D, $2F60E: \cf3 Noise Pointers\cf2\par
+\tab\tab\b - $2F60F - $2F6DB:\b0  Square 1 begin/end\par
+\tab\tab\b - $2F6DC - $2F798:\b0  Square 2 begin/end\par
+\tab\tab\b - $2F799 - $2F7F4:\b0  Triangle Pointers\par
+\tab\tab\b - $2F7F5 - $2F83A:\b0  Noise begin/end\par
+\cf0\par
+\par
+\par
+\b $2F83B - $2F92E \b0 - Password/Game Over\cf2  \cf1\ul\b [Total Length: F4 Bytes]\par
+\cf0\ulnone\b0\tab -$2F83C, $2F83D: \cf3 Square 1 Pointers\par
+\cf0\tab -$2F83E, $2F84F: \cf3 Square 2 Pointers\cf0\par
+\tab -$2F840, $2F841: \cf3 Triangle Pointers\cf0\par
+\tab -$2F842, $2F843: \cf3 Noise Pointers\cf0\par
+\tab\tab\b - $2F844 - $2F8A4:\b0  Square 1 begin/end\par
+\tab\tab\b - $2F8A5 - $2F8F8:\b0  Square 2 begin/end\par
+\tab\tab\b - $2F8F9 - $2F92C:\b0  Triangle begin/end\par
+\tab\tab\b - $2F92D - $2F92E: \b0 Noise begin/end\par
+\par
+\b $2F92E - $2FEA6\b0  - Ending Credits \cf1\ul\b [Total Length: 579 Bytes]\cf0\ulnone\b0\par
+\tab -$2F92F, $2F930: \cf3 Square 1 Pointers\cf0\par
+\tab -$2F931, $2F932: \cf3 Square 2 Pointers\cf0\par
+\tab -$2F933, $2F934: \cf3 Triangle Pointers\cf0\par
+\tab -$2F935, $2F936: \cf3 Noise Pointers\cf0\par
+\tab\tab\b - $2F937 - $2FAE1:\b0  Square 1 begin/end\par
+\tab\tab\b - $2FAE2 - $2FC55:\b0  Square 2 begin/end\par
+\tab\tab\b - $2FC56 - $2FDA9:\b0  Triangle begin/end\par
+\tab\tab\b - $2FDAA - $2FEA6:\b0  Noise begin/end\par
+\par
+\b $2FEA7 - $2FFDE\b0  - Stage Select \cf1\ul\b [Total Length: 138 Bytes]\par
+\cf0\ulnone\b0\tab - $2FEA8, $2FEA9: \cf3 Square 1 Pointers\cf0\par
+\tab - $2FEAA, $2FEAB: \cf3 Square 2 Pointers\par
+\cf0\tab - $2FEAC, $2FEAD: \cf3 Triangle Pointers\cf0\par
+\tab - $2FEAE, $2FEAF: \cf3 Noise Pointers\cf0\par
+\tab\tab\b - $2FEB0 - $2FEFE:\b0  Square 1 begin/end\par
+\tab\tab\b - $2FEFF - $2FF34:\b0  Square 2 begin/end\par
+\tab\tab\b - $2FF35 - $2FFBC:\b0  Triangle begin/end\par
+\tab\tab\b - $2FFBD - $2FFDE:\b0  Noise begin/end \par
+\par
+\b $2FFDF - $3002D\b0  - Proto Whistle 1 (Short Version) \cf1\b [Total Length: 4E Bytes]\par
+\cf0\b0\tab - $2FFE0, $2FFE1: \cf3 Square 1 Pointers\cf0\par
+\tab - $2FFE2, $2FFE3: \cf3 Square 2 Pointers\cf0\par
+\tab - $2FFE4, $2FFE5: \cf3 Triangle Pointers\cf0\par
+\tab - $2FFE6, $2FFE7: \cf3 Noise Pointers\cf0\par
+\tab\tab\b - $2FFE8 - $30029:\b0  Square 1 begin/end\par
+\tab\tab\b - $3002A:\b0  Square 2 begin/end \cf4\b NOTE: No data\cf0\b0  \par
+\tab\tab\b - $3002B:\b0  Triangle begin/end \cf4\b NOTE: No data\cf0\b0\par
+\tab\tab\b - $3002C:\b0  Noise begin/end \cf4\b NOTE: no data\cf0\b0\par
+\par
+\b $3002D - $30542\b0  - Proto Whistle 2 (Long Version) \cf1\ul\b [Total Length: 516 Bytes]\par
+\cf0\ulnone\b0\tab - $3002E, $3002F: \cf3 Square 1 Pointers\cf0\par
+\tab - $30030, $30031: \cf3 Square 2 Pointers\cf0\par
+\tab - $30032, $30033: \cf3 Triangle Pointers\cf0\par
+\tab - $30034, $30035: \cf3 Noise Pointers\par
+\tab\tab\cf2\b - $30036 - $302BC:\b0  Square 1 begin/end\par
+\tab\tab\b - $302BD - $30419:\b0  Square 2 begin/end\par
+\tab\tab\b - $3041A - $30541:\b0  Triangle begin/end\par
+\tab\tab\b - $30542:\b0  Noise begin/end \cf4\b NOTE: no data\cf3\b0\par
+\cf0\par
+-------------------------------------------------------------------------------------------\par
+\b $30543 - $3055D\b0  - Sound ID 13\par
+\b $3055E - $305C3\b0  - Sound ID 14\par
+\b $305C4 - $305CF\b0  - Sound ID 15\par
+\b $305D0 - $305ED\b0  - Sound ID 16\par
+\b $305EE - $30631\b0  - Sound ID 17\par
+\b $30632 - $3063C\b0  - Sound ID 18\par
+\b $3063D - $3064C\b0  - Sound ID 19\par
+\b $3064D - $30669\b0  - Sound ID 1A\par
+\b $3066A - $3067B\b0  - Sound ID 1B\par
+\b $3067C - $30691\b0  - Sound ID 1C\par
+\b $30692 - $306B8\b0  - Sound ID 1D\par
+\b $306B9 - $306D5\b0  - Sound ID 1E\par
+\b $306D6 - $306E7\b0  - Sound ID 1F\par
+\b $306E8 - $30706\b0  - Sound ID 20\par
+\b $30707 - $3071E\b0  - Sound ID 21\par
+\b $3071F - $30742\b0  - Sound ID 22\par
+\b $30743 - $30758\b0  - Sound ID 23\par
+\b $30759 - $30766\b0  - Sound ID 24\par
+\b $30767 - $30777\b0  - Sound ID 25\par
+\b $30778 - $30785\b0  - Sound ID 26\par
+\b $30786 - $30797\b0  - Sound ID 27\par
+\b $30798 - $307B0\b0  - Sound ID 28\par
+\b $307B1 - $307FC\b0  - Sound ID 29\par
+\b $307FD - $30812\b0  - Sound ID 2A\par
+\b $30813 - $30823\b0  - Sound ID 2B\par
+\b $30824 - $30834\b0  - Sound ID 2C\par
+\b $30835 - $3084B\b0  - Sound ID 2D\par
+\b $3084C - $3085B\b0  - Sound ID 2E\par
+\b $3085C - $30874\b0  - Sound ID 2F\par
+\b $30875 - $30896\b0  - Sound ID 30\par
+\b $30897 - $308A9\b0  - Sound ID 31\par
+\b $308AA - $308B5\b0  - Sound ID 32\par
+\par
+\b $308B6 - $309C2\b0  - Boss Selection (not stage select) \cf1\ul\b [Total Length: 10D Bytes]\par
+\cf0\ulnone\b0\tab - $308B7, $308B8: \cf3 Square 1 Pointers\cf0\par
+\tab - $308B9, $308BA: \cf3 Square 2 Pointers\cf0\par
+\tab - $308BB, $308BC: \cf3 Triangle Pointers\par
+\cf0\tab - $308BD, $308BE: \cf3 Noise Pointers\cf0\par
+\tab\tab\b - $308BF - $308FD:\b0  Square 1 begin/end\par
+\tab\tab\b - $308FE - $30946:\b0  Square 2 begin/end\par
+\tab\tab\b - $30947 - $3098D:\b0  Triangle begin/end\par
+\tab\tab\b - $3098E - $309C2:\b0  Noise begin/end\par
+\par
+\b $309C3 - $309D9\b0  - Sound ID 34\par
+--------------------------------------------------------------------------------------------\par
+\b $309DA - $30B76 \b0 - Get Weapon Screen \cf1\ul\b [Total Length: 19D Bytes]\par
+\cf0\ulnone\b0\tab -$309DB, $309DC: \cf3 Square 1 Pointers\cf0\par
+\tab -$309DD, $309DE: \cf3 Square 2 Pointers\cf0\par
+\tab -$309DF, $309E0: \cf3 Triangle Pointers\cf0\par
+\tab -$309E1, $309E2: \cf3 Noise Pointers\cf0\par
+\tab\tab\b - $309E3 - $30A5A:\b0  Square 1 begin/end\par
+\tab\tab\b - $30A5B - $30AD6:\b0  Square 2 begin/end\par
+\tab\tab\b - $30AD7 - $30B3A:\b0  Triangle begin/end\par
+\tab\tab\b - $30B3B - $30B76:\b0  Noise begin/end\par
+\par
+\b $30B77 - $30D2D -\b0  Dr Wily Preview Screen \cf1\ul\b [Total Length: 1B7 Bytes]\par
+\cf0\ulnone\b0\tab -$30B78, $30B79: \cf3 Square 1 Pointers\cf0\par
+\tab -$30B7A, $30B7B: \cf3 Square 2 Pointers\cf0\par
+\tab -$30B7C, $30B7D: \cf3 Triangle Pointers\cf0\par
+\tab -$30B7E, $30B7F: \cf3 Noise Pointers\cf0\par
+\tab\tab\b - $30B80 - $30C05:\b0  Square 1 begin/end\par
+\tab\tab\b - $30C06 - $30C8A:\b0  Square 2 begin/end\par
+\tab\tab\b - $30C8B - $30CDA:\b0  Triangle begin/end\par
+\tab\tab\b - $30CDB - $30D2D:\b0  Noise begin/end\par
+\par
+\b $30D2E - $30DCE\b0  - Clear All Song (Beating the game) \cf1\ul\b [Total Length: A1 Bytes]\par
+\cf0\ulnone\b0\tab -$30D2F, $30D30: \cf3 Square 1 Pointers\cf0\par
+\tab -$30D31, $30D32: \cf3 Square 2 Pointers\cf0\par
+\tab -$30D33, $30D34: \cf3 Triangle Pointers\cf0\par
+\tab -$30D35, $30D36: \cf3 Noise Pointers\cf0\par
+\tab\tab\b - $30D37 - $30D6B: \b0 Square 1 begin/end\par
+\tab\tab\b - $30D6C - $30D9F:\b0  Square 2 begin/end\par
+\tab\tab\b - $30DA0 - $30DCD:\b0  Triangle begin/end\par
+\tab\tab\b - $30DCE:\b0  Noise begin/end \cf4\b NOTE: No data\par
+\par
+\cf2 $30DCF - $30E4C\b0  - Beating a Boss \cf1\ul\b [Total Length: 7E Bytes]\par
+\cf2\ulnone\b0\tab -$30DD0, $30DD1: \cf3 Square 1 Pointers\cf2\par
+\tab -$30DD2, $30DD3: \cf3 Square 2 Pointers\cf2\par
+\tab -$30DD4, $30DD5: \cf3 Triangle Pointers\cf2\par
+\tab -$30DD6, $30DD7: \cf3 Noise Pointers\cf2\par
+\tab\tab\b - $30DD8 - $30DF8:\b0  Square 1 begin/end\par
+\tab\tab\b - $30DF9 - $30E14:\b0  Square 2 begin/end\par
+\tab\tab\b - $30E15 - $30E4A:\b0  Triangle begin/end\par
+\tab\tab\b - $30E4B:\b0  Noise begin/end \cf4\b NOTE: No data\cf0\b0\par
+________________________________________________________________________________\par
+\cf3\ul\b Misc:\cf0\ulnone\b0\par
+\par
+\cf2\b $3CD1C\b0  \b - $3CD2D\b0  - Music Track for each level\par
+\tab - $3CD1C: \cf3 Needleman\cf2\par
+\tab - $3CD1D: \cf3 Magnetman\cf2\par
+\tab - $3CD1E: \cf3 Geminiman\cf2\par
+\tab - $3CD1F: \cf3 Hardman\cf2\par
+\tab - $3CD20: \cf3 Topman\cf2\par
+\tab - $3CD21: \cf3 Snakeman\cf2\par
+\tab - $3CD22: \cf3 Sparkman\cf2\par
+\tab - $3CD23: \cf3 Shadownman\cf2\par
+\tab - $3CD24: \cf3 Doc Robot Needleman\cf2\par
+\tab - $3CD25: \cf3 Doc Robot Geminiman\cf2\par
+\tab - $3CD26: \cf3 Doc Robot Sparkman\cf2\par
+\tab - $3CD27: \cf3 Doc Robot Shadownman\cf2\par
+\tab - $3CD28 - $3CD29: \cf3 Dr Wily 1 & 2\cf2\par
+\tab - $3CD2A - $3CD2B: \cf3 Dr Wily 3 & 4\cf2\par
+\tab - $3CD2C - $3CD2D: \cf3 Dr Wily 5 & 6\par
+\par
+\cf2\b $3D359 - $3D364 -\b0  Weapon Sounds (refer to Sound pointer table below)\par
+\tab\cf1\b NOTE:\cf2\b0  Credit to \b Kturbo\b0\par
+\tab - $3D359: \cf3 Mega Buster\cf2\par
+\tab - $3D35A: \cf3 Gemini Laser\cf2\par
+\tab - $3D35B: \cf3 Needle Cannon\cf2\par
+\tab - $3D35C: \cf3 Hard Knuckle\cf2\par
+\tab - $3D35D: \cf3 Magnet Missle\cf2\par
+\tab - $3D35E: \cf3 Top Spin\cf2\par
+\tab - $3D35F: \cf3 Search Snake\cf2\par
+\tab - $3D360: \cf3 Rush coil\cf2\par
+\tab - $3D361: \cf3 Spark Shock\cf2\par
+\tab - $3D362: \cf3 Rush Marine\cf2\par
+\tab - $3D363: \cf3 Shadow Blade\cf2\par
+\tab - $3D364: \cf3 Rush Jet\cf2\f1\fs24\par
+\f0\fs20\par
+\cf0\par
+\b $00C7, $00C9 - \b0 This is in the RAM, i've found that this apparently controls the speed of music. Not sure if it's stage specific or applies to everything, but I was playing the Top Man Stage at one time ..messing with those 2 specific values using the Cheat Search for FCEUXD ..and whenever I set the value higher, the music players faster...if it's set lower..the music plays slower.\par
+Those both are automatic though, so they can't be directly edited anyhow. Not sure entirly how that works, but I found that.\par
+\par
+Now as far as what track is what offset, (not the pointers in the 3CD1C - 3CD2D range) I do not know yet but hope to soon. (Update: As shown above, I've discovered some of them by mself, but this will still be updated when I have the time)\par
+But I do have a list of which track is what (non-hex wise)\par
+\par
+Track 1 - Beginning Intro (when you start the game)\par
+Track 2 - Needleman Stage Music\par
+Track 3 - Magnetman Stage Music\par
+Track 4 - Geminiman Stage Music\par
+Track 5 - Hardman Stage Music\par
+Track 6 - Topman Stage Music\par
+Track 7 - Snakeman Stage Music\par
+Track 8 - Sparkman Stage Music\par
+Track 9 - Shadowman Stage Music\par
+Track 10 - Dr. Wily 1 and 2\par
+Track 11 - Dr Wily 3 and 4\par
+Track 12 - Dr Wily 5 and 6\par
+Track 13 - Boss music \par
+Track 14 - Boss music (for dr wily stages)\par
+Track 15 - Password/Game Over screen Music\par
+Track 16 - Ending Music (when beating the game)\par
+Track 17 - Stage Select Music\par
+Track 18 - Protoman's Whistle\par
+Track 19 - Protoman's Theme (music)\par
+Track 20 - 51 - All sound effects\par
+Track 52 - Stage Select (when you select a stage and hear a short 5-10 second theme)\par
+Track 53 - Sound effect\par
+Track 54 - Got Weapon/Password music (when you beat a stage and gain a new weapon) Music\par
+Track 55 - Dr Wily's fortress (when it appears for about 5 seconds showing dots being connected by lines) ..about 15 seconds long. (Music)\par
+Track 56 - The short 5-10 second theme you hear when beating Dr Wily\par
+Track 57 - Short 5 second theme when beating a boss\par
+_______________________________________________________________________\par
+\cf3\ul\b\f2 Sound pointers:\cf0\ulnone\b0\par
+\par
+00 = Intro music\par
+01 = Needle man music\par
+02 = Magnet man music\par
+03 = Gemini man music\par
+04 = Hard man music\par
+05 = Top man music\par
+06 = Snake man music\par
+07 = Spark man music\par
+08 = Shadow man music\par
+09 = Dr. Willy level\par
+0A = Dr. Willy level\par
+0B = Dr. Willy level\par
+0C = Boss Music\par
+0D = Other Boss music\par
+0E = Password music\par
+0F = Ending Credits music\par
+10 = Stage select\par
+11 = Proto man flute\par
+12 = 2nd Proto flute\par
+13 = Landing sound\par
+14 = Extra life sound\par
+15 = Shooting sound\par
+16 = "Getting hit" sound\par
+17 = Die sound\par
+18 = Hitting enemy sound\par
+19 = "Bullet bounce"\par
+1A = Pause sound\par
+1B = Chosing weapon\par
+1C = Energy sound\par
+1D = Open boss door\par
+1E = Ball Shooter (enemy)\par
+1F = Water splash\par
+20 = Stompthing lands \par
+21 = Unused Sound Effect\par
+22 = Trap (Hard mans level)\par
+23 = Brciks coming out from the wall (Magnetmans level)\par
+24 = Space Creature's Fire (gemini man)\par
+25 = Screws (Top mans level)\par
+26 = Sparkenemies?\par
+27 = Explosion (after protoman)\par
+28 = Dr Wily's spaceship\par
+29 = Unused Sound Effect 2\par
+2A = Magnet Missle\par
+2B = Gemini Lazer\par
+2C = Top Spin\par
+2D = Spark Shock\par
+2E = Shadow Blade\par
+2F = Explosion 2 (unused)\par
+30 = Hardman's Landing \par
+31 = Unused Sound Effect 3\par
+32 = Charging sound (after beating boss)\par
+33 = Choosing boss\par
+34 = Teleportation \par
+35 = Getting weapon screen\par
+36 = Wily base\par
+37 = Clear All Song (beating the game)\par
+38 = Beating boss\par
+39 = Intro\par
+3A = Needle man\par
+DA = Gun?!\par
+89 = Die sound\par
+FF = Nothing\par
+\pard\qr\f0\par
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      

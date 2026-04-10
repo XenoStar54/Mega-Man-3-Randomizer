@@ -1,0 +1,206 @@
+Stage Select/Title Screen/Get Weapon/Gameover Data
+_____________________________________
+
+Scanline Notes: 
+3116D - Change from 58 to A7 ...the game reverses the scrolling directions...but scrolls from 2 sides rather than 1 from the other scanline affected area
+31171 - change from 02 to 00 to take off scanline glitch for password/stage select screen. NOTE: the game will no longer scroll in 3 directions on these screens. but only 1...i have no idea how to fix the scanline so that the game will still scroll 3 directions. but this method still takes the line off. NOTE: Just use this offset and NOT 3116D for best possible results
+
+Coding:
+311D2 - CHR swap for stage select
+______________________________________
+Megaman Weapon Colors (Get Weapon Screen)
+31BC8-31BCA, and 31BCC-31BCE - Needle Cannon
+31BD0-31BD2, and 31BD4-31BD6 - Magnet Missle
+31BD8-31BDA, and 31BDC-31BDE - Gemini Lazer
+31BE0-31BE2, and 31BE4-31BE6 - Hard Knuckle
+31BE8-31BEA, and 31BEC-31BEE - Top Spin
+31BF0-31BF2, and 31BF4-31BF6 - Search Snake
+31BF8-31BFA, and 31BFC-31BFE - Spark Shock
+31C00-31C02, and 31C04-31C06 - Shadow Blade
+
+
+Title Screen CHR Banks:
+31C07-31C0C
+
+Scrolling Settings Part 1: (stage select/password)
+31C0D - Music Track Number (stage select)
+31C0E - Music Track Number (password)
+31C0F-31C10 - Y Position for little cursor (Title Screen)
+31C11 - Some type of weird color control byte for stage select (during scrolling only)
+31C12 - Same as C11 but for password screen
+
+Palettes: (stage select, password, title screen)
+31C13-31C32 - Title Screen Palettes
+31C33-31C52 - palettes for when starting the game (stage select/password)
+31C53-31C62 - For Password Screen
+31C63-31C72 - Selecting a boss
+
+Scrolling Settings Part 2: (stage select/password)
+31C73 - Background during scrolling (stage select)
+31C74 - Same as C73 (password)
+31C75 - Scrolling speed DO NOT EDIT, trust me! (Stage select)
+31C76 - Same as C75 (password)
+31C77 - Another scrolling thing, just don't edit this (stage select)
+31C78 - Same as C77 (password)
+
+Misc Cursor Data (Title Screen)
+31C79 - Starting Position of cursor (before you move up/down)
+31C7A - Tile ID
+31C7B - ???
+31C7C - X Position
+ 
+Megaman tile ID's:
+This controls how the image of megaman's head changes when you move the cursor around on the screen. (noticeably megaman's eyes moving)
+Just leave it alone because it's fine the way it is.
+31C85-31C90: Spark
+31C91-31C9C: Snake
+31C9D-31CA8: Needle
+31CA9-31CB4: Hard
+31CB5-31CC0: Megaman
+31CC1-31CCC: Top
+31CCD-31CD8: Gemini
+31CD9-31CE4: Magnet
+31CE5-31CF0: Shadow
+______________________________________
+
+Level Select Screen Level Order (first 8 stages)
+31CF1-31CF9
+Doc Robot Stages level order
+31CFA-31D02
+
+NOTE: FF means stage cannot be selected, does not apply to when a stage is completed.
+______________________________________
+
+The following data are based off X and Y positions
+
+Y Positions for all 4 flashing dots on each stage
+31D03: Sparkman/Dark
+31D04: Snakeman 
+31D05: Needleman/Dark
+31D06: Hardman
+31D07: Megaman/Breakman
+31D08: Topman
+31D09: Geminiman/Dark
+31D0A: Magnetman
+31D0B: Shadowman/Dark
+
+X Positions for all 4 flashing dots
+31D0C: Spark/Dark
+31D0D: Snake
+31D0E: Needle/Dark
+31D0F: Hard
+31D10: Mega/Break
+31D11: Top
+31D12: Gemini
+31D13: Magnet
+31D14: Shadow/Dark
+
+Dot Positions: Y Affects ALL stages
+31D15: Top left dot 
+31D16: Top Right dot
+31D17: Bottom left dot
+31D18: Bottom right dot
+
+Dot Positions: X affects ALL stages
+31D19: Top left dot
+31D1A: Top right dot
+31D1B: Bottom left dot
+31D1C: Bottom right dot
+______________________________________
+Cursor Selector
+31D1D-31D25:
+All I know is that if the values here are messed with, then it may not be possible to move the cursor around on the stage select screen in any direction or certain directions. Leave these alone
+
+
+Get Weapon Screen Palettes:
+31D26 - 31D45
+	314E2 - Delay time between when the image appears, until it begins to move across the screen
+	314EA - How far the image of megaman moves across the screen until it stops
+	314EF - Frame speed for how fast the image scrolls across the screen. do NOT set too high.
+	314FA - Delay time for after the image stops moving, until text is written to the screen.
+
+Doc Robot Stages Palette (Stage select)
+31D46 - 31D55
+
+Main CHR Pointers for Get Weapon:
+31D56-31D5B
+______________________________________
+Doc Robot stages:
+31D5C-31D64: Looks like the X position on where to place the broken window graphic over the stages
+
+31D65-31D6D: No idea
+31D6E-31DD8: Possibly the tile ID's for the broken window images, but not sure
+	CONFIRMED:
+	31D71-31D78: Tile ids for the doc robot images [Top Side] (affects all stages)
+	31DA9-31DB8: Same as d71-d78, but for bottom side
+______________________________________
+Defeating a boss:
+
+31DD9-31DE1 - No idea yet
+
+This is where the game empties the window for a defeated boss with a black square, not fully understood yet. Just don't really edit these as results may not turn out right if edited
+X positions for black square
+31DE2: Spark
+31DE3: Snake
+31DE4: Needle
+31DE5: Hard
+31DE6: Megaman
+31DE7: Top 
+31DE8: Gemini
+31DE9: Magnet
+31DEA: Shadow
+
+31DEB-31DF3 - No idea yet
+31DF4-31DFC - No idea yet
+
+Enable/Disable data:
+Depending on the current value for a stage, it's like a enable/disable flag for allowing the game to access the level order data
+31DFD: Spark
+31DFE: Snake
+31DFF: Needle
+31E00: Hard
+31E01: Megaman (no idea)
+31E02: Top
+31E03: Gemini
+31E04: Magnet
+31E05: Shadow
+______________________________________
+Breakman Palettes
+31E2A - 31E39 (Stage select)
+31E3A - 31E59 (the battle with breakman)
+_______________________________________
+Question Mark enable/disable (doc robot stages)
+65 means question mark appears, 00 means nothing
+6152: Spark
+6153: Cannot Select
+6154: Needle
+6155-6157: Cannot select
+6158: Gemini
+6159: Cannot Select
+615A: Shadow
+
+X position for question mark
+There are 2 different formats that I know of for how this functions. Values 00-09 and FA-FF
+For how far left/right the question mark appears on the screen
+6176: Spark
+6177: Cant be selected
+6178: Needle
+6179-617B: Cant be selected
+617C: Gemini
+617D: Cant be selected
+617E: Shadow
+
+619A-61A2: More X position data
+Not sure yet but may be another x position based thing, and also depending on the value, it can affect the speed of which the question mark appears on the screen, and how high/low it does the "jumping" effect
+
+61AC-61B4: Unsure at the momment
+
+Sprite tile id (question mark)
+61D0-61D8: 1E is for the question mark, 00 is unused, cant be selected
+
+Unknown:
+61E1-61E4: If these values are nonzero, then the game will fail to load the selected stage
+
+
+Palette (question mark screen)
+61E9-61F0: The first 8 bytes (colors) that make up the palette for the question screen

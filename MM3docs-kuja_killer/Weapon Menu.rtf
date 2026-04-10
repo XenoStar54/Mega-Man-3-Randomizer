@@ -1,0 +1,194 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fswiss\fcharset0 Arial;}}
+{\colortbl ;\red0\green0\blue0;\red255\green0\blue0;\red0\green0\blue255;}
+{\*\generator Msftedit 5.41.15.1507;}\viewkind4\uc1\pard\qc\ul\f0\fs28 Weapon Menu Data\par
+\pard\ulnone\tab\fs20  This guide is for the weapon menu during the game. It will only list offsets related to the menu screen being open. Does not include all known weapon settings, those are found in another document.\cf1\par
+\cf0\par
+Program Code: (In chunks)\par
+\cf2 #1\cf0  = \b $4013 \b0 - \b $406B\par
+\cf2 #\b0 2\cf0  = \b $40B0 \b0 - \b $416A\b0\par
+\cf2 #3\cf0  = \b $419E \b0 - \b $420F\b0\par
+\cf2 #4\cf0  = \b $4223 \b0 - \b $42FF\b0\par
+\cf2 #5\cf0  = \b $4306 \b0 - \b $4500\b0\par
+\cf2 #6\cf0  = \b $451A \b0 - \b $451C\par
+\par
+\b0 The only things I've discovered so far in all of it is the Rush Glitch, and the following:\par
+_________________________________________________________________________________\ul\b\par
+E Tank Controls:\par
+\cf1\ulnone $4076 - $407E\par
+\tab - \b0 $4078: The number of E Tanks subtracted when you use one.\par
+\tab - $3B3B5: The CMP instruction for limiting the maximum number of E Tanks the game allows you to have.\par
+\par
+\ul\b Lives Controls:\par
+\ulnone Varies\par
+\tab - $\b0 3CB8E - $3CB96: The code setup for subtracting lives (ignore)\par
+\tab\tab - $3CB92: Number of lives subtracted when dieing.\cf0\ul\b\par
+\ulnone\b0\tab - $3C90C - Number of lives you start off with\par
+\tab - \cf1 $3192F \b -\b0  Number of lives you start off with when continuing the game from a Game Over screen\par
+\cf0\ul\b\par
+Opening/Closing the Menu:\par
+\ulnone\b0 The ROM Addresses vary for this. What this does is control a few things. \par
+1) The speed at which the menu opens and closes\par
+2) How far up and down it goes\par
+It all depends on some addition and subtraction instructions. There's not much more to say about it. The speed and height are both dependant on the value that's loaded into the Accumulator during the process.\par
+\cf2\par
+The game setting up the menu scrolls:\par
+\cf1\b $3C9C7 - $3C9C8\par
+\tab - $3C9C8: \b0 The value for the LDA instruction. Default is E8 \par
+\cf3\b NOTE: \cf1\b0 Changing this also affects another area of memory, so beware if there are any side effects during the game. I'll eventually find out if it's safe or not to modify\par
+\cf2\par
+Part 1:\cf1\b\par
+$4048 - $4054 - \b0 How far the menu goes DOWN (Switching to page 2)\b\par
+\tab -\b0 Step 1\b  \b0 $404A-$404B: The CMP instruction for switching to page 2 (menu going down first) Default is E8\par
+\tab -Step 2 $4051-$4052: The ADC instruction for frame speed and comparing. Default is 04\b\par
+\cf2\b0\par
+Part 2: \par
+\cf1\b $40F6 - $4102 - \b0 Exiting the menu screen (DOWN)\par
+\tab -Step 1 $40F8-$40F9: The CMP instruction for closing the menu (going downward) Default is E8\par
+\tab -Step 2 $40FF-$4100: The ADC instruction for frame speed and comparing. Default is 04\b\par
+\cf2\b0\par
+Part 3:\cf0\b\par
+$4250 - $425C \b0 - How far UP the menu goes\par
+\tab -Step 1\cf2  \cf1 $4252-$4253: The CMP instruction for making the menu come up. Default is B0 \cf0\par
+\b\tab -\b0 Step 2\b  \b0 $4259-$425A: The SBC instruction for the speed at which the menu comes up per each frame/cycle or whatever. Default is 04\par
+\cf3\b\par
+NOTE: \cf1\b0 The SBC and ADC \cf0 will continue to loop the A register until it hits the value contained in the CMP which makes the menu STOP. Otherwise the game would endlessly subtract A resulting in screwing up the menu like hell.\par
+Generally if you don't want any problems to happen, you'll have to modify the SBC and ADC values so that they are all the same number in order for the game to subtract and add properly reaching the contained value for the CMP for executing the weapon menu screen. Example: To make it open and close faster, choose a higher value than 04 ..as long as it equals to CMP's E8 and B0.\par
+\b __________________________________________________________________________________\par
+$4277 - \b0 How long the lifebar is (applies to all weapon lifebars)\b\par
+$448D\b0  - The sound effect to play when moving the cursor.\par
+It's very complicated so I haven't figured out much more than that yet sadly enough.\par
+One thing on my wish list is to know how to change the code of the normal P cannon so that it'll display 4 tiles in the top left corner of the menu, to display a small image like the rest of the weapons.\par
+\par
+___________________________________________________________________________\par
+\cf2\b Game Data\par
+\par
+\cf1\ul Unknown:\cf2\ulnone\par
+\cf1 $4585 - $45E7\b0  - No idea\par
+\tab $4592/93 - Tile ids for top border of the weapon menu\cf2\b\par
+\tab\cf1\b0 $45A0, 45AB, 45B8, 45C3, 45D9, 45E6 - Tile id for right side border\par
+\tab $45A8 - Tile id for semicolon next to lives counter\par
+\tab $45BF/C0 - Tile ids for the arrow on the left side of weapon menu\par
+\tab $45CE - Tile id for semicolon next to E-Tank counter\par
+\tab $45E5 - Tile id for bottom row of the menu\cf2\b\par
+\pard\tx6660\cf1\ul Weapon Names (Initials):\cf2\ulnone\par
+\pard\cf1\b0 This simply is a list of the intials used for the weapon names.\par
+\b $45E8 - $45FF\par
+\cf2\tab\cf1\b0 It goes like this: $45E8 - $45F3 Is for the first intial of the weapons. (The weapons are ordered the same as usual like in every other data section) $45F5 - $45FF Is for the second intial of the weapons. Couldn't be any easier than that! It's not that hard to figure out.\cf2\b\par
+\par
+\cf1\ul Misc 2:\cf2\ulnone\par
+\cf1 $4600 - $4633\b0\par
+\tab $4601, $4604 - Tile id for energy bar\cf2\b\par
+\cf1\b0\tab $4623-$462D - Settings for the cursor on the left side of the screen\cf2\b\par
+\cf1\ul Weapon Menu Sprite Palettes:\par
+\ulnone\b0 This only really controls colors of the weapon images such as the outlines and backgrounds.\line\b $4634\b0  - \b $4643\b0\par
+\tab - $4635 - Background weapon image color for the rush weapons, magnet missle, top spin, and hard knuckle\par
+\tab - $4636 - Outline color of the same above weapons, but for certain parts of the images.\par
+\tab - $4637 - For the above weapons, changes color of the whole image almost completely except for what 4636 does.\par
+\tab - $4638 - $463B - Same effects as above, but for Needle Cannon, Megaman head, spark shock, shadow blade, and the rushes.\tab\par
+\tab - $463C - $463F - Controls E-Tanks and Megaman head\par
+\tab - $4640 - $4643 - Controls Search Snake and Gemini Lazer\par
+\par
+\ul\b Unknown:\ulnone\b0\par
+\b $4644 - $464F \b0\par
+I have not a clue what's going on here. But this seems to affect the graphics of when you shoot a specific weapon. Anything other than their default values will look really weird. I have no other avaliable information.\par
+\par
+\ul\b Weapon Meter/Megaman Colors:\b0\par
+\ulnone\b $4650 - $467F\par
+\cf3 NOTE: \cf1\b0 IGNORE the 1st byte of the start of each weapons colors. A trace logger shows that the first "0F" does not get logged as data on any of the weapons. I think it's some type of seperator to seperate the weapons from each other or something. So don't edit it. For best results, only edit the last byte (the 3rd)\cf3\par
+\cf1\b\par
+\b0 Here's in depth detail of every single set of colors for all weapons. Affects the color of megaman, and the weapon meters. Each weapon is 3 bytes long.\par
+\tab - $4650 - $4653 - Megaman \cf3\b NOTE:\b0  \cf1 There are 2 seperate palettes for megaman. This one sets the colors after unpausing from the weapon menu screen. In order for changes to take affect permenately, there is another palette located somewhere in the $30000 range. Details later. Plus this one will not affect the meter colors.\par
+\tab - $4654 - $4657 - Gemini Lazer\par
+\tab - $4658 - $465B - Needle Cannon\par
+\tab - $465C - $465F - Hard Knuckle\par
+\tab - $4660 - $4663 - Magnet Missle\ul\b\par
+\cf0\ulnone\b0\tab - $4664 - $4667 - Top Spin\par
+\tab - $4668 - $466B - Search Snake\par
+\tab - $466C - $466F - Rush Coil\par
+\tab - $4670 - $4673 - Spark Shock\par
+\tab - $4674 - $4677 - Rush Marine\par
+\tab - $4678 - $467B - Shadow Blade\par
+\tab - $467C - $467F - Rush Jet\par
+\par
+\par
+\ul\b E-Tank and Megaman head images:\b0\par
+\ulnone See description of how this works below for the "Weapon Images" section. This and the weapon images follow the exact same 4 byte per tile format for each image.\par
+\par
+\b $4680 \b0 - \b $468F \b0 - Megaman\par
+\b $4690 \b0 - \b $469F \b0 - E-Tank\par
+\par
+\par
+\ul\b Cursor Flashing: Part 1\b0\par
+\ulnone I don't quite understand how this works just yet, but it appears that this tells how to flash the weapon image, and the cursor on a selected weapon.\par
+It seems to freeze the game if the value is set to something else other than A6-A8, or other strange effects. Each weapon uses only 2 bytes for the flashing. Here's what I understand.\par
+\par
+A6, A6 = Only cursor will flash\par
+A6, A7 = Both weapon image and cursor flash at the same time\par
+A7, A6 = Weapon image and cursor flash back and forth.\par
+A7, A7 = Cursor flashes, but weapon image completely disappears\par
+A8 glitches the screen apparently. \par
+So you could use this format to decide if you wanted to make certain weapon images flash/not flash, or both.\par
+\par
+\b $46C0 \b0 - \b $46C1 \b0 - Gemini Lazer\par
+\b $46C2 \b0 - \b $46C3 \b0 - Needle Cannon\par
+\b $46C4 \b0 - \b $46C5 \b0 - Hard Knuckle \cf3\b NOTE: \cf0\b0 Follows a different format strangely. A5 and A6 ....A7 will glitch\par
+\b $46C6 \b0 - \b $46C7 \b0 - Magnet Missle\par
+\b $46C8 \b0 - \b $46C9 \b0 - Top Spin \cf3\b NOTE: \cf1\b0 Follows an A5/A7 format\par
+\b $46CA \b0 - \b $46CB \b0 - Search Snake - A7/A8 format\par
+\b $46CC \b0 - \b $46CD \b0 - Rush Coil (works a little different, but default is A8/A8)\par
+\b $46CE \b0 - \b $46CF \b0 - Spark Shock - A7/A8 format\par
+\b $46D0 \b0 - \b $46D1 \b0 - Rush Marine (see rush coil)\par
+\b $46D2 \b0 - \b $46D3 \b0 - Shadow Blade - A7/A8 format\par
+\b $46D4 \b0 - \b $46D5 \b0 - Rush Jet (see rush coil)\par
+\par
+Part 2:\par
+Also there's another whole thing with cursor flashing, each weapon taking up only 2 bytes apiece. It tells which weapon is currently selected I think. I'd just leave these values alone, because changing them can either glitch the screen, or make it look like you've selected 2 weapons at once instead of 1.\par
+\par
+\b $46A2 \b0 - \b $46B7\b0\par
+The weapons are all in the same order as usual. So I will not list each one seperately.\par
+\ul\b\par
+\cf0\ulnone\b0\par
+\ul\b Weapon Images (top left corner of menu):\b0\par
+\ulnone The format for how it works goes something like this. The first byte repersent the Y coordinate of the top left tile of the image. Limited to the weapon menu. So that means you cannot place it outside of the menu as nothing will show up. The 2nd byte is the tile ID out of the current PPU bank. You'll know what I mean when looking at the PPU viewer in FCEUXD. It's self explantory. 3rd byte repersent the color of that top left tile. 4th byte is the X coordinate. The next 4 bytes are for the top right tile, same properties used. 1st = y coordinate, 2nd = tile id, and so on. Next 4 bytes is for the bottom left tile, then the bottom right tile. An "FF" means the end of data for 1 weapon. I don't quite know what that means exactly yet, but I'd rather leave it alone. So here's the offsets for the weapons images in order.\par
+\par
+\b $46DC\b0  - \b $46EC \b0 - Gemini Lazer\par
+\b $46ED\b0  - \b $46FD \b0 - Needle Cannon\par
+\b $46FE\b0  - \b $470E \b0 - Hard Knuckle\par
+\b $470F\b0  - \b $471F \b0 - Magnet Missle\par
+\b $4720\b0  - \b $4730 \b0 - Top Spin\par
+\b $4731\b0  - \b $4741 \b0 - Search Snake\par
+\b $4742 - $476E -\b0  Rush Coil \cf3\b NOTE: \cf1\b0 Stored differently hence the longer offset range (for animating the image after selecting)\cf0\par
+\b $476F\b0  - \b $477F \b0 - Spark Shock\par
+\b $4780 - $47A4 -\b0  Rush Jet (See rush coil above)\par
+\b $47CA\b0  - \b $47DA \b0 - Shadow Blade\par
+\b\par
+\cf3 NOTE:\cf0  \b0 The Rush Weapons are stored differently\b\par
+$47DB - $480F\b0  - Rush Marine\par
+\b $483D - $4865\b0  - Rush Jet\par
+\b $4866 - $48BF\b0  - Affects all 3 rushes, controls tile ids, and flashing.\par
+\par
+\ul\b Defeating a Boss:\par
+\ulnone\b0 When you defeat a boss. The weapon menu automatically opens up and fills up the energy bar for the weapon you just gained. This is what tells the page number and cursor positions to load during this process.\par
+\par
+\b $3DD14 - $3DD1B\b0  - Cursor selector position which I believe would tell the game  where to put the cursor at in the menu and start filling up that energy bar.\par
+\tab 14 - needle cannon\par
+\tab 15 - magnet missle\par
+\tab 16 - gemini lazer\par
+\tab 17 - Hard Knuckle\par
+\tab 18 - Top Spin\par
+\tab 19 - Search Snake\par
+\tab 1A - Spark Shock\par
+\tab 1B - shadow\par
+\par
+\b $3DD1C - $3DD23\b0  - Page number for opening Weapon menu after defeating a boss\par
+06 - page 2 ... 00 - page 1\par
+\tab 1C - needle\par
+\tab 1d - magnet\par
+\tab 1e - gemini\par
+\tab 1f - hard\par
+\tab 20 - top\par
+\tab 21 - Search Snake\par
+\tab 22 - Spark Shock\par
+\tab 23 - Shadow Blade\par
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               

@@ -1,0 +1,389 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fswiss\fcharset0 Arial;}}
+{\colortbl ;\red255\green0\blue0;\red0\green0\blue0;}
+{\*\generator Msftedit 5.41.15.1507;}\viewkind4\uc1\pard\qc\cf1\ul\b\f0\fs28 Boss Database\par
+\pard\cf2\ulnone\b0\fs20 This guide is my own personal Bosses Database. Which will include offsets to bosses, and other major enemies in the game as detailed as possible. Will be updated overtime.\par
+\par
+\b Snakeman: \par
+\b0 -----------------------------\par
+Part 1: A02E - A030: Pointer, A88D-A93B: Main AI code for the mini snakes \par
+Part 2: $E01C - $E01E: Pointer, E36D-E37B, E3E6-E3F6, $E52B - $E6C1: Main AI code, E755-E765\par
+-----------------------------\par
+A8A4 - Speed of the snakes\par
+E5F1, E5F3 - The type of way the snakes are shot\par
+E610 - Time until Snakeman moves after shooting search snake\par
+E64F - Number of snakes shot NOTE: You can't get snakemans shooting times to be perfect unless you mess around and experiment.\par
+E66F - Possibly how high the snakes are shot up into the air (??)\par
+E6BC - One of snakemans jumping heigth settings\par
+E6BD - Snakemans Jump height when ready to shoot his weapon. NOTE: If set lower than default value. ..then he can shoot only 1 snake and not 2\par
+_____________________\par
+\par
+\b Topman settings:\par
+\b0\par
+C016-C018, C01F-C021: Pointers\par
+C4C3-C6A7: Main AI Code\par
+C4D6-C4DD - Data Pointers - DO NOT EDIT\par
+C4F4 - Set hit detection - dont edit\par
+C4FB - Frame ID to intialize weapon attack\par
+C546 - Sprite tile id after releasing weapon, before doing the spinning phase\par
+C55C - sprite tile id for spinning I think\par
+C561 - Set hit detection for the spinning phase AA - shots will reflect off him\par
+C56D - Sprite tile id for spinning (another)\par
+C57D - Time until topman starts spinning. Default - Aprox. 2.00 seconds\par
+C593 - How far topman will spin to the right until stopping. Important\par
+C5A0 - Same as C593 but for the left\par
+C5EF - Where tops will originate on the screen from\par
+C602 - Speed of tops being thrown\par
+______________________\par
+\par
+\pard\tx4950\b Sparkman: \par
+\par
+\pard\b0 Part 1: A028-A02A: Pointer, A7A6-A7CA\par
+Part 2: ($E016 - $E018: Pointer) ($E329 - $E52A: Main AI code)\par
+E360 - Jumping height\par
+E393 - Number of times Sparkman jumps until doing his spark shock attacking phase (randomly generated)\par
+E396 - related to E393\par
+E3BE, E3C3 - jumping setting (unsure how it works, must check back on this again soon)\par
+E415 - Time until Sparkman will start moving after shooting his large spark shock.\par
+E440 - Number of small sparks shot (not recommended to edit, can cause graphical glitches if set higher than default value)\par
+E469 - something to do with the small sparks\par
+E46B - Small sparks sprite tile id (sparkman shooting)\par
+E48A - Seems like the core position of where the small sparks will originate from when sparkman releases them. It's fine the way it is.\par
+E4C7 - Speed of the Spark Shock (big one)\par
+\par
+Various Settings: (E4EF - E52A)\par
+\tab E4EF - E4FE - Misc Jumping Settings\par
+\tab E50B - E513 - Misc Small spark settings (may be just how fast they move ...but other things happen to.\par
+\cf0 _________________________\par
+\b Needleman settings:\par
+\b0 ---------\par
+Part 1: 803D - 803F: Pointer, 81A7-81B3, 8897-88C3\par
+Part 2: C010-C012: Pointer 1, C025-C027: Pointer 2, C02C-C25D: Main AI code\par
+---------\par
+81AB: Direction the needles are shot, sometimes they'll be shot by needleman in the wrong direction if set to something other than the default value\par
+88A6: Speed of the needles\par
+C0C9: Seems possibly how many needles are shot per round\par
+C0F9: A way the needles are shot while in the air. The higher the value, the shorter time he stays in air and shooting. The lower, the longer and more needles shot\par
+C10C: Sprite tile for jumping across the room\par
+C19F, C1B0, C1B1, C1B8: Jumping height settings\par
+C1E2, C1E6, C1E7: How fast/far needleman jumps from one side of the room to the other\par
+__________________________\par
+\b Hardman settings:\par
+\b0 E010-E015: Pointers\par
+E029-E328: Main AI Code\par
+\par
+E0B5 - Jumping Height\par
+E0BD - Time until jumping after shooting hard knuckle\par
+E133 - How fast/slow hardman floats down to the screen from jumping (mikes setting: 0F)\par
+E138 - Another speed thing..not sure how it works\par
+E195 - Jumping Height after landing (Mikes setting:  02)\par
+E19D - Shaking intensity of the room from hardman landing. NOTE: Do not set to 00 or higher than 02 because game will glitch. 01 - default 02 - double the shaking (Mikes setting: 02)\par
+E1C5 - Time until shooting the hard knuckle after jumping back up from the landing phase\par
+E1F5 - How long the ground shakes for (hardman staying in the ground) NOTE: If set too high, then eventually the whole ground will become slightly disjointed\par
+E237, E238 - how fast hardman moves across the screen for the jumping phase NOTE: seems to take affect depending on how far or close megaman is to hardman (mikes settings: 09/09)\par
+E264 - Something to do with the way the hard knuckle appears on the screen\par
+E2AA - Seems to deal with how high the hard kunckle travels after reversing it's direction\par
+E31D - Speed of the hard knuckle\par
+E31F - another speed thing...not sure how it works fully yet\par
+_______________________________\par
+\b Geminiman Settings\par
+\b0 Part 1: A02B-A02D, A7CE-A88C: Main AI Code for phase 2 of the battle\par
+Part 2: E022-E027: Pointers, E3E6-E3F6, E6C2-E9AE: Main AI Code\par
+\par
+A02B-A02D - Pointer\par
+A7E3, A837, A847, A84B - A way the gemini lazer is shot\par
+A827 - Speed of the gemini lazer AFTER bouncing off the wall the first time. Not the same as E951\par
+A88A-A88C: Settings for the 3 pieces of the gemini lazer, seems like delay times\par
+___________\par
+\b Gemini Clones:\par
+\b0 E6D8 - Something about how high the gemini clones jump, and appear on the ground after  ... NO\par
+E70F - Used for stopping the cloning phase of the battle when the boss life bar goes 1 pellet below this value MAYBE\par
+E773 - Sprite tile ID when landing on the ground, otherwise don't know. 35 default ...34 can make the clones shot as soon as landing on the ground. Also will shoot normally when you do.\par
+E7A8 - Game checks for controller input. This repersents the controller id number from $14/$16 in RAM and will make the clones shoot based off that the button you press that's repersented by the controller id numbers.\par
+E7B8 - X position they stop at to jump\par
+E8Eb - shooting technique..\par
+E8A5 - Sprite tile id position just before jumping, but after splitting into 2\par
+E8F5 - Speed of the bullets\par
+E8FF - Something to do with the bullets, but it can be set in a way that yours will repel off it.\par
+E980-E981 - More shooting settings, but not sure how they work\par
+E996 - Possibly a delay time for the gemini clones (only when battle starts)\par
+E9A0, E9A5 - Speed related value with one of the clones. One can go faster than the other depending on the setting\par
+\par
+___________________________________\par
+\b Geminiman:\par
+\b0\par
+\par
+E785, E78A - How fast gemini man will start moving once cloning phase ends\par
+E852 - See E7A8 description (non-clone phase)\par
+E85B - Jumping height\par
+E951 - Speed of the gemini lazer being shot (does not affect how fast it travels when bouncing off walls)\par
+____________________________________\par
+\b Shadowman\par
+\b0 Settings:\par
+C019-C01B, C022-C024, C028-C02A: Pointers\par
+C69B-C933 - Main AI Code\par
+\par
+C69F - Direction shadow blade is shot. only affects going left/right\par
+If set incorrectly, it'll shoot the wrong way\par
+C6D1, C6D6 - How far shadowman moves through the air during each jump\par
+C707, C733 - Sprite Tile ID for landing\par
+C70C - Delay time for when to jump again after landing\par
+C71D - Seems like the number of times shadowman will jump until shooting the shadow blade. Does not include doing a jump directly after a slide.\par
+C725, C72A - Sprite Tile ID for jumping\par
+C749 - Sprite tile id for throwing\par
+C75A - Something dealing with how shadowman gets up after sliding. Not understood yet.\par
+C75F - Sliding setting: If not 00, then shadowman can't slide far at all.\par
+00 allows him to slide fully from one side of the screen to the other until he hits a wall or megaman\par
+C764 - Sprite tile id for sliding\par
+C780, C78D - deals with the smoke animation when sliding. Unsure how it works\par
+C79C - Sliding Speed mikes setting: 06\par
+C7BA - Delay time for how long shadowman hold up his arm and then downward to do the throwing animation. Does not affect the actual shadow blade. This is fine the way it is, don't edit it.\par
+C7CF - Sound effect ID for shadow blade\par
+C80C - Sliding direction. If set other than default, then it can cause shadowman to slide the wrong way all the time.\par
+C878-C883 - Many different jumping settings\par
+C88A - A VERY strange value. If nonzero, megaman will turn grey when shadowman throws. Do not edit\par
+C8A7 - How high/low the shadowblade will be shot from\par
+C8B1, C8FF - Sprite tile id for shadowblade\par
+C8C4, C8DE, C8F4 - A way the shadow blade is thrown part 1 (getting ready) \par
+C8E4 - number of blades thrown (possibly, but not sure)\par
+C8EB - looks like how far up/down the bottom blade will go.\par
+C8ED - Speed of the top blade\par
+C8EF - speed of the bottom blade\par
+C908 - How high/low shadow blade is thrown part 2 (throwing it)\par
+\b _____________________________________\par
+Metalman:\par
+\b0 8019-801B, 8028-802A: Pointers 1\par
+81A7-81B3, 8387-8391\par
+_____________________\par
+8388 - Sprite Tile ID for standing still\par
+86F9 - A behavior control byte. If not default, then many different things can happen. Metalman may either disappear off the screen, jump backwards, or throw metals nonstop. Not recommended for editing\par
+86FD - Delay time for when Metalman will throw the metal blade when the battle first starts. NOTE: The timer temporary stops when you attempt to shoot at him, which will cause him to immediately throw blades, then the timer will continue until he does the intial throw. set to 01\par
+8729 - Jumping height when you are very close to metalman\par
+873A - Same as 86FD but after that delay time.\par
+8742-8747 - The check/compare routine for how the game makes metalman throw blades based on what button you press. Follows the same format as geminiman.\par
+8759 - Landing height after throwing metal blade possibly\par
+876C - Sprite tile for jumping \par
+8773 - Not sure but if set to BMI, it'll make him slightly jump higher every metal blade that's shot\par
+8789 - Delay time between the metal blades\par
+87AC - Same as 8759 but when you're close to him (possibly, not sure exactly how it works)\par
+87BD - Sprite tile id for landing (after jumping when you were close to him)\par
+8820 - Sprite tile id for jumping (when close)\par
+8825 - Number of metalblades throw when jumping (DO NOT EDIT) if nonzero, he'll throw too many but it'll be inaccruate\par
+884E-8859 - Jumping/Metalblade settings (analysis incomplete)\par
+\tab 8849-8852 - Unknown\par
+\tab 8853-8855 - Jumping height setting\tab\par
+\tab 8856-8859 - How slow/fast metalman floats down to the ground. The longer in the air, the more metalblades shot\par
+8860 - If nonzero, than no metalblades will be thrown but it'll still look like it happened DO NOT EDIT\par
+886F - kind of looks like where the metal blade is shot from.\par
+8888 - Sprite tile id for shooting\par
+88A6 - Speed of the metal blade\par
+___________________________________________________________________\par
+\b Woodman:\par
+\b0 8013-8015, 801F-8024, 802B-802E: Pointers\par
+8260 - 84A9 - Main AI Code\par
+___________________________________________________________________\par
+8273-827E - Data pointers. DO NOT EDIT\par
+8285 - Jumping height (only when battle first starts) set to 07\par
+8295 - Delay time for when the small leaves will appear (only when battle first starts)\par
+829A - Delay time for how long woodman stays vunlerable after the 1st leaf shield attack phase .....set to 30\par
+82A8 - Delay time for the small leaves.\par
+82B6 - Number of leaves that get shot into the air (does not affect when the amount of them coming downward)\par
+82BA - Delay time for how long the leaves stay up in the air until they then fall set to 5A\par
+82D5 - Delay time for when woodman will release the leaf sheild protecting him as soon as the leaves begin to fall to the ground \par
+82E3 - Same as 829A but for rest of battle\par
+8337 - Jumping height (normal) set to 06\par
+835A - Some type of jumping related value. Otherwise not sure how it works\par
+8379 - Same as 829A but for rest of battle set to 30\par
+8388 - Standing still sprite tile id with leaf sheild covering woodman\par
+83BD - Leaf Sheild Sprite tile id\par
+83CC - Speed of the leaf sheild when it's released from woodman\par
+83F7 - Sprite tile id for small leaves\par
+8401 - Speed of the small leaves traveling up into the air\par
+841C - How far up/down on the screen the leaves will float to the ground from. The lower the value, the higher they are, the higher the value, the lower to the ground they appear from set to 01\par
+8426 - sprite tile id for the leaves (when coming down)\par
+8430, 8438 - speed of the leaves (when coming down) 8430 - set to 68\par
+8455 - Number of small leaves that appear for floating down the screen. Anything higher than 4 won't work too well\par
+8459-845C - X positions of the 4 leaves set first to 2a, 4th to e0\par
+845E - Sprite tile id for the leaves that get thrown up into the air\par
+847D - A timer for the leaves that float to the ground, not quite sure how it works yet\par
+8488, 849E, 84A0 - Another thing dealing with the floating leaves. Unsure how it works\par
+84A5 - Another delay timer for the floating leaves. set to 25\par
+_______________________________________________________________________\par
+\b Airman\par
+\b0 A019, A025 - Pointers\par
+A563-A702 - Main AI Code\par
+A703-A7A5 - Main Settings\par
+_________________________________________________________________________\par
+A588 - Standing still sprite tile id. If nonzero, then it may not be possible to even battle him anymore. dont edit\par
+A5AE - Sprite tile id while during jumping phase\par
+A5B7 - Number of times the air shooter is used before jumping.\par
+A5C4 - Shooting setting, not sure how it works yet\par
+A5D6 - Delay timer for the when airman shots the air things AFTER the 1st set.\par
+A5DF - Number of mini air tornados shot - The higher the number, the more the game flickers\par
+A62B - Sprite tile id for the air tornado\par
+A674 - Similiar to A5B7\par
+A67C - The direction airman faces on whatever side of the screen he's on.\par
+A684 - Direction that the tornados push megaman away from airman. Dont edit this because it can mess up airman himself as well.\par
+A68D - X postion of where airman lands on the ground when jumping to the right side of the screen.\par
+A691 - Same as a68D - but for the left side of the screen. Don't mess with these 2 values that much or else airman "might" stand in mid air\par
+a696 - Another stand still sprite tile id\par
+a6CB/a6D7/a6DF/a6ed - A speed setting for the air shooter. Unsure how it works\par
+A6E8 - This type of speed value is a weird one ...it determines the speed of the air shooter just before it disappears off the screen.\par
+-----------------\par
+Settings\par
+-----------------\par
+Note: Airman uses 5 entirly different sets of 6 tornados. They are always randomly generated on the screen. So it's not easy to determine which set will appear at what time\par
+\par
+A705 - 1st jump - jump heigth - applies to both sides of the screen airman jumps from\par
+A706 - 2nd jump (from a705)\par
+A707 - how far airman travels from the first jump\par
+A708 - and for the 2nd jump (from a707)\par
+A709/A70A - Same as 707/708 but a little different. Dont edit. Use the other 2 values\par
+A70B-A70F - Delay timers for the sets of air tornados. It's difficult to determine which is for what since they are randomly generated.\par
+A710-a715 - y positions of a set of tornados (a712 - set to ee)\par
+a721, a727 - y position of a tornado\par
+\par
+A72E-4C - Speed settings of seperate tornados\par
+A74D - A769 - X positions of seperate tornados. Again, very difficult to know which applies to which tornado because of these sets being randomly generated.\par
+A76A - A787 - More speed settings for every tornado\par
+A788 - A7A5 - More X/Y based positions for the tornado sets. But NOT neccessairly "X and Y"\par
+____________________________________________________\par
+\b Giant Metool: ($25484-$25673)\par
+\b0 25510 - Time until 3rd metool is released after the first 2\par
+25589 - Time until middle (2nd) metool is released after the 1st, also seems to affect when the giant metool will move up/down after spitting out red balls\par
+2559E - Number of metools that appear\par
+255B2 - Something to do with the way it shoots the balls\par
+25630 - X position of where the metools will appear on the screen. Doesn't have to just be the giant metools mouth if you wanted.\par
+2563A - how high the metools jump into the air when dropped from the giant (Default: FF)\par
+25644 - Speed of the metools\par
+25655-25657 - Speed of the balls\par
+25660-25663 - Explosion settings when defeating giant metool. Unusre how it really works \par
+25664-25673 - Palette that's automatically loaded after battle with giant metool ends. NOTE: This is not a stage-spefic palette \par
+____________________________________________________\par
+\b Magnetman Settings:\par
+\b0 C013-C015, C01C-C01E: Pointers\par
+C25E-C4C2: Main AI Code\par
+---------------------------------------------------\par
+Remember to continue at C429, not finished studying yet\par
+\par
+C271-C27A - Data Pointers: DO NOT EDIT\par
+\par
+C2CC - Jumping sprite tile id\par
+C2D1 - Delay time between each jump\par
+C2DC - Number of jumps done before attacking. If higher than the default  of 03, then magnetman will zip right through walls and diasappear for the  rest of the battle. not recommended for editing\par
+C2F3 - Similiar to C2CC\par
+C30F - Delay time for how long magnetman uses his magnet pulling process.  If you are touched by him, the counter stops and resets the next time he  does it.\par
+C314 - Sprite tile id for magnet pulling phase\par
+C324 - Sprite tile id for jumping into the air before using magnet missle\par
+C334 - Sprite tile id for when he's at the top of the screen before using  magnet missle. This can freeze the game,.\par
+C33E - Delay time until magnet missle is used when he's up in the air \par
+C34C - Another one but delay time between the magnet missles being shot\par
+C35B - Sound effect ID for magnet missle\par
+C366 - Number of magnet missles used before going back dto the ground\par
+C36D - Seems like if this is nonzero, then magnetman will immediatelly  return to the ground after his last magnet missle is shot. Otherwise  their will be a very small delay time until he does. Also if above 00  then C372 has no effect\par
+C372 - The actual delay time for when magnetman returns to he ground\par
+C377 - Sprite tile id just before coming back to the ground\par
+C381 - How fast/slow he floats down to the screen after magnet missle  phase\par
+C39B - Sprite tile for landing (only after magnet missle)\par
+C3C4, C3C8 - Based off megamans current facing of $0580\par
+If your to the right of magnetman, you'll be pulled to the left through  C3c8, otherwise c4, stored to $36\par
+C3D0 - How hard the pulling is for the magnet pulling phase. Stored to  $38 RAM\par
+C42C - Jumping height (first jump)\par
+C42D - Jumping height (second jump)\par
+C42F - Seems like how far magnetman travels from each jump. Otherwise a tiny bit not sure\par
+C432/33 - Same as C42F\par
+C469 - Speed of the magnet missle\par
+C480/81 - X position of where the magnet missles originate from, but not entirly positive. It's fine the way it is, dont edit\par
+C48D/C4B0 - Shooting technique (can make a cool effect if not default)\par
+__________________________________________________________________________________\par
+\b Giant Cat: ($3BB65 - $3BE08)\par
+\b0 3BD82 - Jumping height of balls\par
+3BB93, 3bb9b, 3bba3 - the game loads the last 4 color palette for the cat here.\par
+doing it in a level editor has no effect\par
+3bbcd - how far down the cat teleports to the ground - set to 40\par
+3bc3d - number of balls it spits out\par
+3bc4f - delay time for when the balls are released after the 1st\par
+3BC9F - speed of the balls (fine the way it is, dont edit)\par
+3BD3B - possibly how high the fleas are shot up into the air\par
+3BD57 - something related to how the fleas are released\par
+-------------------------------------------\par
+3BD69-3BD74 - Settings for the fleas when released \par
+3BD6B - Location of one of the fleas appearance on screen set to 13\par
+3BD72-D74 - Speed at which the 3 fleas are thrown from the cat set to 01 02 03\par
+3BDC3/CA - Sprite tile id for jumping/landing (don't edit)\par
+3BDD4 - Delay time between jumping\par
+3BDDE - Jump height - set to 06\par
+3BDE8 - How fast they move \par
+__________________________________________________________________________________\par
+\b protoman notes: (3a007-3a1f1 part 1, 3a259-3a2fb part 2, 3a96f-3aa19 explosion settings "possibly)\par
+\b0 3a012 - continusly checks protomans current life. If 00 then, it runs the following JMP to intiliaze the explosion phase otherwise skips\par
+3a26a - control byte for megaman during proto whistle.\par
+0F by default - prevents you from moving\par
+3a26e - loads song before proto appears\par
+3a277 - time until protoman appears DONT EDIT\par
+3a281 - lets you walk again after the timer for 3a277 reaches 00. DONT EDIT\par
+3a297 - song loaded for breakman battle after whistle\par
+3a2d9 - speed of bullets\par
+3a2e5, 3a2e9 - if your fighting protoman normally, then he shoots small bullets. if your fighting breakman, then he shoots big bullets\par
+3a2f3 - shooting technique - need to look into this\par
+3a09b - i believe this is how far he'll walk to one side of the room until turning around\par
+3a0a5 - and the same for the opposite direction\par
+3a0c7 - jump height if touching a wall that he would normally not be able to jump over\par
+3a107, 3a110 - another thing dealing with how far he walks across the room until turning\par
+3a124 - delay time between shooting DONT EDIT\par
+3a138 - normal jump height (non touching wall)\par
+3a186-3a18f - sprite tile id settings\par
+AFTER BATTLE......\par
+3a1ab - teleport speed up (fine the way it is, dont edit)\par
+3a1bf, 3a1c7 - and again as 3a1ab, but the other one is recommended (dont edit anyway\par
+3a1e9 - transports you to dr light (breakman only)\par
+_________________________________________________________________________________\par
+\b Crashman AI\b0 :\par
+8016-8018, 8025-8027: Pointers (DONT EDIT) \par
+84AA-86F4 - Main AI code\par
+\par
+84C0 - Sprite tile id when battle starts. (walking) dont edit\par
+84E0 - How far crash walks to the right side of the screen until turning around - set to DF\par
+84EF - Same as 84E0 but for other direction - set to 22\par
+8507 - Just like Geminiman. This checks for controller input and triggers crashman to take action for the rest of the battle if the shoot button is pressed based on this value.\par
+8520 - Delay time between each crash bomb phase - set to 43 (come back to this later!!!)\par
+8528 - Same as 8507 but this is a little different. If the matched button is pressed, the timer is frozen/reset making crash shoot immediately then the timer continues\par
+855F - how fast crash walks\par
+8569 - sprite tile id (walking) for rest of the battle \par
+8580 - sprite tile id for shooting. DONT edit ..fine the way it is\par
+85AF - Jumping height - fine the way it is for me\par
+85C9 - 85D0 - Misc Settings (some currently not understood)\par
+\tab - 85CD-D0 - How far crashman moves across the screen from jumping. set to 00 03 01 02 \par
+8634 - sprite tile id for crash bomb when in air (not touching walls)\par
+863E - shooting technique - fine the way it is\par
+864B - delay time until crash bomb explodes - set to 26\par
+8654 - speed of crash bomb - set to 07\par
+86C2 - sprite tile id for crash bomb on a wall\par
+86DA - sprite tile id for crash bomb after touching a wall fine the way it is, don't edit\par
+86E4 - Sprite tile id for explosion dont edit, fine the way it is.\par
+86F3/F4 - Looks like position settings for the crash bomb not sure how it works to be exact.\par
+__________________________________________________________________________________\par
+\b Bubbleman AI\b0\par
+A010-A012, A01F-A021 - Pointers DONT EDIT\par
+A1EC-A3A2: Main AI code\par
+\par
+bubbleman:\par
+A216 - How high/low bubbleman goes up into the air until going back down\par
+A21F - Landing speed\par
+A236 - Number of bubbles shot (1st phase)\par
+A2B1 - Traveling speed when moving across the screen\par
+A2C2 - Sprite tile id when in the air for shooting dont edit, fine the way it is.\par
+A2D2 - Number of bullets shot during each attacking phase when going up into the air\par
+A2DE - same as A236 (2nd phase)\par
+A2E8 - 3rd phase\par
+A35C-A36F - Misc Settings\par
+\tab A35E - Jump height of bubbles (only when first released does not include constant jumps/bouncing) \par
+\tab A362 - Speed of bubbles (fine the way it is)\par
+\tab A363 - Speed of bullets (fine the way it is)\par
+\tab A364 - Delay time between the bubbles, and when bubbleman will go up/moving across the screen after shooting the first bullet on the ground\par
+\tab A368/69 - Sprite tile id for bubbles and bullets\par
+set 69 to 5B\par
+\tab A36A - Ground detection check. Bubbleman will stay still if your current current position is higher than bubble's above ground. - set to 15\par
+A373 - Unknown, but need to look into this again later\par
+A383 - Jumping height of bubbles like A35E, but after the first time\par
+}
+                                                                                                                                                                                                                                                                                                                                                              

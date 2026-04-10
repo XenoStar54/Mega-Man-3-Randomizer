@@ -1,0 +1,66 @@
+Misc Sprite Data:
+
+Magnet Man stage
+___________________
+Pellet Shooter 
+39DF2 - Time until next pellet is shot (during close range)
+39E0C - Rest time after shooting 2 pellets in close range
+39E29 -  time until next pellet shooting phase) Affects all 3 pellets if modified
+39E38 - Rest time after shooting 3 pellets
+
+
+___________________
+
+Snakeman Stage
+_______________
+39645 - How long snakehead/upside down snakehead keeps mouth open after shooting
+3964A - Time until next pellet shot from Snakehead and upside down snakehead
+396A9 - Speed of small snakes bullets
+3BA96 - Giant Snakes time until next attack phase
+3bab2 - sprite tile id for shooting
+3bada - speed of his shots
+$0535 (RAM) - the number determines how many shots the Giant Snake will shoot on his next phase. This is random generated so I do not know how this works yet.
+3BAF8 - How long giant snake keeps mouth open DURING shooting NOTE: This works differently than regular snakes, you'll have to change the value here and experiment with how it works. I'm not going into detail.
+3bb61-3bb64 - number of times it shoots. 4 different settings
+38C18 - Cannonball thrower: How long until the eye opens up so you can attack/until cannonball is thrown
+3909C - Cloud Platforms: Time until next cloud is formed (appears)
+
+
+_____________________
+
+
+Sparkman Stage
+39503 - Spark Trap: Time left until next sparking phase
+3B3B3 - How far sparker flys up and down repeatedly
+39CF2 - Metool Bulldozer: Rest time when not moving
+3958C - Time until next piece of trash sprite appears
+3ABC4 - Bolt: How fast/slow the bolt moves as it's about to connect with the other side
+3ACC1 - Bolt: Time until you can freely attack the bolt when it's connected. NOTE: in order for the bolt enemy to function properly, both values MUST be the same otherwise it'll mess up the connecting process of this enemy. Also, if value is set too high, then the bolt will NEVER connect thus making it so you can never defeat it.
+
+
+Needleman Stage
+3A376 - Delay timer 1 for after needler releases needles until rolling up in a ball
+3A394 - Needler: How long he rolls on the ground for when curled up
+3A422 - Delay timer 2 (2nd phase of delay timer 1)
+397D7 - Metool: How far metool runs across the screen after shooting
+397DC - Metool: Time until metool moves after shooting pellets
+39888-3988A - Metool: Speed of the 3 bullets it shoots
+39745 - Mosquito: Time until mosquito moves. Editing this is not recommended because during delay time, the mosquito moves up until the time it moves which will make it miss megaman much more frequently the higher the value is set
+3B352 - Needle Upward, Downward: Time for how long the needle stays stretched out/invisable
+
+
+shadowman: 
+3b5b3 - dark bulbs: delay timer for when dark bulb starts to move after making the screen dark
+3b5c4 - how fast it moves across the screen
+
+
+Rock/Trash piece:
+3958C: Time until next one appears
+
+Rock Monster:
+39BAD: Delay time for until next rock throwing phase
+39C15: Sprite tile id for what he throws
+39C34: Speed of the rock coming down
+39C55: Speed of the rock when traveling toward megaman
+39C61: Technique (look into this)
+jsr to 9f49

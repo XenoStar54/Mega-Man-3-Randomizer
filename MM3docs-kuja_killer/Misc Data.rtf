@@ -1,0 +1,258 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fswiss\fcharset0 Arial;}}
+{\colortbl ;\red255\green0\blue0;\red0\green0\blue0;\red0\green0\blue255;}
+{\*\generator Msftedit 5.41.15.1507;}\viewkind4\uc1\pard\qc\ul\f0\fs28 Miscellaneous\par
+\ulnone\fs20 This guide will contain the most information and will be updated as more becomes discovered for the Megaman 3 rom. \par
+\par
+\pard\tab In a Hex Editor, open up in ROM Viewing mode. (FCEUXD Recommended). Here's a list of known data found so far. \par
+______________________________________________________________________________\par
+\cf1\ul\b Misc:\cf0\ulnone\b0\par
+\b\par
+$2040 - $220F\b0  - Sprite Palettes/data **Currently under investigation**\par
+\tab - $20B9: HP Meter BG Color, $20BA - $20BB: HP Meter Color\cf1  (Doc Robot GFX Set 0F)\par
+\tab\cf2 - $20C1: HP Meter BG Color, $20C2 - $20C3: HP Meter Color\cf1  (Doc Robot GFX Set 10)\par
+\cf0\tab - $2159: HP Meter BG Color, $215A - $215B: HP Meter Color \cf1 (Magnetman)\par
+\tab\cf2 - $2161: HP Meter BG Color, $2162 - $2163: HP Meter Color \cf1 (Hardman)\par
+\cf2\tab - $2169: HP Meter BG Color, $216A - $216B: HP Meter Color \cf1 (Needleman)\par
+\cf2\tab - $2171: HP Meter BG Color, $2172 - $2173: HP Meter Color \cf1 (Snakeman)\par
+\cf2\tab - $2179: HP Meter BG Color, $217A - $217B: HP Meter Color \cf1 (Geminiman)\cf2\par
+\tab - $2181: HP Meter BG Color, $2182 - $2183: HP Meter Color \cf1 (Sparkman)\cf2\par
+\tab - $2189: HP Meter BG Color, $218A - $218B: HP Meter Color \cf1 (Shadowman)\cf2\par
+\tab - $2191: HP Meter BG Color, $2192 - $2193: HP Meter Color \cf1 (Topman)\cf2\par
+\line\par
+\par
+\b $6241 - $630F(??)\b0  - Level Select Screen Sprite Data\par
+\b $35D1B -\b0  Infinite Time for a item to stay on screen (non-dropped) NOTE: ..default = 00 ..if set anything higher...all sprites seem to get disabled.\par
+\b $3BE67\b0  - Amount of energy recovered from a \cf1 Large Energy Capsule\cf2\par
+\b $3BE6D\b0  - Amount of energy recovered from a \cf1 Small Energy Capsule\cf2\par
+\b $3BE73\b0  - Amount of energy recovered from a \cf1 Large Weapon Capsule\cf2\par
+\b $3BE77\b0  - Amount of energy recovered from a \cf1 Small Weapon Capsule\par
+\cf2\b $3BF4A\cf1\b0  \cf2 - Time left until a random generated item disappears from a ? Box\cf1\par
+\cf2\b $3BF9A -\cf1\b0  \cf2 Time left until a item disappears if dropped from a enemy\par
+\b $3C8C9\b0  - Mapper Bank for each level's graphics\par
+\b $3CD57\b0  - Megaman's Walking Speed \par
+\b $3CD5C\b0  - Gravity for Megaman in air\par
+\b $3CE7E -\b0  Megaman's jump heigth (Rush Coil)\par
+\b $3CEC9 -\b0  Megaman's jump heigth (Regular)\par
+\b $3D132 -\b0  How long megaman holds arm out far during shooting (don't really edit this because it's fine the way it is....)\par
+\b $3D166 -\b0  Shooting Speed\par
+\b $3F2E8 \b0 - Energy Bar height\par
+\b $3F32B\b0  - Weapon Energy Bar X Position\par
+\b $3F32C\b0  - Energy Bar X Position\par
+\b $3F32D\b0  - Boss Energy Bar X Position\par
+\b $3D77D -\b0  Megamans Recovery Time from being damaged \par
+_____________________________________________________________________________\par
+\cf1\ul\b Weapon Shooting Ranges Table #1: (Directions a weapon can be shot) ex. up/down/left/right\par
+\cf2\ulnone $3D2EB - \b0 Shadow Blade\par
+\cf3\b NOTE:\cf2\b0  Will be updated soon\par
+______________________________________________________________________________\par
+\cf1\ul\b Weapon Shooting Ranges Table #2: (How far a weapon can shoot/go across the screen)\par
+\cf2\ulnone\b0\par
+\b $3D2FC\b0  - Shadow Blade\par
+\cf3\b NOTE:\cf2\b0  Will be updated soon\par
+_____________________________________________________________________________\par
+\cf1\ul\b Weapon Energy Usage Table: (amount of pellets/energy used up per use)\par
+\cf2\ulnone\b0\par
+\cf3\b NOTE: \cf2\b0 If a value is set to 00, then it basically gives that particular weapon unlimited energy. \par
+Or if a value is set any higher than 1B, then it'll deplete ALL the energy from the weapon. In other words, if you have a weapon at full, 1 shot with it will send it having NOTHING left in the energy bar.\par
+\b $3DF2C - $3DF3F\b0  - Energy Usage table for weapons\par
+\b $3DF2C\b0  - Gemini Lazer\par
+\b $3DF2D\b0  - Needle Cannon\par
+\b $3DF2E\b0  - Hard Knuckle\par
+\b $3DF2F\b0  - Magnet Missle\par
+\b $3DF30\b0  - Top Spin\par
+\b $3DF31\b0  - Search Snake\par
+\b $3DF32\b0  - Rush Coil\par
+\b $3DF33\b0  - Spark Shock\par
+\b $3DF34\b0  - Rush Marine\par
+\b $3DF35\b0  - Shadow Blade\par
+\b $3DF36\b0  - Rush Jet\par
+\par
+\cf3\b NOTE: \cf2 $3DF38 - $3DF42\b0  - This weapon related table is for how many times you can shoot a weapon before it will start depeleting energy from the bar\par
+_____________________________________________________________________________\par
+\cf1\ul\b Weapon Shooting Limits:\par
+\cf2\ulnone\b0\par
+This short table is for the amount of times the ROM allows you to shoot a weapon per frame.\b\par
+\b0\par
+\b $3D34D -\b0  Mega Buster\par
+\b $3D34E \b0 - Gemini Lazer\par
+\b $3D34F -\b0  Needle Cannon\par
+\b $3D350 -\b0  Hard Knuckle\par
+\b $3D351 \b0 - Magnet Missle\par
+\b $3D352 -\b0  Top Spin\par
+\b $3D353 -\b0  Search Snake\par
+\b $3D354 -\b0  Rush coil\par
+\b $3D355 -\b0  Spark Shock\par
+\b $3D356 -\b0  Rush Marine\par
+\b $3D357 -\b0  Shadow Blade\par
+\b $3D358 -\b0  Rush Jet\par
+\par
+Bullet Sizes hit detection:\par
+\par
+$3CF13 - Sprite Y sizes\par
+$3CF33 - Sprite X sizes\par
+\cf3\b NOTE: \cf2\b0 Credit to \b KTurbo\b0\par
+______________________________________________________________________________\par
+Weapon Settings:\par
+Search Snake:\par
+3D2CF - how high the snake is shot up into the air\par
+3D2D9 - how far in front of megman it's shot until touching ground\par
+Magnet Missle: \par
+387F5 - Sprite tile id for shooting it\par
+\b Hard Knuckle:\b0\par
+3D282/38981 - Speed of the hard knuckle\par
+3D28D - How sentive the weapon reacts to going up/down when you hold the up/down button down\par
+3D29A - Delay time for how long megaman holds out arm before releasing hard knuckle\par
+3896C - Sprite tile id for hard knuckle. fine the way it is, don't edit\par
+\cf1\ul\b\par
+\cf2\ulnone\b0 _______________________________________________________________________________\cf1\ul\b\par
+In-Game Text:\par
+\par
+\cf2\b0 Stage Select #1\par
+\ulnone\par
+\b $61F1 - $61FA\b0  - NEEDLE MAN\par
+\b $61FB - $6204\b0  - MAGNET MAN\par
+\b $6205 - $620E\b0  - GEMINI MAN\par
+\b $620F - $6218\b0  - HARD MAN\par
+\b $6219 - $6222\b0  - TOP MAN\par
+\b $6223 - $622C\b0  - SNAKE MAN\par
+\b $622D - $6236\b0  - SPARK MAN\par
+\b $6237 - $6240\b0  - SHADOW MAN\par
+\ul\par
+Password/Gameover \ulnone\par
+\b $6310 - $631F -\b0  STAGE SELECT\par
+\b $6323 - $632D\b0  - PASS WORD \par
+\b $6331 - $6333\b0  - END\par
+\b $6338 - $6342\b0  - GAME OVER\par
+\b $6346 - $6348\b0  - END\par
+\b $634D - $6359\b0  - STAGE SELECT\par
+\b $636B - $6372\b0  - CONTINUE\par
+\b $6376 - $6378\b0  - END\par
+\par
+\ul Stage Select #2\ulnone\par
+\par
+\b $637D - $6388\b0  - PUSH START\par
+\b $638C - $6390\b0  - SPARK\par
+\b $6395 - $6399\b0  - SNAKE\par
+\b $639E - $63A3\b0  - NEEDLE\par
+\b $63AA - $63AC\b0  - MAN (SPARK)\par
+\b $63B3 - $63B5\b0  - MAN (SNAKE)\par
+\b $63BC - $63BE\b0  - MAN (NEEDLE)\par
+\b $63C3 - $63C6\b0  - HARD\par
+\b $63CC - $63CE\b0  - TOP\par
+\b $63D8 - $63DA\b0  - MAN (HARD)\par
+\b $63E1 - $63E3\b0  - MAN (TOP)\par
+\b $63E7 - $63EC\b0  - GEMINI\par
+\b $63F0 - $63F5\b0  - MAGNET\par
+\b $63F9 - $63FE\b0  - SHADOW\par
+\b $6405 - $6407\b0  - MAN (GEMINI)\par
+\b $640E - $6410\b0  - MAN (MAGNET)\par
+\b $6417 -$6419\b0  - MAN (SHADOW)\par
+\par
+\ul Weaponnames\par
+\ulnone\par
+(\b $641E - $6424\b0  YOU GOT)\par
+\b $6429 - $6435\b0  - NEEDLE CANNON\par
+\b $6439 - $643B\b0  - AND\par
+\b $643F - $6447\b0  - RUSH JET\par
+\b $644C - $6459\b0  - MAGNET MISSLE\par
+\b $645E - $6469\b0  - GEMINI LASER\par
+\b $646E - $6479\b0  - HARD KNUCKLE\par
+\b $647E - $6485\b0  - TOP SPIN\par
+\b $648A - $6495\b0  - SEARCH SNAKE\par
+\b $649A - $64A4\b0  - SPARK SHOCK\par
+\b $64A9 - $64B4\b0  - SHADOW BLADE\par
+\b $64B8 - $64BA\b0  - AND\par
+\b $64BE - $64C8\b0  - RUSH MARINE\par
+\par
+\ul Beginning Intro\ulnone\par
+\par
+\b $6500 - $6514\b0  - \'a91990 CAPCOM CO.LTD\par
+\b $6518 - $6536\b0  - TM AND \'a91990 CAPCOM U.S.A.,INC.\par
+\b $653B - $6545\b0  - LICENSED BY\par
+\b $6549 - $6561\b0  - NINTENDO OF AMERICA. INC.\par
+\par
+\ul Dr Light (before dr wily stages)\par
+\par
+\ulnone\b $1C215 - $1C229 - \b0 OH NO! RIGHT AFTER WE\par
+\b $1C22D - $1C23D\b0  - RECEIVED THE LAST\par
+\b $1C241 - $1C24A\b0  - ELEMENT...\par
+\b $1C24E - $1C25F\b0  - WILEY RAN OFF WITH\par
+\b $1C263 - $1C268\b0  - GAMMA!\par
+\par
+\ul Ending (After beating Dr Wily)\par
+\ulnone\b\par
+$1C26C - $1C280 - \b0 WHERE'S Dr. WILEY?...\b\par
+$1C284 - $1C293 - \b0 OH NO, TOO LATE.\par
+\par
+\b $1A3BB - \b0 EPILOGUE\par
+\b $1C297 - $1C2AE\b0  -  MEGAMAN, YOU'VE REGAINED\par
+\b $1C2B2 - $1C2C7\b0  -  CONSCIOUSNESS. I FOUND\par
+\b $1C2CB - $1C2DF\b0  -  YOU LYING HERE WHEN I \par
+\b $1C2E3 - $1C2EA\b0  -  ARRIVED.\par
+\par
+\b $1C2EE - $1C305\b0  - I WONDER WHO BROUGHT YOU\par
+\b $1C309 - $1C30F\b0  - HERE...\par
+\par
+\b $1C313 - $1C329\b0  - THIS WHISTLE... IT MUST\par
+\b $1C32D - $1C340\b0  - HAVE BEEN PROTO MAN!\par
+\par
+\ul Game Credits\par
+\par
+\cf3\ulnone\b NOTE: \cf2\b0 I believe that FF means start new pargraph and FE means to start writing text to the next line below. \par
+\ul\par
+\ulnone\b $1A3C7 - $1A3D1\b0  - NUMBER LIST\par
+\b $1A3D5 - $1A3DD\b0  - OF ROBOTS\par
+\b $1A3E1 - $1A3EB\b0  - MADE BY Dr.\par
+\b $1A3EF - $1A3F3\b0  - RIGHT\par
+\par
+\b $1A3F8 - $1A405\b0  - NO.008 ELECMAN\par
+\b $1A409 - $1A40E\b0  - ATOMIC\par
+\b $1A412 - $1A417\b0  - ENERGY\par
+\b $1A41B - $1A424\b0  - CONTROLLER\par
+\par
+\b $1A429 - $1A436\b0  - NO.007 FIREMAN\par
+\b $1A43A - $1A43E\b0  - WASTE\par
+\b $1A442 - $1A449\b0  - DISPOSAL\par
+\b $1A44D - $1A451\b0  - ROBOT\par
+\par
+\b $1A456 - $1A463\b0  - NO.006 BOMBMAN\par
+\b $1A467 - $1A46C\b0  - GROUND\par
+\b $1A470 - $1A479\b0  - DISRUPTION\par
+\b $1A47D - $1A481\b0  - ROBOT\par
+\par
+\b $1A486 - $1A492\b0  - NO.005 ICEMAN\par
+\b $1A496 - $1A49E \b0 - ANTARTIC\par
+\b $1A4A2 - $1A4A9 \b0 - INVESTI-\par
+\b $1A4AD - $1A4B8\b0  - GATION ROBOT\par
+\par
+\b $1A4BD - $1A4CA\b0  - NO.004 GUTSMAN\par
+\b $1A4CE - $1A4D7\b0  - WILDERNESS\par
+\b $1A4DB - $1A4E5\b0  - RECLAMATION\par
+\b $1A4E9 - $1A4ED\b0  - ROBOT\par
+\par
+\b $1A4F2 - $1A4FE\b0  - NO.003 CUTMAN\par
+\b $1A502 - $1A508\b0  - TIMBER-\par
+\b $1A50C - $1A512\b0  - FEELING\par
+\b $1A516 - $1A51A\b0  - ROBOT\par
+\par
+\b $1A51F - $1A529\b0  - NO.002 ROLL\par
+\b $1A52D - $1A538\b0  - HOUSEKEEPING\par
+\b $1A53C - $1A540\b0  - ROBOT\par
+\par
+\b $1A545 - $1A552\b0  - NO.001 MEGAMAN\par
+\b $1A556 - $1A55B\b0  - FORMER\par
+\b $1A55F - $1A56A\b0  - ASSISTANT TO \par
+\b $1A56E - $1A575\b0  - Dr.RIGHT\par
+\par
+\b $1A57A - $1A589\b0  - NO.000 PROTO MAN\par
+\b $1A58D - $1A595\b0  - NEW ROBOT\par
+\b $1A599 - $1A5A2\b0  - PROTOTYPE,\par
+\b $1A5A6 - $1A5AF\b0  - BROTHER OF\par
+\b $1A5B3 - $1A5B9\b0  - MEGAMAN\ul\par
+\ulnone\b $188D3 - $188D7\b0  - STAFF\par
+\b $1C0D3 - $1C211\b0  - Megaman 3 robots/creators\par
+\b $1E2D7 - $1E639\b0  - Game Credits \par
+____________________________________________________________________________\par
+\cf1\ul\b\par
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  

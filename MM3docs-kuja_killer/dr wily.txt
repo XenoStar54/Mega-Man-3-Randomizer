@@ -1,0 +1,69 @@
+This is for Dr Light/Dr Wily stuff
+
+______________________________________
+Dr Light's Lab: 16010 - 161BF
+
+1602B - Music Track to play during Dr Light Intro (Set to E0 by default for nothing)
+16082 - A way megaman and dr light are placed on the screen (mikes setting: FF)
+160AD - How fast megaman teleports down to the screen NOTE: FF by default, the lower the value, the faster the teleportation happens. If set too low, then it'll be too fast causing strange side effects or make the dieing noise
+160EC - How far down to the ground megaman telports. 
+1611D - How fast/slow megaman walks to Dr Light
+16122 - X position to stop walking phase
+16134 - Speed of the flashing colors on the wall (possibly)
+16174 - Text display speed
+1619C - Delay time between the first and 2nd paragraphs (dr light talking)
+_______________________________________
+Levels:
+1652D - Level number for dr wily 1
+_______________________________________
+
+Palettes: 
+16665 - 16684: Dr Light Lab
+16685 - 166A4: Dr Wily Intro Screen
+166A5 - 166C4: Skull Fortress stage preview screen
+_______________________________________
+Misc Settings 
+166C5 - 166CA: Main Dr. Light CHR Pointers
+166CB - 166D0: Main Dr. Wily CHR Pointers
+166D1 - 166D6: Main Skull Fortress CHR Pointers
+
+166D7 - 166E8: Colors used for flashing on the wall in the lab
+166E9 - 166F2: Colors used for flashing on the dr wily intro
+
+166F3 - 16700: Dr Light Lab Settings
+	- 166F5: X position of where megaman teleports from on the screen
+	- 166F6: Dr Light's X position on the ground
+	- 166F7: Y position of where the teleportation begins
+	- 166F8: Dr Light's Y Position
+	- 166F9: Y position of the left piece of the red orb on top of the green machine
+	- 166FC: See F9, but X position
+	- 166FD: Y position of right piece of red orb
+	- 16700: See FD, but X position
+
+16701 - 1673C: Tile ID's for parts of the skull fortress
+_______________________________________
+1673D - 16744: Settings for how the space ship moves back and forth, it is not recommended for this to be edited.
+16745 - 1676C: Settings for the stars on the 2nd dr wily intro screen. X/Y Positions, tile ids, etc. Just leave this one alone too, it's fine the way it is really
+_______________________________________
+
+Line drawing (Skull Fortress Screen)
+X/Y Positions, Tile ID, possibly color, etc. Not sure how to change direction of each seperate piece yet:
+16784 - 1679B: Line drawing for Dr Wily 1 
+1679C - 167AB: Line drawing for dr wily 2
+167AC - 167C3: Line drawing for dr wily 3
+167C4 - 167E7: Line drawng for dr wily 4
+167E8 - 167FF: Line drawing for dr wily 5
+16800 - 1680F: line drawing for dr wily 6
+
+
+
+163DC - 1656A - Unknown Code
+
+
+Delay times for dr wily stages preview screen:
+1650F 
+1651E
+The higher the values, the more you can hear of the song for a short time.
+
+
+UNDER CONSTRUCTION

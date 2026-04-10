@@ -1,0 +1,173 @@
+All info is based on the USA version of Mega Man 3.
+
+Resources:
+https://github.com/refreshing-lemonade/megaman3-disassembly/blob/master/bank0A.asm
+https://datacrystal.tcrf.net/wiki/Mega_Man_3_(NES)/ROM_map
+Kuja Killer's MM3 documentation
+
+Level Select Screen Level Order (first 8 stages)
+$00031CF1-$00031CF9
+Doc Robot Stages level order
+$00031CFA-$00031D02
+
+ROM Addresses for Palettes:
+Title screen - $00031C13-$00031C32
+Stage select - $00031C33-$00031C52
+Password screen - $00031C53-$00031C62
+Boss intro - $00031C63-$00031C72
+Needle Man - $00000A92-$00000AA1
+Magnet Man - $00002A92-$00002AB5
+Gemini Man - $00004A92-$00004AA1
+Hard Man - $00006A92-$00006AA2
+Top Man - $00008A92-$00008AC6
+Break Man Battle? - $00031E2A-$00031E57
+
+ROM Addresses for Weapon Ammo Consumption (Bars Used Per Shot):
+Gemini Laser - $0003DF2C
+Needle Cannon - $0003DF2D
+Hard Knuckle - $0003DF2E
+Magnet Missile - $0003DF2F
+Top Spin - $0003DF30
+Search Snake - $0003DF31
+Rush Coil - $0003DF32
+Spark Shock - $0003DF33
+Rush Marine - $0003DF34
+Shadow Blade - $0003DF35
+Rush Jet - $0003DF36
+
+ROM Addresses for Weapon Ammo Consumption (Shots Required for Bar to Deplete):
+Gemini Laser - $0003DF38
+Needle Cannon - $0003DF39
+Hard Knuckle - $0003DF3A
+Magnet Missile - $0003DF3B
+Top Spin - $0003DF3C
+Search Snake - $0003DF3D
+Rush Coil - $0003DF3E
+Spark Shock - $0003DF3F
+Rush Marine - $0003DF40
+Shadow Blade - $0003DF41
+Rush Jet - $0003DF42
+
+ROM Addresses for Weapon Shooting Limits:
+Mega Buster - $0003D34D
+Gemini Laser - $0003D34E
+Needle Cannon - $0003D34F
+Hard Knuckle - $0003D350
+Magnet Missile - $0003D351
+Top Spin - $0003D352
+Search Snake - $0003D353
+Rush Coil - $0003D354
+Spark Shock - $0003D355
+Rush Marine - $0003D356
+Shadow Blade - $0003D357
+Rush Jet - $0003D358
+
+ROM Addresses for Weapon Palettes (four bytes each):
+Mega Buster - $00004650 - $00004653
+Gemini Laser - $00004654 - $00004657
+Needle Cannon - $00004658 - $0000465B
+Hard Knuckle - $0000465C - $0000465F
+Magnet Missile - $00004660 - $00004663
+Top Spin - $00004664 - $00004667
+Search Snake - $00004668 - $0000466B
+Rush Coil - $0000466C - $0000466F
+Spark Shock - $00004670 - $00004673
+Rush Marine - $00004674 - $00004677
+Shadow Blade - $00004678 - $0000467B
+Rush Jet - $0000467C - $0000467F
+
+ROM Addresses for Weapon Behaviors:
+Default projectile speed (controls all horizontal speed for traditional projectile weapons) - $0003D166 (default 04)
+Hard Knuckle speed values - 3D282, 38981
+Hard Knuckle input sensitivity - $0003D28D
+Hard Knuckle delay - $0003D29A
+Search Snake vertical launch speed - $0003D2CF
+Search Snake horizontal launch speed - $0003D2D9
+Shadow Blade vertical launch speed - $0003D2F7 (default 04)
+Shadow Blade shooting directions - $0003D2EB (default 0B)
+	00: Enables shooting right and left but nothing else
+	01: Enables shooting right and left but nothing else
+	02: Enables shooting right and left but nothing else
+	03: Enables shooting right and left but nothing else
+	04: Enables shooting right, down, left ala an inverted Magic Card
+	05: Enables shooting right, down, left, 315°
+	06: Enables shooting right, down, left, 225°
+	07: Enables shooting in the five downwards directions (180° - 360°)
+	08: Enables shooting right, up, left ala Magic Card
+	09: Enables shooting right, up, left, 45°
+	0A: Enables shooting right, up, left, 135°
+	0B: Enables shooting in the five upwards directions (0° - 180°)
+	0C: Enables shooting up and down but nothing else
+	0D: Enables shooting right, up, down, left, 45°, 315°
+	0E: Enables shooting right, up, down, left, 135°, 225°
+	0F: Enables shooting in all eight directions ala Metal Blade
+Shadow Blade shooting range - $0003D2FC (default 14)
+
+ROM Addresses for Weapon Damage Tables:
+Mega Buster - $00014110
+Needle Cannon - $00014210
+Magnet Missile - $00014310
+Gemini Laser - $00014410
+Hard Knuckle - $00014510
+Top Spin - $00014610
+Search Snake - $00014710
+Spark Shock - $00014810
+Shadow Blade - $00014910
+
+Enemy Damage Table Structure (Enemies):
+E1 - Dada
+E2 - Potton
+E3 - New Shotman
+E4 - Hammer Joe
+PE - Pole Egg (background tile) (still unlocated)
+
+Enemy Damage Table Structure (Bosses):
+NE - Needle Man
+MG - Magnet Man
+GE - Gemini Man
+GC - Gemini Man Clone
+HA - Hard Man
+TO - Top Man
+SN - Snake Man
+SP - Spark Man
+SH - Shadow Man
+PM - Proto Man
+DM - Doc Metal
+DA - Doc Air
+DB - Doc Bubble
+DQ - Doc Quick
+DC - Doc Crash
+DF - Doc Flash
+DH - Doc Heat
+DW - Doc Wood
+BM - Break Man
+KM - Kamegoro Maker Turtles
+YD - Yellow Devil MK-II
+HM - Holographic Mega Men
+W1 - Wily Machine 3 Phase 1
+W2 - Wily Machine 3 Phase 2
+G1 - Gamma Phase 1
+G2 - Gamma Phase 2
+
+   00   01   02   03   04   05   06   07   08   09   0A   0B   0C   0D   0E   0F
+00 $00, $00, $E1, $E2, $E3, $E4, $01, $01, $01, $01, $01, $01, $00, $01, $01, $00
+10 $00, $00, $01, $01, $00, $01, $01, $01, $01, $00, $01, $00, $00, $01, $01, $01
+20 $01, $01, $00, $00, $01, $01, $00, $01, $01, $00, $01, $01, $01, $00, $01, $00
+30 $01, $00, $00, $00, $01, $01, $01, $01, $00, $00, $00, $01, $00, $01, $00, $00
+40 $00, $00, $01, $00, $00, $00, $01, $01, $00, $01, $01, $01, $01, $01, $01, $00
+50 $00, $00, $PM, $BM, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+60 $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00
+70 $00, $00, $00, $01, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+80 $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $01, $01, $00
+90 $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+A0 $DF, $DW, $DC, $DM, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
+B0 $DB, $DH, $DQ, $DA, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+C0 $NE, $MG, $TO, $SH, $00, $00, $00, $NE, $??, $00, $00, $00, $00, $00, $00, $00
+D0 $HA, $00, $SP, $00, $SN, $00, $GE, $GC, $00, $00, $00, $00, $00, $00, $00, $00
+E0 $YD, $00, $00, $W2, $00, $W1, $00, $00, $G1, $G2, $00, $00, $00, $00, $00, $00
+F0 $01, $KM, $01, $00, $00, $HM, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00
+
+Miscellaneous Notes: 
+- Needle Man appears to be listed twice in memory? Unsure of why this might be, possibly something to do with the extra sprite created during his headbutt attack?
+- Gemini Man's clone actually has a separate (but identical) damage table. Very odd.
+- I'd like to add memory addresses for all enemies, but it's a tremendous amount of work to test. May or may not go through with this. 
