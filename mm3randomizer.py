@@ -80,12 +80,34 @@ def scramble_stage_palettes():
 
     # Gemini Man
     for i in range(0x4A92, 0x4ADE):
-        if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
-            if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
-                edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
-            else:
-                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS))
+        if i not in [0x4AA2, 0x4AA3, 0x4AA4, 0x4AA5, 0x4AB6, 0x4AB7, 0x4AB8, 0x4AB9, 0x4ACA, 0x4ACB, 0x4ACC, 0x4ACD]: # Animated tile values, do not change
+            if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
+                if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
+                    edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
+                else:
+                    edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
     # Animated tiles
+    # Gemini Man's animations are more complicated than the rest of the stages and are stored in a different way as well
+    # Flashing stringy things in the background of the cave segments
+    gemini_string_color = random.randint(0x11, 0x1C)
+    edit_nes_byte(GAME_PATH, 0x4AAF, gemini_string_color + 0x10)
+    edit_nes_byte(GAME_PATH, 0x4AB0, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x4AB1, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x4AC3, gemini_string_color + 0x10)
+    edit_nes_byte(GAME_PATH, 0x4AC4, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x4AC5, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x4AD7, gemini_string_color + 0x10)
+    edit_nes_byte(GAME_PATH, 0x4AD8, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x4AD9, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D1, gemini_string_color + 0x10)
+    edit_nes_byte(GAME_PATH, 0x125D2, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D3, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D4, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D5, gemini_string_color + 0x10)
+    edit_nes_byte(GAME_PATH, 0x125D6, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D7, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D8, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D9, gemini_string_color + 0x10)
 
     # Hard Man
     for i in range(0x6A92, 0x6AA2):
@@ -327,19 +349,19 @@ def scramble_weapon_energy_costs():
 
 def scramble_weapon_behaviors():
 # This scrambles the behaviors of the game's weapons.
-    # Weapon projectile limits (the max number of each weapon that can be on screen at once)
+    # Weapon projectile limits (the max number of each weapon that can be on screen at once) Setting any of these higher than the default usually causes collision issues (except Shadow Blade...?) Creates ghost projectiles that don't work
     edit_nes_byte(GAME_PATH, 0x3D34D, 0x03) # Mega Buster (default 3) setting this higher than 3 causes collision issues?
     edit_nes_byte(GAME_PATH, 0x3D34E, 0x01) # Gemini Laser (default 1)
     edit_nes_byte(GAME_PATH, 0x3D34F, 0x03) # Needle Cannon (default 3) setting this higher than 3 seems to cause collision issues
     edit_nes_byte(GAME_PATH, 0x3D350, 0x01) # Hard Knuckle (default 1)
-    edit_nes_byte(GAME_PATH, 0x3D351, random.choice([0x01, 0x02, 0x03, 0x04])) # Magnet Missile (default 2)
+    edit_nes_byte(GAME_PATH, 0x3D351, random.choice([0x01, 0x02])) # Magnet Missile (default 2)
     edit_nes_byte(GAME_PATH, 0x3D352, random.choice([0x00])) # Top Spin (default 0, do not recommend changing)
-    edit_nes_byte(GAME_PATH, 0x3D353, random.choice([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])) # Search Snake (default 3)
-    edit_nes_byte(GAME_PATH, 0x3D354, random.choice([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])) # Rush Coil (default 3)
-    edit_nes_byte(GAME_PATH, 0x3D355, random.choice([0x01, 0x02, 0x03, 0x04])) # Spark Shock (default 2)
-    edit_nes_byte(GAME_PATH, 0x3D356, random.choice([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])) # Rush Marine (default 3)
+    edit_nes_byte(GAME_PATH, 0x3D353, random.choice([0x01, 0x02, 0x03])) # Search Snake (default 3)
+    edit_nes_byte(GAME_PATH, 0x3D354, random.choice([0x01, 0x02, 0x03])) # Rush Coil (default 3)
+    edit_nes_byte(GAME_PATH, 0x3D355, random.choice([0x01, 0x02])) # Spark Shock (default 2)
+    edit_nes_byte(GAME_PATH, 0x3D356, random.choice([0x01, 0x02, 0x03])) # Rush Marine (default 3)
     edit_nes_byte(GAME_PATH, 0x3D357, random.choice([0x01, 0x02, 0x03])) # Shadow Blade (default 1)
-    edit_nes_byte(GAME_PATH, 0x3D358, random.choice([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])) # Rush Jet (default 3)
+    edit_nes_byte(GAME_PATH, 0x3D358, random.choice([0x01, 0x02, 0x03])) # Rush Jet (default 3)
 
     # Default projectile speed (affects all straight shooting weapons: Mega Buster, Needle Cannon, Magnet Missile, Gemini Laser, Spark Shock, Shadow Blade). Also messes with Hard Knuckle for some reason.
     edit_nes_byte(GAME_PATH, 0x3D166, random.choice([0x02, 0x03, 0x04, 0x05, 0x06, 0x07]))
@@ -413,6 +435,29 @@ def scramble_weapon_behaviors():
 
 def scramble_boss_weakness_tables():
 # Scrambles the weaknesses of the bosses in the game. Damage tables are listed by weapon, which is how this list is structured. See the attached notes for more details on the enemy damage tables.
+    # To give every weapon at least one boss that it's effective against, use a 2d array to randomize with some logic
+    effectiveness = [
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01]]
+    # Mega Man 3 bosses all have 2 weaknesses so let's preserve that in the randomization
+    weaknesses_1 = [0, 1, 2, 3, 4, 5, 6, 7]
+    random.shuffle(weaknesses_1)
+    weaknesses_2 = weaknesses_1
+    random.shuffle(weaknesses_2)
+    # These loops set immunities, weaknesses and semi-weaknesses across the Robot Master damage tables
+    for i in range(len(effectiveness)):
+        for j in range(i):
+            effectiveness[i][j] = random.choice([0x00, 0x00, 0x01, 0x01, 0x01, 0x02])
+        effectiveness[i][weaknesses_1[i]] = 0x04
+        effectiveness[i][weaknesses_2[i]] = 0x04
+    print(effectiveness)
+    
     # Needle Cannon
     needle_effectiveness = [0x00, 0x00, 0x01, 0x01, 0x01, 0x02, 0x04, 0x04]
     random.shuffle(needle_effectiveness)
@@ -426,6 +471,34 @@ def scramble_boss_weakness_tables():
     edit_nes_byte(GAME_PATH, 0x142E4, needle_effectiveness[6]) # VS Snake Man
     edit_nes_byte(GAME_PATH, 0x142E6, needle_effectiveness[7]) # VS Gemini Man
     edit_nes_byte(GAME_PATH, 0x142E7, needle_effectiveness[7]) # VS Gemini Man's clone (yes it has a separate damage table for some reason)
+
+    # Magnet Missile
+    magnet_effectiveness = [0x00, 0x00, 0x01, 0x01, 0x01, 0x02, 0x04, 0x04]
+    random.shuffle(magnet_effectiveness)
+    edit_nes_byte(GAME_PATH, 0x143D0, magnet_effectiveness[0]) # VS Needle Man
+    edit_nes_byte(GAME_PATH, 0x143D7, magnet_effectiveness[0]) # Also VS Needle Man but specifically for the head hammer extended state
+    edit_nes_byte(GAME_PATH, 0x143D1, magnet_effectiveness[1]) # VS Magnet Man
+    edit_nes_byte(GAME_PATH, 0x143D2, magnet_effectiveness[2]) # VS Top Man
+    edit_nes_byte(GAME_PATH, 0x143D3, magnet_effectiveness[3]) # VS Shadow Man
+    edit_nes_byte(GAME_PATH, 0x143E0, magnet_effectiveness[4]) # VS Hard Man
+    edit_nes_byte(GAME_PATH, 0x143E2, magnet_effectiveness[5]) # VS Spark Man
+    edit_nes_byte(GAME_PATH, 0x143E4, magnet_effectiveness[6]) # VS Snake Man
+    edit_nes_byte(GAME_PATH, 0x143E6, magnet_effectiveness[7]) # VS Gemini Man
+    edit_nes_byte(GAME_PATH, 0x143E7, magnet_effectiveness[7]) # VS Gemini Man's clone (yes it has a separate damage table for some reason)
+
+    # Gemini Laser
+    gemini_effectiveness = [0x00, 0x00, 0x01, 0x01, 0x01, 0x02, 0x04, 0x04]
+    random.shuffle(gemini_effectiveness)
+    edit_nes_byte(GAME_PATH, 0x144D0, gemini_effectiveness[0]) # VS Needle Man
+    edit_nes_byte(GAME_PATH, 0x144D7, gemini_effectiveness[0]) # Also VS Needle Man but specifically for the head hammer extended state
+    edit_nes_byte(GAME_PATH, 0x144D1, gemini_effectiveness[1]) # VS Magnet Man
+    edit_nes_byte(GAME_PATH, 0x144D2, gemini_effectiveness[2]) # VS Top Man
+    edit_nes_byte(GAME_PATH, 0x144D3, gemini_effectiveness[3]) # VS Shadow Man
+    edit_nes_byte(GAME_PATH, 0x144E0, gemini_effectiveness[4]) # VS Hard Man
+    edit_nes_byte(GAME_PATH, 0x144E2, gemini_effectiveness[5]) # VS Spark Man
+    edit_nes_byte(GAME_PATH, 0x144E4, gemini_effectiveness[6]) # VS Snake Man
+    edit_nes_byte(GAME_PATH, 0x144E6, gemini_effectiveness[7]) # VS Gemini Man
+    edit_nes_byte(GAME_PATH, 0x144E7, gemini_effectiveness[7]) # VS Gemini Man's clone (yes it has a separate damage table for some reason)
 
 
 if __name__ == "__main__":

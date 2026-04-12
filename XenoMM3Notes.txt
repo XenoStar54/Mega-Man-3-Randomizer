@@ -117,57 +117,147 @@ Shadow Blade - $00014910
 Enemy Damage Table Structure (Enemies):
 E1 - Dada
 E2 - Potton
+P1 - Potton (head)
 E3 - New Shotman
 E4 - Hammer Joe
-PE - Pole Egg (background tile) (still unlocated)
+E5 - Peterchy
+E6 - Bubukan
+P2 - Bubukan pole
+E7 - Bomb Flier
+P3 - Junk Golem (flying block before hitting ground)
+P4 - New Shotman bullets, Gamma phase 1 bullets, Junk Golem projectile (broken junk pieces after hitting ground)
+E8 - Bikky
+E9 - Metall
+P5 - Metall bullet, Elec'n sparks, and Giant Metall bullets?
+EA - Cannon
+P6 - Cannon projectile
+EB - Jamacy (different entries for the various forms, climbing, grounded, etc)
+EC - Magfly
+P7 - New Shotman/Break Man's/Proto Man's bullets
+P8 - Bomber Pepe eggs
+ED - Gyoraibo (28 is regular Gemini Man variant, 1E is for Doc Gemini variant)
+EE - Junk Golem
+EF - Pickelman Bull
+EG - Nitron
+P9 - Nitron fire
+EH - Pole
+PA - Gyoraibo missile (before exploding, 29 is regular Gemini Man variant, 45 is Doc Gemini variant)
+EI - Hari Hari
+EJ - Penpen Maker
+EK - Returning Monking
+PB - Hammer Joe projectile
+EL - Have "Su" Bee
+PC - Have "Su" Bee nest projectile
+EM - Nutton
+EN - Wanaan
+PD - Needle Man needle obstacle (up/down)
+EO - Walking Bomb
+EP - Elec'n
+PD - Hari Hari needles
+EQ - Mechakkero
+ER - Chibee
+ES - Penpen (Wily 1 swimming variant)
+PE - Komasaburo top projectiles
+ET - Penpen (Gemini Man sliding variant)
+EU - Komasaburo
+EV - Parasyu
+EW - Hologran (4A is stationary, 4B is moving)
+EX - Bomber Pepe
+EY - Metall (flying heli variant)
+EZ - Petit Snakey
+PF - Gyoraibo missile explosion, Doc Crash's Crash Bomb explosion
+PG - Bomber Pepe egg explosion, Walking Bomb explosion
+PH - Spark Man junk block
+PI - Giant Metall's small Metalls
+E! - Giant Springer
+PJ - Giant Springer missiles
+PK - Electric Gabyoall (short and tall variants as 78 and 79 respectively)
+E@ - Big Snakey
+E# - Tama
+PL - Tama yarn balls
+PM - Tama fleas
+PO - Petit Snakey bullets, Big Snakey bullets, Yellow Devil MK-II bullets, Holograph Mega Mans' bullets
+E% - Giant Metall
 
 Enemy Damage Table Structure (Bosses):
 NE - Needle Man
+NH - Needle Man (headbutt state)
+N1 - Needle Man's needle projectiles
 MG - Magnet Man
+M1 - Magnet Man's Magnet Missile
 GE - Gemini Man
-GC - Gemini Man Clone
+GC - Gemini Man clone
+GB - Gemini Man's bullet
+GL - Gemini Man's Gemini Laser
 HA - Hard Man
+H1 - Hard Man's Hard Knuckles
 TO - Top Man
+T1 - Top Man's top projectiles
 SN - Snake Man
+S3 - Snake Man small snakes
 SP - Spark Man
+S1 - Spark Man small spark projectiles
+S2 - Spark Man large spark projectile
 SH - Shadow Man
+S4 - Shadow Man's Shadow Blades
+S5 - Shadow Man (sliding state)
 PM - Proto Man
 DM - Doc Metal
+D7 - Doc Metal's Metal Blades
 DA - Doc Air
+D@ - Doc Air's tornados
 DB - Doc Bubble
+D2 - Doc Bubble's bullets
+D9 - Doc Bubble's Bubble Lead
 DQ - Doc Quick
+D! - Doc Quick's Quick Boomerangs
 DC - Doc Crash
+D6 - Doc Crash's Crash Bomb (before exploding)
 DF - Doc Flash
+D2 - Doc Flash's bullets
 DH - Doc Heat
+D8 - Doc Heat's flame projectiles
 DW - Doc Wood
+D1 - Doc Wood's Leaf Shield (thrown)
+D3 - Doc Wood's leaves (traveling upwards)
+D4 - Doc Wood's leaves (traveling downwards)
+D5 - Doc Wood's Leaf Shield (before being thrown)
 BM - Break Man
-KM - Kamegoro Maker Turtles
+KM - Kamegoro Maker
+K1 - Kamegoro Maker turtles
+K2 - Kamegoro Maker turtle shell
 YD - Yellow Devil MK-II
+Y1 - Yellow Devil MK-II flying segments (non-folding attack)
+Y2 - Yellow Devil MK-II flying segments (folding attack)
 HM - Holographic Mega Men
-W1 - Wily Machine 3 Phase 1
-W2 - Wily Machine 3 Phase 2
-G1 - Gamma Phase 1
-G2 - Gamma Phase 2
+W1 - Wily Machine 3 phase 1
+W2 - Wily Machine 3 phase 2
+W3 - Wily Machine 3 phase 1 orb projectile
+W4 - Wily Machine 3 foot/pin hitbox
+G1 - Gamma phase 1
+G2 - Gamma phase 2
+G3 - Gamma phase 2 large bullets
+G4 - Gamma phase 1 close range bullets
 
+Starting at $14110 for Mega Buster (for instance)
    00   01   02   03   04   05   06   07   08   09   0A   0B   0C   0D   0E   0F
-00 $00, $00, $E1, $E2, $E3, $E4, $01, $01, $01, $01, $01, $01, $00, $01, $01, $00
-10 $00, $00, $01, $01, $00, $01, $01, $01, $01, $00, $01, $00, $00, $01, $01, $01
-20 $01, $01, $00, $00, $01, $01, $00, $01, $01, $00, $01, $01, $01, $00, $01, $00
-30 $01, $00, $00, $00, $01, $01, $01, $01, $00, $00, $00, $01, $00, $01, $00, $00
-40 $00, $00, $01, $00, $00, $00, $01, $01, $00, $01, $01, $01, $01, $01, $01, $00
-50 $00, $00, $PM, $BM, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-60 $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00
-70 $00, $00, $00, $01, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-80 $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $01, $01, $00
-90 $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-A0 $DF, $DW, $DC, $DM, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
-B0 $DB, $DH, $DQ, $DA, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-C0 $NE, $MG, $TO, $SH, $00, $00, $00, $NE, $??, $00, $00, $00, $00, $00, $00, $00
-D0 $HA, $00, $SP, $00, $SN, $00, $GE, $GC, $00, $00, $00, $00, $00, $00, $00, $00
-E0 $YD, $00, $00, $W2, $00, $W1, $00, $00, $G1, $G2, $00, $00, $00, $00, $00, $00
-F0 $01, $KM, $01, $00, $00, $HM, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00
+00 $--, $--, $E1, $E2, $P1, $E3, $E4, $E5, $E6, $P2, $E7, $P3, $P4, $E8, $E9, $P5
+10 $--, $--, $EA, $P6, $--, $EB, $EB, $EB, $EB, $--, $EC, $P7, $--, $P8, $ED, $EE
+20 $EF, $E8, $--, $--, $--, $EG, $P9, $EH, $ED, $PA, $EI, $EJ, $EK, $PB, $EL, $PC
+30 $EM, $--, $EN, $PD, $EO, $EP, $PD, $EQ, $--, $--, $--, $ER, $D1, $ES, $--, $--
+40 $GB, $D2, $PE, $S1, $--, $PA, $ET, $EU, $--, $EV, $EW, $EW, $EX, $EY, $EZ, $--
+50 $G3, $G4, $PM, $BM, $PF, $PG, $--, $--, $--, $--, $--, $--, $--, $--, $--, $--
+60 $--, $--, $PH, $--, $--, $--, $--, $--, $--, $--, $--, $--, $--, $PI, $--, $--
+70 $--, $--, $--, $E!, $--, $PJ, $--, $--, $PK, $PK, $--, $--, $--, $--, $--, $--
+80 $--, $--, $--, $--, $--, $--, $--, $--, $--, $E@, $E#, $--, $--, $PL, $PM, $PO
+90 $--, $--, $--, $--, $--, $--, $--, $--, $--, $--, $--, $--, $--, $--, $--, $--
+A0 $DF, $DW, $DC, $DM, $D2, $D3, $D4, $D6, $D7, $D5, $--, $--, $--, $--, $--, $N1
+B0 $DB, $DH, $DQ, $DA, $D8, $D9, $D!, $D@, $S2, $GL, $S3, $--, $--, $--, $--, $--
+C0 $NE, $MG, $TO, $SH, $M1, $T1, $S4, $NH, $S5, $--, $--, $--, $--, $--, $--, $--
+D0 $HA, $H1, $SP, $--, $SN, $--, $GE, $GC, $--, $--, $--, $--, $--, $--, $--, $--
+E0 $YD, $Y1, $Y2, $W2, $W3, $W1, $--, $--, $G1, $G2, $--, $--, $--, $W4, $--, $--
+F0 $KM, $K1, $K2, $--, $--, $HM, $--, $--, $--, $--, $--, $--, $E%, $--, $--, $--
 
 Miscellaneous Notes: 
-- Needle Man appears to be listed twice in memory? Unsure of why this might be, possibly something to do with the extra sprite created during his headbutt attack?
+- Needle Man is listed twice in memory. The second value is specifically for his headbutt attack.
 - Gemini Man's clone actually has a separate (but identical) damage table. Very odd.
-- I'd like to add memory addresses for all enemies, but it's a tremendous amount of work to test. May or may not go through with this. 
