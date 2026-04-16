@@ -36,7 +36,7 @@ FIVE_LETTER_NOUNS = [
     "glass", "plate", "spoon", "knife", "noise", "light", "bread", "frame", "brush", "libra",
     "towel", "sheet", "grass", "shirt", "water", "brick", "cloth", "agate", "heart", "steel",
     "purse", "crate", "boxer", "panel", "light", "cream", "voice", "drain", "paper", "valve",
-    "wheel", "motor", "fancy", "cable", "lever", "chain", "screw", "devil", "hinge", "plate"
+    "wheel", "motor", "fancy", "cable", "lever", "chain", "screw", "ingot", "hinge", "plate"
 ]
 SIX_LETTER_NOUNS = [
     "energy", "planet", "forest", "desert", "island", "valley", "stream", "meadow", "animal", "insect",
@@ -47,7 +47,7 @@ SIX_LETTER_NOUNS = [
 ] 
 
 # Enumerate which graphics sets actually have usable assets (i.e. not bosses)
-VIABLE_GFX_SETS = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]
+VIABLE_GFX_SETS = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x38, 0x39]
 
 # This globally accessible list determines which enemies belong to which graphics set for enemy randomization.
 ENEMY_GRAPHICS = [
@@ -187,8 +187,11 @@ def convert_string_to_mm3_text(text):
     return build_string
 
 
-def replace_entities(graphics_set, enemy_lower_bound, enemy_upper_bound):
+def replace_entities(graphics_set, enemy_lower_bound, enemy_upper_bound, *args):
     replace_enemies = random.choice(VIABLE_GFX_SETS) # choose random graphics set
+    # If additional arguments are given to restrict the graphics set chosen, use that list instead
+    if args:
+        replace_enemies = args[0]
     replace_enemy_set = []
     for i in ENEMY_GRAPHICS:
         if replace_enemies in i[1]: # add only enemies that exist in this graphics set to the possible enemy pool
@@ -247,7 +250,7 @@ def randomize_needle_man():
     # Hammer Joes on fifth screen
     replace_entities(0xA78, 0xE2B, 0xE2D)
 
-    # Bikky on the final screen
+    # Bikky on the sixth screen
     replace_entities(0xA7A, 0xE2D, 0xE2E)
 
     # Randomizes the boss himself
@@ -256,17 +259,63 @@ def randomize_needle_man():
 
 
 def randomize_magnet_man():
-    # GFX at 2A70, entities at 2E10
-    pass
+# Randomizes the entities for Magnet Man's stage.
+    # Magflys on first screen
+    replace_entities(0x2A70, 0x2E10, 0x2E17)
+    
+    # Proto Man encounter on screen 2 (don't replace this lmao)
+    # replace_entities(0x2A72, 0x2E17, 0x2E18)
+
+    # Giant Springers on third screen
+    replace_entities(0x2A74, 0x2E18, 0x2E1A)
+
+    # Peterchys on fourth screen
+    replace_entities(0x2A76, 0x2E1A, 0x2E1C)
+
+    # Peterchys and magnet force objects on fifth screen
+    replace_entities(0x2A78, 0x2E1C, 0x2E23)
+
+    # Health pickups on sixth screen
+    replace_entities(0x2A7A, 0x2E23, 0x2E27)
+
+    # Seventh screen with yoku blocks, can only randomize to 0x09 and 0x19 to not mess up yoku block sprites
+    replace_entities(0x2A7C, 0x2E27, 0x2E2D, random.choice([0x09, 0x19]))
+
+    # Eighth screen with just pickups
+    replace_entities(0x2A7E, 0x2E2D, 0x2E31)
+
+    # Ninth screen with New Shotman
+    replace_entities(0x2A80, 0x2E31, 0x2E32)
+
+    # Tenth screen with Giant Springer
+    replace_entities(0x2A82, 0x2E32, 0x2E33)
+
+    # Randomizes the boss himself
+    edit_nes_byte(GAME_PATH, 0x2E33, RANDOMIZED_BOSSES[1][0])
+    edit_nes_byte(GAME_PATH, 0x2A86, RANDOMIZED_BOSSES[1][1])
 
 
 def scramble_stages():
+# This scrambles all the stage entities.
     randomize_needle_man()
+    randomize_magnet_man()
 
 
 def scramble_music():
-    for i in range(0x3CD1C, 0x3CD2E):
-        edit_nes_byte(GAME_PATH, i, random.randint(0x01, 0x0B))
+# This scrambles all the music in the game.
+    robot_master_music_list = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08]
+    random.shuffle(robot_master_music_list)
+    wily_stage_music_list = [0x09, 0x09, 0x0A, 0x0A, 0x0B, 0x0B]
+    random.shuffle(wily_stage_music_list)
+    # Equally distribute the eight initial stage themes to random stages
+    for i in range(0x3CD1C, 0x3CD24):
+        edit_nes_byte(GAME_PATH, i, robot_master_music_list[i - 0x3CD1C]) 
+    # For Doc Robot stages, just pull stage themes from the previously built array
+    for i in range(0x3CD24, 0x3CD28):
+        edit_nes_byte(GAME_PATH, i, robot_master_music_list[(i - 0x3CD24) * 2])
+    # Pull equally distributed Wily stage themes for the fortress stages
+    for i in range(0x3CD28, 0x3CD2E):
+        edit_nes_byte(GAME_PATH, i, wily_stage_music_list[i - 0x3CD28])
 
 
 def scramble_sprite_palettes():
@@ -320,10 +369,20 @@ def scramble_stage_palettes():
             if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
-                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS))
+                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
     # This check is made for the sky colors at the beginning so they don't look incoherent.
     edit_nes_byte(GAME_PATH, 0x2AA0, int(read_nes_byte(GAME_PATH, 0x2A9B), 16))
     edit_nes_byte(GAME_PATH, 0x2AA1, int(read_nes_byte(GAME_PATH, 0x2A9C), 16))
+    # Magnet Man's background is very harsh on the eyes with randomized colors; this should alleviate some of the visual pain
+    magnet_background = random.randint(0x00, 0x0C)
+    edit_nes_byte(GAME_PATH, 0x2A97, magnet_background + 0x10)
+    edit_nes_byte(GAME_PATH, 0x2A98, magnet_background)
+    edit_nes_byte(GAME_PATH, 0x2AB4, int(read_nes_byte(GAME_PATH, 0x2A98), 16))
+    # Prevent the screen from weirdly changing palette after first screen
+    for i in range(0x2AA6, 0x2AAE):
+        edit_nes_byte(GAME_PATH, i, int(read_nes_byte(GAME_PATH, i - 0x14), 16))
+    # Fix background colors after that palette shift
+    edit_nes_byte(GAME_PATH, 0x2AAF, int(read_nes_byte(GAME_PATH, 0x2AAB), 16))
 
     # Gemini Man
     for i in range(0x4A92, 0x4ADE):
@@ -362,7 +421,7 @@ def scramble_stage_palettes():
             if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
-                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS))
+                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
     # Top Man
     for i in range(0x8A92, 0x8AC6):
@@ -371,7 +430,7 @@ def scramble_stage_palettes():
                 if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
                     edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
                 else:
-                    edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS))
+                    edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
     # This ensures that the background of the panels and pipes is the same color as the stage background.
     edit_nes_byte(GAME_PATH, 0x8AB5, int(read_nes_byte(GAME_PATH, 0x8AA9), 16))
     # Animated tiles
@@ -394,7 +453,7 @@ def scramble_stage_palettes():
             if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
-                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS))
+                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
     # Animated tile values (sky and clouds)
     edit_nes_byte(GAME_PATH, 0x125A0, random.choice(LIGHT_COLORS_NW))
     edit_nes_byte(GAME_PATH, 0xAAA0, int(read_nes_byte(GAME_PATH, 0x125A0), 16))
@@ -437,7 +496,7 @@ def scramble_stage_palettes():
             if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
-                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS))
+                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
     # Animated tiles
     # Shadow Man's lava/sewer water works with a gradient across NES color palette rows (26, 16, 06). I think preserving this structure is best for graphical integrity.
     shadow_middle_color = random.randint(0x11, 0x1C)
@@ -807,7 +866,7 @@ def scramble_boss_behaviors():
     edit_nes_byte(GAME_PATH, 0xE195, random.randint(0x01, 0x07)) # Jumping height after tackle attack (default 04)
     edit_nes_byte(GAME_PATH, 0xE19D, random.randint(0x01, 0x02)) # Shaking intensity during tackle attack (do not set higher than 02) (default 01)
     edit_nes_byte(GAME_PATH, 0xE1C5, random.randint(0x08, 0x18)) # Time until shooting Hard Knuckle after recovering from tackle (default 10)
-    edit_nes_byte(GAME_PATH, 0xE1F5, random.randint(0x1D, 0x4D)) # Length of time the ground shakes for during Hard Man's tackle; this setting can sometimes cause the ground to be disjointed if set too high (default 3D)
+    edit_nes_byte(GAME_PATH, 0xE1F5, random.randint(0x1D, 0x3D)) # Length of time the ground shakes for during Hard Man's tackle; this setting can sometimes cause the ground to be disjointed if set too high (default 3D)
     edit_nes_byte(GAME_PATH, 0xE237, random.randint(0x02, 0x04)) # Hard Man horizontal speed during jump? (default 03)
     edit_nes_byte(GAME_PATH, 0xE238, random.randint(0x02, 0x04)) # Hard Man horizontal speed during jump? (default 03)
     edit_nes_byte(GAME_PATH, 0xE2AA, random.randint(0x06, 0x0A)) # Influences the height of Hard Knuckle after it reverses direction (default 08)
