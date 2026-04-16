@@ -1,5 +1,6 @@
 import struct
 import random
+import math
 
 GAME_PATH = "MegaMan3.nes"
 
@@ -12,6 +13,154 @@ DARK_COLORS = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
 DARK_COLORS_NB = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C]
 LIGHT_COLORS = [0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D]
 LIGHT_COLORS_NW = [0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D]
+
+# This is how the lettering system (A-Z) works for the stage select, and possibly other things.
+LETTERS = [0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23]
+# This is for the Robot Master name generation piece
+THREE_LETTER_NOUNS = [
+    "box", "cup", "pen", "jar", "lid", "can", "pan", "pot", "mug", "rug",
+    "mat", "bed", "cot", "tab", "bin", "bag", "key", "cap", "hat", "tie",
+    "wig", "zip", "rod", "net", "peg", "pin", "tap", "tub", "fan", "pad",
+    "map", "bar", "toy", "bat", "cue", "die", "ink", "jet", "kit", "log",
+    "ram", "rim", "urn", "toe", "wax", "web", "zip", "arc", "axe", "orb"
+]
+FOUR_LETTER_NOUNS = [
+    "book", "desk", "lamp", "door", "wall", "roof", "sofa", "seat", "rack", "sack",
+    "lock", "safe", "case", "tree", "cart", "tote", "bowl", "dish", "slap", "vase",
+    "tank", "tube", "pipe", "wire", "cord", "plug", "chip", "disk", "gear", "tool",
+    "drum", "bell", "horn", "lens", "mask", "coat", "shoe", "boot", "sock", "belt",
+    "coin", "bill", "card", "note", "file", "page", "pack", "clip", "hook", "tray"
+] 
+FIVE_LETTER_NOUNS = [
+    "table", "chair", "couch", "shelf", "clock", "watch", "phone", "cable", "mouse", "spice",
+    "glass", "plate", "spoon", "knife", "noise", "light", "bread", "frame", "brush", "libra",
+    "towel", "sheet", "grass", "shirt", "water", "brick", "cloth", "agate", "heart", "steel",
+    "purse", "crate", "boxer", "panel", "light", "cream", "voice", "drain", "paper", "valve",
+    "wheel", "motor", "fancy", "cable", "lever", "chain", "screw", "devil", "hinge", "plate"
+]
+SIX_LETTER_NOUNS = [
+    "energy", "planet", "forest", "desert", "island", "valley", "stream", "meadow", "animal", "insect",
+    "flower", "branch", "jungle", "garden", "castle", "palace", "temple", "church", "school", "office",
+    "market", "bakery", "bridge", "tunnel", "taurus", "engine", "rocket", "record", "system", "device",
+    "gadget", "camera", "sensor", "screen", "bottle", "bucket", "basket", "drawer", "closet", "window",
+    "mirror", "statue", "figure", "symbol", "pencil", "guitar", "ladder", "napkin", "quartz", "tablet"
+] 
+
+# Enumerate which graphics sets actually have usable assets (i.e. not bosses)
+VIABLE_GFX_SETS = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]
+
+# This globally accessible list determines which enemies belong to which graphics set for enemy randomization.
+ENEMY_GRAPHICS = [
+    [0x00, [0x01, 0x09, 0x15, 0x1B, 0x1F, 0x38]], # Dada (available in set 0x01, 0x09, 0x15, 0x1B, 0x1F, 0x38)
+    [0x01, [0x01, 0x09, 0x15, 0x1B, 0x1F, 0x38]], # Potton
+    [0x02, [0x06, 0x1B]], # New Shotman
+    [0x03, [0x17]], # Hammer Joe
+    [0x04, [0x01, 0x0A, 0x0C]], # Bubukan
+    [0x05, [0x06, 0x17, 0x1C, 0x20]], # Jamacy (climbing variant)
+    [0x06, [0x06, 0x1B]], # Bomb Flier
+    # [0x07] Mega Man's teleport animation (do not use)
+    [0x08, [0x00, 0x0A, 0x0C, 0x19, 0x30, 0x31, 0x32, 0x33]], # Yambow
+    [0x09, [0x00, 0x18, 0x21, 0x22]], # Metall DX (grounded)
+    [0x0A, [0x00, 0x18, 0x21, 0x22]], # Cannon
+    # [0x0B] Snake Man cloud platform (probably shouldn't use)
+    [0x0C, [0x06, 0x17, 0x1C, 0x20]], # Jamacy (crawling variant)
+    [0x0D, [0x06, 0x17, 0x1C, 0x20]], # Jamacy (crawling and climbing variant?)
+    [0x0E, [0x03, 0x33, 0x38]], # Gyoraibo (Doc Gemini variant?)
+    [0x0F, [0x09, 0x19]], # Magfly
+    # [0x10] No clue what this is (do not use)
+    [0x11, [0x32, 0x37]], # Junk Golem
+    [0x12, [0x02, 0x2D, 0x30]], # Pickelman Bull
+    [0x13, [0x0B]], # Bikky
+    # [0x14] Mega Man?? (do not use)
+    [0x15, [0x06, 0x17, 0x1C, 0x20]], # Jamacy (Alternate climbing variant? State for climbing variant?)
+    [0x16, [0x09, 0x19]], # Magnet force (left)
+    # [0x17] No clue what this is (do not use)
+    [0x18, [0x04, 0x14, 0x1A, 0x1C, 0x1D, 0x20, 0x2F, 0x39]], # Nitron
+    # [0x19] No clue what this is (do not use)
+    [0x1A, [0x03, 0x33, 0x38]], # Gyoraibo (Normal Gemini variant?)
+    [0x1B, [0x12, 0x15, 0x2E]], # Hari Hari
+    # [0x1C] # Penpen Maker (handle) (probably shouldn't use)
+    [0x1D, [0x05, 0x1F]], # Returning Monking
+    # [0x1E], # Weird invincible moving Returning Monking? Apparently unused (probably shouldn't use)
+    [0x1F, [0x05, 0x2F]], # Have "Su" Bee
+    [0x20, [0x02, 0x03, 0x13, 0x1A, 0x22, 0x2D]], # Bolton & Nutton
+    [0x21, [0x04, 0x14, 0x1A, 0x1C, 0x1D, 0x20, 0x2F, 0x39]], # Wanaan
+    [0x22, [0x01, 0x0A, 0x0C]], # Needle Man needle obstacle (upwards variant)
+    [0x23, [0x01, 0x0A, 0x0C]], # Needle Man needle obstacle (downwards variant)
+    [0x24, [0x04, 0x14, 0x1A, 0x1C, 0x1D, 0x20, 0x2F, 0x39]], # Elec'n
+    # [0x25] Magnet force animation (left) (probably shouldn't use)
+    [0x26, [0x02, 0x2D, 0x30]], # Mechakkero
+    # [0x27] Top Man top platform (probably shouldn't use)
+    # [0x28 - 0x2B] No clue what this is (do not use)
+    [0x2C, [0x03, 0x33, 0x38]], # Penpen
+    # [0x2D] Spark Man rising platforms (probably shouldn't use)
+    # [0x2E - 0x30] No clue what this is; 0x2F resembles Hari Hari but moves slowly forward and is not interactable (do not use)
+    # [0x31] Magnet force animation (right) (probably shouldn't use)
+    # [0x32, [0x03, 0x33, 0x38]], # Pole (these don't seem to work correctly when spawned randomly)
+    # [0x33] # Holograph Mega Mans (don't use this in normal enemy randomization)
+    # [0x34 - 0x35] No clue what this is (do not use)
+    [0x36, [0x08, 0x09]], # Peterchy
+    [0x37, [0x08]], # Walking Bomb
+    [0x38, [0x00, 0x0A, 0x0C, 0x19, 0x30, 0x31, 0x32]], # Parasyu
+    [0x39, [0x08]], # Hologran (static)
+    [0x3A, [0x08]], # Hologran (moving)
+    [0x3B, [0x04, 0x18, 0x1D]], # Bomber Pepe
+    [0x3C, [0x00, 0x18, 0x21, 0x22]], # Metall DX (heli)
+    [0x3D, [0x09, 0x19]], # Magnet force (right)
+    # [0x3E] # Proto Man fight (don't use this in normal enemy randomization)
+    # [0x3F - 0x46] No clue what this is (do not use)
+    # [0x47 - 0x4E] The eight Robot Masters (NE, MA, GE, HA, TO, SN, SP, SH) (don't use in normal enemy randomization)
+    # [0x4F] Mega Man's sprite? (do not use)
+    # The following items had to be removed from the entity pool due to constantly spawning all the time
+    # [0x50, [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]], # Large health capsule
+    # [0x51, [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]], # Small health capsule
+    # [0x52, [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]], # Large weapon energy capsule
+    # [0x53, [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]], # Small weapon energy capsule
+    # [0x54, [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]], # E Tank
+    # [0x55, [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]], # 1-UP / extra life
+    [0x56, [0x02, 0x03, 0x06, 0x09, 0x0B, 0x17, 0x19, 0x1B, 0x2D, 0x30, 0x33, 0x38]], # Surprise Box / ? Can
+    # [0x57] # Giant Metall (don't use this in normal enemy randomization)
+    # [0x58] # Doc Spark conveyor wheel (left) (probably shouldn't use)
+    # [0x59] # Doc Spark conveyor wheel (right) (probably shouldn't use)
+    # [0x5A] # Shadow Man collapsing platform (probably shouldn't use)
+    # [0x5B] # No clue what this is (do not use)
+    [0x5C, [0x13]], # Giant Springer
+    [0x5D, [0x06, 0x09, 0x19, 0x1B]], # Hard Knuckle destructible wall
+    # [0x5E] # Kamegoro Maker (don't use this in normal enemy randomization)
+    # [0x5F] # Kamegoro Maker currents (do not use)
+    [0x60, [0x12, 0x15, 0x2E]], # Petit Snakey
+    [0x61, [0x12, 0x15, 0x2E]], # Petit Snakey (upside down variant)
+    [0x62, [0x16, 0x31]], # Komasaburo 
+    [0x63, [0x32, 0x37]], # Spark Man junk block
+    [0x64, [0x02, 0x03, 0x13, 0x1A, 0x22, 0x2D]], # Electric Gabyoall
+    [0x65, [0x02, 0x03, 0x13, 0x1A, 0x22, 0x2D]], # Electric Gabyoall (wider variant)
+    # [0x66 - 0x67] Big Snakey body and init sprites (do not use)
+    # [0x68 - 0x6F] The eight Doc Robots (FL, BU, QU, WO, CR, AI, ME, HE) (don't use in normal enemy randomization)
+    # [0x70 - 0x71] Big Snakey eye and mouth sprites (do not use)
+    # [0x72 - 0x73] Tama eye and body sprites (do not use)
+    # [0x74] Seal that Proto Man destroys in Gemini Man's stage (do not use)
+    # [0x75 - 0x77] Tama tail, body, and init sprites (do not use)
+    # [0x78] Proto Man (variant that opens the seal in Gemini Man's stage) (do not use)
+    # [0x79 - 0x80] Gamma sprites (don't use in normal enemy randomization)
+    # [0x81] Yellow Devil MK-II (don't use in normal enemy randomization)
+    # [0x82 - 0x89] Wily Machine 3 sprites (don't use in normal enemy randomization)
+    # [0x8A] Teleporter (do not use)
+]
+CHANCE_ITEMS_SPAWN = 3 # Percentage chance for stage entities to be replaced with items. 3% by default
+ITEM_LIST = [0x50, 0x51, 0x52, 0x53, 0x54, 0x55] # List of items (enumerated above)
+
+# This globally accessible list is used for randomizing what bosses appear in what stage. The list items are the boss entity ID and graphics set. It seems that the bank 0 and 1 values are actually automatically handled with the graphics set value.
+RANDOMIZED_BOSSES = [
+    [0x47, 0x25], # Needle Man  
+    [0x48, 0x23], # Magnet Man
+    [0x49, 0x27], # Gemini Man
+    [0x4A, 0x24], # Hard Man
+    [0x4B, 0x2A], # Top Man
+    [0x4C, 0x26], # Snake Man
+    [0x4D, 0x28], # Spark Man
+    [0x4E, 0x29] # Shadow Man
+    ]
+random.shuffle(RANDOMIZED_BOSSES)
 
 # Change this seed for a specific generated ROM.
 #random.seed(54)
@@ -31,6 +180,41 @@ def read_nes_byte(file_path, offset):
         return value.hex()
 
 
+def convert_string_to_mm3_text(text):
+    build_string = []
+    for char in text:
+        build_string.append(ord(char.lower()) - 97 + 0x0A)
+    return build_string
+
+
+def replace_entities(graphics_set, enemy_lower_bound, enemy_upper_bound):
+    replace_enemies = random.choice(VIABLE_GFX_SETS) # choose random graphics set
+    replace_enemy_set = []
+    for i in ENEMY_GRAPHICS:
+        if replace_enemies in i[1]: # add only enemies that exist in this graphics set to the possible enemy pool
+            replace_enemy_set.append(i[0])
+    edit_nes_byte(GAME_PATH, graphics_set, replace_enemies) # Graphics set
+    for i in range(enemy_lower_bound, enemy_upper_bound):
+        if random.randint(0, 99) < CHANCE_ITEMS_SPAWN: # add a chance to replace an enemy with an item (3% by default)
+            edit_nes_byte(GAME_PATH, i, random.choice(ITEM_LIST))
+        else:
+            edit_nes_byte(GAME_PATH, i, random.choice(replace_enemy_set))
+
+
+def activate_burst_chaser():
+# Speeds up the game a bit by increasing Mega Man's speed, bullet speed, and a few other variables.
+    edit_nes_byte(GAME_PATH, 0x3CD57, 0x03) # Mega Man's movement speed (default 01)
+    edit_nes_byte(GAME_PATH, 0x3D166, 0x07) # Bullet speed (default 04)
+    edit_nes_byte(GAME_PATH, 0x3D77D, 0x4C) # Invicibility time after taking damage (default 3C)
+    edit_nes_byte(GAME_PATH, 0x3D3D5, 0x03) # Mega Man's sliding speed (default 02)
+    edit_nes_byte(GAME_PATH, 0x3D4CC, 0x02) # Ladder climbing speed (default 01)
+
+
+def fix_scanline():
+# Fixes the annoying scanline issue on the stage select. Yep, it's one byte.
+    edit_nes_byte(GAME_PATH, 0x3C4E0, 0xCF)
+
+
 def scramble_stage_order():
 # This shuffles the first eight stages to different positions on the stage select screen. Currently disabled because this causes problems with boss selection.
     # stage_list = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07]
@@ -46,6 +230,45 @@ def scramble_stage_order():
     pass
 
 
+def randomize_needle_man():
+# Randomizes the entities for Needle Man's stage. Replacing entities is surprisingly convoluted because of all the changes required for the graphics sets etc.
+    # Hari Haris on the first screen
+    replace_entities(0xA70, 0xE10, 0xE14)
+    
+    # Yambows, Metalls, and Cannons on second screen
+    replace_entities(0xA72, 0xE14, 0xE21)
+
+    # Needles on third screen
+    replace_entities(0xA74, 0xE21, 0xE29)
+
+    # Hari Hari on fourth screen
+    replace_entities(0xA76, 0xE29, 0xE2A)
+
+    # Hammer Joes on fifth screen
+    replace_entities(0xA78, 0xE2B, 0xE2D)
+
+    # Bikky on the final screen
+    replace_entities(0xA7A, 0xE2D, 0xE2E)
+
+    # Randomizes the boss himself
+    edit_nes_byte(GAME_PATH, 0xE2E, RANDOMIZED_BOSSES[0][0])
+    edit_nes_byte(GAME_PATH, 0xA7E, RANDOMIZED_BOSSES[0][1])
+
+
+def randomize_magnet_man():
+    # GFX at 2A70, entities at 2E10
+    pass
+
+
+def scramble_stages():
+    randomize_needle_man()
+
+
+def scramble_music():
+    for i in range(0x3CD1C, 0x3CD2E):
+        edit_nes_byte(GAME_PATH, i, random.randint(0x01, 0x0B))
+
+
 def scramble_sprite_palettes():
 # This scrambles the color schemes for the enemies and bosses in the game. Black and white are not replaced to maintain some level of graphical integrity. Light colors are replaced with other light colors and dark colors are replaced with other dark colors.
     for i in range(0x2040, 0x220F):
@@ -54,18 +277,42 @@ def scramble_sprite_palettes():
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+    # Specific check for Hard Man's sprite since he's composed of two dark colors and looks awful with totally random colors lmao
+    edit_nes_byte(GAME_PATH, 0x2166, 0x10)
+
+
+def scramble_sprite_health():
+# Scrambles the health values for the enemies of the game. Bosses are not affected.
+    for i in range(0x410, 0x49F):
+        if int(read_nes_byte(GAME_PATH, i), 16) not in [0x1C, 0xFF, 0x00]: # Do not scramble bosses or any entity with null/zero HP
+            edit_nes_byte(GAME_PATH, i, random.randint(0x01, math.floor(int(read_nes_byte(GAME_PATH, i), 16) * 1.5)))
+
+
+def scramble_sprite_speed():
+# Scrambles the speed values for the enemies of the game.
+    for i in range(0x510, 0x58F):
+        if int(read_nes_byte(GAME_PATH, i), 16) not in [0x1C, 0xFF, 0x00]: # Do not scramble bosses or any entity with no movement value to avoid causing weird issues
+            edit_nes_byte(GAME_PATH, i, random.randint(0x01, 0x0A))
 
 
 def scramble_stage_palettes():
 # This scrambles the color schemes for the stages in the game. Black and white are not replaced to maintain some level of graphical integrity, and black and white are excluded from the possible color options to prevent extreme eyesore.
     # Needle Man
-    for i in range(0xA92, 0xAA1):
-        if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
+    for i in range(0xA92, 0xAB6):
+        if i not in [0xAA2, 0xAA3, 0xAA4, 0xAA5]:
             if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
                 if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
                     edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
                 else:
-                    edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS))
+                    edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+    # Some fixes for bizarre color shenanigans with ladders and backgrounds
+    edit_nes_byte(GAME_PATH, 0xA9D, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0xAA1, int(read_nes_byte(GAME_PATH, 0xA99), 16))
+    edit_nes_byte(GAME_PATH, 0xAA8, int(read_nes_byte(GAME_PATH, 0xA94), 16))
+    edit_nes_byte(GAME_PATH, 0xAA9, int(read_nes_byte(GAME_PATH, 0xA95), 16))
+    edit_nes_byte(GAME_PATH, 0xAAF, int(read_nes_byte(GAME_PATH, 0xA9B), 16))
+    edit_nes_byte(GAME_PATH, 0xAB0, int(read_nes_byte(GAME_PATH, 0xA9C), 16))
+    edit_nes_byte(GAME_PATH, 0xAB1, int(read_nes_byte(GAME_PATH, 0xA9D), 16))
 
     # Magnet Man
     for i in range(0x2A92, 0x2AB5):
@@ -149,13 +396,17 @@ def scramble_stage_palettes():
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS))
     # Animated tile values (sky and clouds)
-    edit_nes_byte(GAME_PATH, 0x1259F, 0x20)
     edit_nes_byte(GAME_PATH, 0x125A0, random.choice(LIGHT_COLORS_NW))
     edit_nes_byte(GAME_PATH, 0xAAA0, int(read_nes_byte(GAME_PATH, 0x125A0), 16))
     edit_nes_byte(GAME_PATH, 0xAAA1, int(read_nes_byte(GAME_PATH, 0x125A0), 16))
     edit_nes_byte(GAME_PATH, 0x125A2, int(read_nes_byte(GAME_PATH, 0x125A0), 16))
     edit_nes_byte(GAME_PATH, 0x125A3, int(read_nes_byte(GAME_PATH, 0x125A0), 16))
-
+    # This controls the color for the cloud animation, turn it to white if this would cause a color overflow when adding 0x10
+    if int(read_nes_byte(GAME_PATH, 0xAAA0), 16) > 0x2F:
+        edit_nes_byte(GAME_PATH, 0x1259F, 0x20)
+    else:
+        edit_nes_byte(GAME_PATH, 0x1259F, int(read_nes_byte(GAME_PATH, 0xAAA0), 16) + 0x10)
+    
     # Spark Man
     for i in range(0xCA92, 0xCAB6):
         if i not in [0xCAA2, 0xCAA3, 0xCAA4, 0xCAA5]: # These specific values are for tile animation and should not be messed with
@@ -279,6 +530,73 @@ def scramble_stage_select_palettes():
     edit_nes_byte(GAME_PATH, 0x31C72, stage_select_primary)
 
 
+def scramble_robot_master_names():
+# Purely cosmetic, but changes the Robot Master names.
+    list_new_names = [] # This just ensures that no name is generated twice
+    needle_new_name = random.choice(SIX_LETTER_NOUNS)
+    list_new_names.append(needle_new_name)
+    magnet_new_name = random.choice(SIX_LETTER_NOUNS)
+    while magnet_new_name in list_new_names: # If the chosen name is already in the list of names, reroll
+        magnet_new_name = random.choice(SIX_LETTER_NOUNS)
+    list_new_names.append(magnet_new_name)
+    gemini_new_name = random.choice(SIX_LETTER_NOUNS)
+    while gemini_new_name in list_new_names: # If the chosen name is already in the list of names, reroll
+        gemini_new_name = random.choice(SIX_LETTER_NOUNS)
+    list_new_names.append(gemini_new_name)
+    hard_new_name = random.choice(FOUR_LETTER_NOUNS)
+    list_new_names.append(hard_new_name)
+    top_new_name = random.choice(THREE_LETTER_NOUNS)
+    list_new_names.append(top_new_name)
+    snake_new_name = random.choice(FIVE_LETTER_NOUNS)
+    while snake_new_name in list_new_names: # If the chosen name is already in the list of names, reroll
+        snake_new_name = random.choice(FIVE_LETTER_NOUNS)
+    list_new_names.append(snake_new_name)
+    spark_new_name = random.choice(FIVE_LETTER_NOUNS)
+    while spark_new_name in list_new_names: # If the chosen name is already in the list of names, reroll
+        spark_new_name = random.choice(FIVE_LETTER_NOUNS)
+    list_new_names.append(spark_new_name)
+    shadow_new_name = random.choice(SIX_LETTER_NOUNS)
+    while shadow_new_name in list_new_names: # If the chosen name is already in the list of names, reroll
+        shadow_new_name = random.choice(SIX_LETTER_NOUNS)
+    list_new_names.append(shadow_new_name)
+
+    # This section is used somewhere but unsure where
+    for i in range(0x61F1, 0x61F7): # "Needle Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(needle_new_name)[i - 0x61F1])
+    for i in range(0x61FB, 0x6201): # "Magnet Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(magnet_new_name)[i - 0x61FB])
+    for i in range(0x6205, 0x620B): # "Gemini Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(gemini_new_name)[i - 0x6205])
+    for i in range(0x620F, 0x6213): # "Hard Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(hard_new_name)[i - 0x620F])
+    for i in range(0x6219, 0x621C): # "Top Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(top_new_name)[i - 0x6219])
+    for i in range(0x6223, 0x6228): # "Snake Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(snake_new_name)[i - 0x6223])
+    for i in range(0x622D, 0x6232): # "Spark Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(spark_new_name)[i - 0x622D])
+    for i in range(0x6237, 0x623D): # "Shadow Man"   
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(shadow_new_name)[i - 0x6237])
+
+    # Actual stage select stuff?
+    for i in range(0x639E, 0x63A4): # "Needle Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(needle_new_name)[i - 0x639E])
+    for i in range(0x63F0, 0x63F6): # "Magnet Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(magnet_new_name)[i - 0x63F0])
+    for i in range(0x63E7, 0x63ED): # "Gemini Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(gemini_new_name)[i - 0x63E7])
+    for i in range(0x63C3, 0x63C7): # "Hard Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(hard_new_name)[i - 0x63C3])
+    for i in range(0x63CC, 0x63CF): # "Top Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(top_new_name)[i - 0x63CC])
+    for i in range(0x6395, 0x639A): # "Snake Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(snake_new_name)[i - 0x6395])
+    for i in range(0x638C, 0x6391): # "Spark Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(spark_new_name)[i - 0x638C])
+    for i in range(0x63F9, 0x63FF): # "Shadow Man"   
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(shadow_new_name)[i - 0x63F9])
+
+
 def scramble_weapon_palettes():
 # This scrambles the color palettes for all of the weapons except the Mega Buster.
     # Gemini Laser
@@ -354,16 +672,16 @@ def scramble_weapon_behaviors():
     edit_nes_byte(GAME_PATH, 0x3D34E, 0x01) # Gemini Laser (default 1)
     edit_nes_byte(GAME_PATH, 0x3D34F, 0x03) # Needle Cannon (default 3) setting this higher than 3 seems to cause collision issues
     edit_nes_byte(GAME_PATH, 0x3D350, 0x01) # Hard Knuckle (default 1)
-    edit_nes_byte(GAME_PATH, 0x3D351, random.choice([0x01, 0x02])) # Magnet Missile (default 2)
+    edit_nes_byte(GAME_PATH, 0x3D351, random.choice([0x01, 0x02, 0x03])) # Magnet Missile (default 2)
     edit_nes_byte(GAME_PATH, 0x3D352, random.choice([0x00])) # Top Spin (default 0, do not recommend changing)
-    edit_nes_byte(GAME_PATH, 0x3D353, random.choice([0x01, 0x02, 0x03])) # Search Snake (default 3)
-    edit_nes_byte(GAME_PATH, 0x3D354, random.choice([0x01, 0x02, 0x03])) # Rush Coil (default 3)
+    edit_nes_byte(GAME_PATH, 0x3D353, random.choice([0x02, 0x03])) # Search Snake (default 3)
+    edit_nes_byte(GAME_PATH, 0x3D354, random.choice([0x02, 0x03])) # Rush Coil (default 3)
     edit_nes_byte(GAME_PATH, 0x3D355, random.choice([0x01, 0x02])) # Spark Shock (default 2)
-    edit_nes_byte(GAME_PATH, 0x3D356, random.choice([0x01, 0x02, 0x03])) # Rush Marine (default 3)
+    edit_nes_byte(GAME_PATH, 0x3D356, random.choice([0x02, 0x03])) # Rush Marine (default 3)
     edit_nes_byte(GAME_PATH, 0x3D357, random.choice([0x01, 0x02, 0x03])) # Shadow Blade (default 1)
-    edit_nes_byte(GAME_PATH, 0x3D358, random.choice([0x01, 0x02, 0x03])) # Rush Jet (default 3)
+    edit_nes_byte(GAME_PATH, 0x3D358, random.choice([0x02, 0x03])) # Rush Jet (default 3)
 
-    # Default projectile speed (affects all straight shooting weapons: Mega Buster, Needle Cannon, Magnet Missile, Gemini Laser, Spark Shock, Shadow Blade). Also messes with Hard Knuckle for some reason.
+    # Default projectile speed (affects all straight shooting weapons: Mega Buster, Needle Cannon, Magnet Missile, Gemini Laser, Spark Shock, Shadow Blade). Also appears to mess with Hard Knuckle for some reason.
     edit_nes_byte(GAME_PATH, 0x3D166, random.choice([0x02, 0x03, 0x04, 0x05, 0x06, 0x07]))
 
     # Some notes on projectiles
@@ -425,12 +743,76 @@ def scramble_weapon_behaviors():
 
     # Shadow Blade variables
     edit_nes_byte(GAME_PATH, 0x3D2EB, random.choice([0x04, 0x07, 0x08, 0x0B, 0x0F])) # Shadow Blade shooting directions: see documentation for more info, but determines Shadow Blade throwable angles. Randomized between 5 upwards, 5 downwards, all 8, up/left/right, down/left right (Default 0B)
-    edit_nes_byte(GAME_PATH, 0x3D2F7, random.randint(0x01, 0x07)) # Shadow Blade vertical launch speed (default 04)
+    edit_nes_byte(GAME_PATH, 0x3D2F7, random.randint(0x02, 0x07)) # Shadow Blade vertical launch speed (default 04)
     shadow_blade_returns = random.randint(0, 3) # Little randomization to see if Shadow Blade will boomerang at all. Default is a 25% chance to act like Metal Blade
     if shadow_blade_returns:
         edit_nes_byte(GAME_PATH, 0x3D2FC, random.randint(0x0A, 0x28)) # Shadow Blade range, i.e. how long it travels before boomeranging. Setting it high enough causes it to act like Metal Blade (default 14)
     else:
         edit_nes_byte(GAME_PATH, 0x3D2FC, 0xFF) # 0xFF is more than enough range for the blade to never boomerang
+
+
+def scramble_enemy_weakness_tables():
+# Scrambles the amount of damage that each special weapon does to the enemies in the game. The buster's table is not altered in this.
+    for i in range(0x14210, 0x14A10):
+        if i > 0x14610 and i < 0x14710: # This is specifically for Top Spin; in the base game it either kills a normal enemy in one hit or is completely ineffective, so we will preserve the idea here
+            edit_nes_byte(GAME_PATH, i, random.choice([0x00, 0x0A]))
+        else:
+            edit_nes_byte(GAME_PATH, i, random.choice([0x00, 0x00, 0x01, 0x01, 0x02, 0x02, 0x06, 0x0A]))
+
+
+def scramble_boss_behaviors():
+# Scrambles the AI for the bosses in the game.
+    # Needle Man
+    edit_nes_byte(GAME_PATH, 0x88A6, random.randint(0x02, 0x06)) # Speed of Needle Man's needles (default 04)
+    edit_nes_byte(GAME_PATH, 0xC0C9, random.randint(0x01, 0x02)) # Related to number of needles are shot per round? (default 01)
+    edit_nes_byte(GAME_PATH, 0xC0F9, random.randint(0x02, 0x1D)) # This value governs how Needle Man moves in the air. The lower the value, the longer he stays in the air and shoots needles (default 10)
+    edit_nes_byte(GAME_PATH, 0xC19F, random.randint(0x01, 0x02)) # Related to jump height (default 01)
+    edit_nes_byte(GAME_PATH, 0xC1B0, random.randint(0x04, 0x07)) # Related to jump height (default 06)
+    edit_nes_byte(GAME_PATH, 0xC1B1, random.randint(0x07, 0x0A)) # Related to jump height (default 09)
+    edit_nes_byte(GAME_PATH, 0xC1B8, random.randint(0x05, 0x07)) # Related to jump height (default 06)
+    edit_nes_byte(GAME_PATH, 0xC1E2, random.randint(0x01, 0x03)) # Related to Needle Man's horizontal jump speed (default 02)
+    edit_nes_byte(GAME_PATH, 0xC1E6, random.randint(0x01, 0x05)) # Related to Needle Man's horizontal jump speed (default 03)
+    edit_nes_byte(GAME_PATH, 0xC1E7, random.randint(0x01, 0x03)) # Related to Needle Man's horizontal jump speed (default 02)
+
+    # Magnet Man
+    edit_nes_byte(GAME_PATH, 0xC2D1, random.randint(0x03, 0x05)) # Delay time between each jump (default 04)
+    edit_nes_byte(GAME_PATH, 0xC30F, random.randint(0xA0, 0xF0)) # Timer for Magnet Man's pulling phase (default F0)
+    edit_nes_byte(GAME_PATH, 0xC34C, random.randint(0x02, 0x0A)) # Delay time between Magnet Missiles being fired (default 06)
+    edit_nes_byte(GAME_PATH, 0xC366, random.randint(0x01, 0x06)) # Number of Magnet Missiles used before falling back to the ground (default 03)
+    edit_nes_byte(GAME_PATH, 0xC381, random.randint(0x04, 0x08)) # Gravity after firing Magnet Missile (default 06)
+    edit_nes_byte(GAME_PATH, 0xC42C, random.randint(0x02, 0x06)) # First jump height (default 04)
+    edit_nes_byte(GAME_PATH, 0xC42D, random.randint(0x04, 0x08)) # Second jump height (default 06)
+    edit_nes_byte(GAME_PATH, 0xC42F, random.randint(0xA3, 0xC8)) # Horizontal distance Magnet Man travels with each jump? (default B3)
+    edit_nes_byte(GAME_PATH, 0xC432, random.randint(0x00, 0x02)) # Also related to horizontal jumping distance? (default 01)
+    edit_nes_byte(GAME_PATH, 0xC433, random.randint(0x01, 0x04)) # Also related to horizontal jumping distance? (default 02)
+    edit_nes_byte(GAME_PATH, 0xC469, random.randint(0x02, 0x06)) # Speed of Magnet Missile (default 04)
+
+    # Gemini Man
+    edit_nes_byte(GAME_PATH, 0xA827, random.randint(0x01, 0x05)) # Speed of Gemini Laser after bouncing off the wall (default 03)
+    edit_nes_byte(GAME_PATH, 0xE70F, random.randint(0x07, 0x15)) # Battle phase changes at one below this value (default 0F)
+    # edit_nes_byte(GAME_PATH, 0xE7B8, 0xA7) # X position that Gemini Man and his clone stop to jump at; don't mess with this one (default A7)
+    edit_nes_byte(GAME_PATH, 0xE8F5, random.randint(0x02, 0x06)) # Phase 1 bullet speed (default 04)
+    edit_nes_byte(GAME_PATH, 0xE9A0, random.randint(0x21, 0x38)) # Related to clone movement speed (default 2D)
+    edit_nes_byte(GAME_PATH, 0xE9A5, random.randint(0x01, 0x05)) # Related to clone movement speed (default 03)
+    edit_nes_byte(GAME_PATH, 0xE785, random.randint(0x49, 0x4F)) # Related to phase 2 Gemini Man speed (default 4C)
+    edit_nes_byte(GAME_PATH, 0xE78A, random.randint(0x01, 0x02)) # Related to phase 2 Gemini Man speed (default 01)
+    edit_nes_byte(GAME_PATH, 0xE85B, random.randint(0x03, 0x07)) # Jumping height (default 05)
+    edit_nes_byte(GAME_PATH, 0xE951, random.randint(0x01, 0x05)) # Speed of Gemini Laser when shot initially (default 03)
+
+    # Hard Man
+    edit_nes_byte(GAME_PATH, 0xE0B5, random.randint(0x06, 0x0A)) # Jumping height (default 08)
+    edit_nes_byte(GAME_PATH, 0xE0BD, random.randint(0x10, 0x2D)) # Time until jumping after shooting Hard Knuckle (default 1E)
+    edit_nes_byte(GAME_PATH, 0xE133, random.randint(0x03, 0x07)) # Hard Man's gravity after jumping (default 05)
+    # edit_nes_byte(GAME_PATH, 0xE138, 0xBD) # Speed related variable; don't mess with this one (default BD)
+    edit_nes_byte(GAME_PATH, 0xE195, random.randint(0x01, 0x07)) # Jumping height after tackle attack (default 04)
+    edit_nes_byte(GAME_PATH, 0xE19D, random.randint(0x01, 0x02)) # Shaking intensity during tackle attack (do not set higher than 02) (default 01)
+    edit_nes_byte(GAME_PATH, 0xE1C5, random.randint(0x08, 0x18)) # Time until shooting Hard Knuckle after recovering from tackle (default 10)
+    edit_nes_byte(GAME_PATH, 0xE1F5, random.randint(0x1D, 0x4D)) # Length of time the ground shakes for during Hard Man's tackle; this setting can sometimes cause the ground to be disjointed if set too high (default 3D)
+    edit_nes_byte(GAME_PATH, 0xE237, random.randint(0x02, 0x04)) # Hard Man horizontal speed during jump? (default 03)
+    edit_nes_byte(GAME_PATH, 0xE238, random.randint(0x02, 0x04)) # Hard Man horizontal speed during jump? (default 03)
+    edit_nes_byte(GAME_PATH, 0xE2AA, random.randint(0x06, 0x0A)) # Influences the height of Hard Knuckle after it reverses direction (default 08)
+    edit_nes_byte(GAME_PATH, 0xE31D, random.randint(0x02, 0x05)) # Speed of the Hard Knuckle, perhaps the first one? (default 03)
+    edit_nes_byte(GAME_PATH, 0xE31F, random.randint(0x02, 0x05)) # Another speed variable, perhaps the second Hard Knuckle? (default 03)
 
 
 def scramble_boss_weakness_tables():
@@ -445,70 +827,112 @@ def scramble_boss_weakness_tables():
     [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
     [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
     [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01]]
-    # Mega Man 3 bosses all have 2 weaknesses so let's preserve that in the randomization
+    # Mega Man 3 bosses all have 2 weaknesses so let's preserve the chance for that in the randomization
     weaknesses_1 = [0, 1, 2, 3, 4, 5, 6, 7]
     random.shuffle(weaknesses_1)
-    weaknesses_2 = weaknesses_1
+    weaknesses_2 = [0, 1, 2, 3, 4, 5, 6, 7]
     random.shuffle(weaknesses_2)
+
     # These loops set immunities, weaknesses and semi-weaknesses across the Robot Master damage tables
     for i in range(len(effectiveness)):
         for j in range(i):
             effectiveness[i][j] = random.choice([0x00, 0x00, 0x01, 0x01, 0x01, 0x02])
         effectiveness[i][weaknesses_1[i]] = 0x04
-        effectiveness[i][weaknesses_2[i]] = 0x04
-    print(effectiveness)
+        effectiveness[i][weaknesses_2[i]] = random.choice([0x04, 0x04, 0x04, 0x05, 0x07, 0x07, 0x07, 0x07])
     
-    # Needle Cannon
-    needle_effectiveness = [0x00, 0x00, 0x01, 0x01, 0x01, 0x02, 0x04, 0x04]
-    random.shuffle(needle_effectiveness)
-    edit_nes_byte(GAME_PATH, 0x142D0, needle_effectiveness[0]) # VS Needle Man
-    edit_nes_byte(GAME_PATH, 0x142D7, needle_effectiveness[0]) # Also VS Needle Man but specifically for the head hammer extended state
-    edit_nes_byte(GAME_PATH, 0x142D1, needle_effectiveness[1]) # VS Magnet Man
-    edit_nes_byte(GAME_PATH, 0x142D2, needle_effectiveness[2]) # VS Top Man
-    edit_nes_byte(GAME_PATH, 0x142D3, needle_effectiveness[3]) # VS Shadow Man
-    edit_nes_byte(GAME_PATH, 0x142E0, needle_effectiveness[4]) # VS Hard Man
-    edit_nes_byte(GAME_PATH, 0x142E2, needle_effectiveness[5]) # VS Spark Man
-    edit_nes_byte(GAME_PATH, 0x142E4, needle_effectiveness[6]) # VS Snake Man
-    edit_nes_byte(GAME_PATH, 0x142E6, needle_effectiveness[7]) # VS Gemini Man
-    edit_nes_byte(GAME_PATH, 0x142E7, needle_effectiveness[7]) # VS Gemini Man's clone (yes it has a separate damage table for some reason)
+    # Repeat this same process for the Doc Robots
+    doc_effectiveness = [
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
+    [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01]]
+    # Mega Man 3 bosses all have 2 weaknesses so let's preserve the chance for that in the randomization
+    doc_weaknesses_1 = [0, 1, 2, 3, 4, 5, 6, 7]
+    random.shuffle(doc_weaknesses_1)
+    doc_weaknesses_2 = [0, 1, 2, 3, 4, 5, 6, 7]
+    random.shuffle(doc_weaknesses_2)
+    
+    # These loops set immunities, weaknesses and semi-weaknesses across the Robot Master damage tables
+    for i in range(len(doc_effectiveness)):
+        for j in range(i):
+            doc_effectiveness[i][j] = random.choice([0x00, 0x00, 0x01, 0x01, 0x01, 0x02])
+        doc_effectiveness[i][doc_weaknesses_1[i]] = 0x04
+        doc_effectiveness[i][doc_weaknesses_2[i]] = random.choice([0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x07, 0x07]) # Doc Robot weaknesses have a slightly different distribution that I've replicated here
+    
+    # Loop through and assign all weaknesses to Robot Masters and Doc Robots
+    counter = 0
+    for i in range(0x14100, 0x14A00, 0x100):
+        if i == 0x14100: # This first segment is for the Mega Buster, which we want to make do only 1 or 2 damage to bosses. No boss should be immune to the Mega Buster
+            # Doc Robots (yes these are first in memory interestingly)
+            edit_nes_byte(GAME_PATH, i + 0xB0, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Doc Flash Man
+            edit_nes_byte(GAME_PATH, i + 0xB1, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Doc Wood Man
+            edit_nes_byte(GAME_PATH, i + 0xB2, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Doc Crash Man
+            edit_nes_byte(GAME_PATH, i + 0xB3, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Doc Metal Man
+            edit_nes_byte(GAME_PATH, i + 0xC0, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Doc Bubble Man
+            edit_nes_byte(GAME_PATH, i + 0xC1, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Doc Heat Man
+            edit_nes_byte(GAME_PATH, i + 0xC2, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Doc Quick Man
+            edit_nes_byte(GAME_PATH, i + 0xC3, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Doc Air Man
 
-    # Magnet Missile
-    magnet_effectiveness = [0x00, 0x00, 0x01, 0x01, 0x01, 0x02, 0x04, 0x04]
-    random.shuffle(magnet_effectiveness)
-    edit_nes_byte(GAME_PATH, 0x143D0, magnet_effectiveness[0]) # VS Needle Man
-    edit_nes_byte(GAME_PATH, 0x143D7, magnet_effectiveness[0]) # Also VS Needle Man but specifically for the head hammer extended state
-    edit_nes_byte(GAME_PATH, 0x143D1, magnet_effectiveness[1]) # VS Magnet Man
-    edit_nes_byte(GAME_PATH, 0x143D2, magnet_effectiveness[2]) # VS Top Man
-    edit_nes_byte(GAME_PATH, 0x143D3, magnet_effectiveness[3]) # VS Shadow Man
-    edit_nes_byte(GAME_PATH, 0x143E0, magnet_effectiveness[4]) # VS Hard Man
-    edit_nes_byte(GAME_PATH, 0x143E2, magnet_effectiveness[5]) # VS Spark Man
-    edit_nes_byte(GAME_PATH, 0x143E4, magnet_effectiveness[6]) # VS Snake Man
-    edit_nes_byte(GAME_PATH, 0x143E6, magnet_effectiveness[7]) # VS Gemini Man
-    edit_nes_byte(GAME_PATH, 0x143E7, magnet_effectiveness[7]) # VS Gemini Man's clone (yes it has a separate damage table for some reason)
+            # Robot Masters
+            edit_nes_byte(GAME_PATH, i + 0xD0, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Needle Man
+            edit_nes_byte(GAME_PATH, i + 0xD7, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # Also VS Needle Man but specifically for the head hammer extended state
+            edit_nes_byte(GAME_PATH, i + 0xD1, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Magnet Man
+            edit_nes_byte(GAME_PATH, i + 0xD2, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Top Man
+            edit_nes_byte(GAME_PATH, i + 0xD3, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Shadow Man
+            edit_nes_byte(GAME_PATH, i + 0xE0, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Hard Man
+            edit_nes_byte(GAME_PATH, i + 0xE2, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Spark Man
+            edit_nes_byte(GAME_PATH, i + 0xE4, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Snake Man
+            edit_nes_byte(GAME_PATH, i + 0xE6, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Gemini Man
+            edit_nes_byte(GAME_PATH, i + 0xE7, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Gemini Man's clone (yes it has a separate damage table for some reason)
+        else:
+            # Doc Robots (yes these are first in memory interestingly)
+            edit_nes_byte(GAME_PATH, i + 0xB0, doc_effectiveness[counter][0]) # VS Doc Flash Man
+            edit_nes_byte(GAME_PATH, i + 0xB1, doc_effectiveness[counter][1]) # VS Doc Wood Man
+            edit_nes_byte(GAME_PATH, i + 0xB2, doc_effectiveness[counter][2]) # VS Doc Crash Man
+            edit_nes_byte(GAME_PATH, i + 0xB3, doc_effectiveness[counter][3]) # VS Doc Metal Man
+            edit_nes_byte(GAME_PATH, i + 0xC0, doc_effectiveness[counter][4]) # VS Doc Bubble Man
+            edit_nes_byte(GAME_PATH, i + 0xC1, doc_effectiveness[counter][5]) # VS Doc Heat Man
+            edit_nes_byte(GAME_PATH, i + 0xC2, doc_effectiveness[counter][6]) # VS Doc Quick Man
+            edit_nes_byte(GAME_PATH, i + 0xC3, doc_effectiveness[counter][7]) # VS Doc Air Man
 
-    # Gemini Laser
-    gemini_effectiveness = [0x00, 0x00, 0x01, 0x01, 0x01, 0x02, 0x04, 0x04]
-    random.shuffle(gemini_effectiveness)
-    edit_nes_byte(GAME_PATH, 0x144D0, gemini_effectiveness[0]) # VS Needle Man
-    edit_nes_byte(GAME_PATH, 0x144D7, gemini_effectiveness[0]) # Also VS Needle Man but specifically for the head hammer extended state
-    edit_nes_byte(GAME_PATH, 0x144D1, gemini_effectiveness[1]) # VS Magnet Man
-    edit_nes_byte(GAME_PATH, 0x144D2, gemini_effectiveness[2]) # VS Top Man
-    edit_nes_byte(GAME_PATH, 0x144D3, gemini_effectiveness[3]) # VS Shadow Man
-    edit_nes_byte(GAME_PATH, 0x144E0, gemini_effectiveness[4]) # VS Hard Man
-    edit_nes_byte(GAME_PATH, 0x144E2, gemini_effectiveness[5]) # VS Spark Man
-    edit_nes_byte(GAME_PATH, 0x144E4, gemini_effectiveness[6]) # VS Snake Man
-    edit_nes_byte(GAME_PATH, 0x144E6, gemini_effectiveness[7]) # VS Gemini Man
-    edit_nes_byte(GAME_PATH, 0x144E7, gemini_effectiveness[7]) # VS Gemini Man's clone (yes it has a separate damage table for some reason)
+            # Robot Masters
+            edit_nes_byte(GAME_PATH, i + 0xD0, effectiveness[counter][0]) # VS Needle Man
+            edit_nes_byte(GAME_PATH, i + 0xD7, effectiveness[counter][0]) # Also VS Needle Man but specifically for the head hammer extended state
+            edit_nes_byte(GAME_PATH, i + 0xD1, effectiveness[counter][1]) # VS Magnet Man
+            edit_nes_byte(GAME_PATH, i + 0xD2, effectiveness[counter][2]) # VS Top Man
+            edit_nes_byte(GAME_PATH, i + 0xD3, effectiveness[counter][3]) # VS Shadow Man
+            edit_nes_byte(GAME_PATH, i + 0xE0, effectiveness[counter][4]) # VS Hard Man
+            edit_nes_byte(GAME_PATH, i + 0xE2, effectiveness[counter][5]) # VS Spark Man
+            edit_nes_byte(GAME_PATH, i + 0xE4, effectiveness[counter][6]) # VS Snake Man
+            edit_nes_byte(GAME_PATH, i + 0xE6, effectiveness[counter][7]) # VS Gemini Man
+            edit_nes_byte(GAME_PATH, i + 0xE7, effectiveness[counter][7]) # VS Gemini Man's clone (yes it has a separate damage table for some reason)
+            counter += 1 
 
 
 if __name__ == "__main__":
 # Mix it all up!
+    # Core randomizer features
     scramble_stage_order()
     scramble_title_screen_palette()
     scramble_weapon_palettes()
+    scramble_robot_master_names()
     scramble_stage_select_palettes()
     scramble_stage_palettes()
+    scramble_music()
+    scramble_stages()
     scramble_sprite_palettes()
+    scramble_sprite_health()
+    scramble_sprite_speed()
     scramble_weapon_energy_costs()
     scramble_weapon_behaviors()
-    scramble_boss_weakness_tables()
+    scramble_enemy_weakness_tables()
+    scramble_boss_behaviors()
+    scramble_boss_weakness_tables() # Make sure to scramble boss tables after enemy tables, otherwise the enemy scrambling will overwrite those memory values
+
+    # Bonus stuff
+    fix_scanline() # Disable if you want to preserve the annoying scanline issue on the stage select...?
+    activate_burst_chaser() # Disable if not playing Burst Chaser mode

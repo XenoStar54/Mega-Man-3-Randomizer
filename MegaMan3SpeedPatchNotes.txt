@@ -1,0 +1,26 @@
+Notes
+
+walk:
+3cd48: 03D006A530D00CEAEAA9988D0004A902
+3cd52: detail speed 4c -> 98
+3cd57: speed 01 -> 02
+
+capsule speed
+3bea5 dc
+3be9d EAEAEA
+
+slide 
+3d3d5 speed 02 -> 03 
+3d3be long 14 - 1a
+3d3d0 detail speed 80 -> cc
+
+buster 
+3D166 speed 04 -> 0a
+
+impulse slide jump
+3d481: 4CADCE
+3d442: 162904D0
+
+ladders
+3d4c7: detail speed climb 4c -> 98
+3d4cc: speed climb general 01 -> 02

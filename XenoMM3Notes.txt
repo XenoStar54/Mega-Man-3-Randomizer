@@ -6,21 +6,28 @@ https://datacrystal.tcrf.net/wiki/Mega_Man_3_(NES)/ROM_map
 Kuja Killer's MM3 documentation
 
 Level Select Screen Level Order (first 8 stages)
-$00031CF1-$00031CF9
+$00031CF1 - $00031CF9
 Doc Robot Stages level order
-$00031CFA-$00031D02
+$00031CFA - $00031D02
 
 ROM Addresses for Palettes:
-Title screen - $00031C13-$00031C32
-Stage select - $00031C33-$00031C52
-Password screen - $00031C53-$00031C62
-Boss intro - $00031C63-$00031C72
-Needle Man - $00000A92-$00000AA1
-Magnet Man - $00002A92-$00002AB5
-Gemini Man - $00004A92-$00004AA1
-Hard Man - $00006A92-$00006AA2
-Top Man - $00008A92-$00008AC6
-Break Man Battle? - $00031E2A-$00031E57
+Title screen - $00031C13 - $00031C32
+Stage select - $00031C33 - $00031C52
+Password screen - $00031C53 - $00031C62
+Boss intro - $00031C63 - $00031C72
+Needle Man - $00000A92 - $00000AA1
+Magnet Man - $00002A92 - $00002AB5
+Gemini Man - $00004A92 - $00004AA1
+Hard Man - $00006A92 - $00006AA2
+Top Man - $00008A92 - $00008AC6
+Break Man Battle? - $00031E2A - $00031E57
+
+ROM Addresses for Mega Man's variables:
+Mega Man's movement speed (default 01) - $0003CD57
+Bullet speed (default 04) - $0003D166
+Invicibility time after taking damage (default 3C) - $0003D77D
+Mega Man's sliding speed (default 02) - $0003D3D5
+Mega Man's ladder climbing speed (default 01) - $0003D4CC
 
 ROM Addresses for Weapon Ammo Consumption (Bars Used Per Shot):
 Gemini Laser - $0003DF2C
@@ -114,6 +121,17 @@ Search Snake - $00014710
 Spark Shock - $00014810
 Shadow Blade - $00014910
 
+ROM Addresses for Stage Music:
+$0003CD1C - $0003CD2D
+
+ROM Addresses for Stage Entity Graphics
+Needle Man's Stage (graphics set): $00000A70 - $00000A7F
+Magnet Man's Stage (graphics set): $00002A70 - 
+
+ROM Addresses for Stage Entities:
+Needle Man's Stage - $00000E10 - $00000E2E
+Magnet Man's Stage - $00002E10 - 
+
 Enemy Damage Table Structure (Enemies):
 E1 - Dada
 E2 - Potton
@@ -148,7 +166,7 @@ EK - Returning Monking
 PB - Hammer Joe projectile
 EL - Have "Su" Bee
 PC - Have "Su" Bee nest projectile
-EM - Nutton
+EM - Bolton & Nutton
 EN - Wanaan
 PD - Needle Man needle obstacle (up/down)
 EO - Walking Bomb
@@ -257,6 +275,7 @@ C0 $NE, $MG, $TO, $SH, $M1, $T1, $S4, $NH, $S5, $--, $--, $--, $--, $--, $--, $-
 D0 $HA, $H1, $SP, $--, $SN, $--, $GE, $GC, $--, $--, $--, $--, $--, $--, $--, $--
 E0 $YD, $Y1, $Y2, $W2, $W3, $W1, $--, $--, $G1, $G2, $--, $--, $--, $W4, $--, $--
 F0 $KM, $K1, $K2, $--, $--, $HM, $--, $--, $--, $--, $--, $--, $E%, $--, $--, $--
+Note that this table is not structured the same way as the enemy HP table, but does appear to be structured the same way as the enemy damage table.
 
 Miscellaneous Notes: 
 - Needle Man is listed twice in memory. The second value is specifically for his headbutt attack.
