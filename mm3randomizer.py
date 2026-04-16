@@ -78,11 +78,11 @@ ENEMY_GRAPHICS = [
     [0x18, [0x04, 0x14, 0x1A, 0x1C, 0x1D, 0x20, 0x2F, 0x39]], # Nitron
     # [0x19] No clue what this is (do not use)
     [0x1A, [0x03, 0x33, 0x38]], # Gyoraibo (Normal Gemini variant?)
-    [0x1B, [0x12, 0x15, 0x2E]], # Hari Hari
+    [0x1B, [0x12, 0x2E]], # Hari Hari
     # [0x1C] # Penpen Maker (handle) (probably shouldn't use)
     [0x1D, [0x05, 0x1F]], # Returning Monking
     # [0x1E], # Weird invincible moving Returning Monking? Apparently unused (probably shouldn't use)
-    [0x1F, [0x05, 0x2F]], # Have "Su" Bee
+    [0x1F, [0x2F]], # Have "Su" Bee
     [0x20, [0x02, 0x03, 0x13, 0x1A, 0x22, 0x2D]], # Bolton & Nutton
     [0x21, [0x04, 0x14, 0x1A, 0x1C, 0x1D, 0x20, 0x2F, 0x39]], # Wanaan
     [0x22, [0x01, 0x0A, 0x0C]], # Needle Man needle obstacle (upwards variant)
@@ -233,7 +233,7 @@ def scramble_stage_order():
     pass
 
 
-def randomize_needle_man():
+def randomize_needle_man_entities():
 # Randomizes the entities for Needle Man's stage. Replacing entities is surprisingly convoluted because of all the changes required for the graphics sets etc.
     # Hari Haris on the first screen
     replace_entities(0xA70, 0xE10, 0xE14)
@@ -258,7 +258,7 @@ def randomize_needle_man():
     edit_nes_byte(GAME_PATH, 0xA7E, RANDOMIZED_BOSSES[0][1])
 
 
-def randomize_magnet_man():
+def randomize_magnet_man_entities():
 # Randomizes the entities for Magnet Man's stage.
     # Magflys on first screen
     replace_entities(0x2A70, 0x2E10, 0x2E17)
@@ -295,10 +295,90 @@ def randomize_magnet_man():
     edit_nes_byte(GAME_PATH, 0x2A86, RANDOMIZED_BOSSES[1][1])
 
 
-def scramble_stages():
+def randomize_gemini_man_entities():
+# Randomizes the entities for Gemini Man's stage.
+    # First screen Bomber Pepes and Nitrons; choose a graphics set that is compatible with the star background
+    replace_entities(0x4A70, 0x4E10, 0x4E25, random.choice([0x04, 0x14, 0x1A, 0x1C, 0x1D, 0x20, 0x2F, 0x39]))
+
+    # Second screen with Proto Man (don't replace this)
+    # replace_entities(0x4A72, 0x4E25, 0x4E27)
+
+    # Third screen with pickups; replace with a graphics set that is compatible with Poles
+    replace_entities(0x4A74, 0x4E27, 0x4E2A, random.choice([0x03, 0x33, 0x38]))
+
+    # Fourth screen with Poles but no other entities?
+    # replace_entities(0x4A76, 0x4E2A, 0x4E2A)
+
+    # Fifth screen with Yambows, Penpen Makers; put the Penpen Makers back
+    replace_entities(0x4A78, 0x4E2A, 0x4E32, random.choice([0x03, 0x33, 0x38]))
+    edit_nes_byte(GAME_PATH, 0x4E2D, 0x1C)
+    edit_nes_byte(GAME_PATH, 0x4E30, 0x1C)
+
+    # Sixth screen with just a health pickup... I'll let the player have this one
+    # replace_entities(0x4A7A, 0x4E32, 0x4E32)
+
+    # Seventh screen with Yambows and Gyoraibos; restrict the available enemies to only those graphics sets that have the correct water splash animation
+    replace_entities(0x4A7C, 0x4E33, 0x4E48, random.choice([0x03, 0x33, 0x38]))
+    edit_nes_byte(GAME_PATH, 0x4E37, 0x54) # I'll leave the E-Tanks be
+    edit_nes_byte(GAME_PATH, 0x4E46, 0x51) # This entity often causes softlocks since it's positioned right over the ladder; replace it with a small health pickup so that it falls out of the way
+
+    # Eighth screen with Mechakkeros
+    replace_entities(0x4A7E, 0x4E49, 0x4E4B)
+
+    # Ninth screen with Bikky
+    replace_entities(0x4A80, 0x4E4B, 0x4E4C)
+
+    # Randomize the boss himself
+    edit_nes_byte(GAME_PATH, 0x4E4C, RANDOMIZED_BOSSES[2][0])
+    edit_nes_byte(GAME_PATH, 0x4A84, RANDOMIZED_BOSSES[2][1])
+
+
+def randomize_hard_man_entities():
+# Randomizes the entities for Hard Man's stage.
+    # First screen with Have "Su" Bees, Wanaans, health pickup
+    replace_entities(0x6A70, 0x6E10, 0x6E1A)
+
+    # Second screen with Hammer Joe
+    replace_entities(0x6A72, 0x6E1A, 0x6E1B)
+
+    # Third screen with Returning Monkings
+    replace_entities(0x6A74, 0x6E1B, 0x6E1D)
+
+    # Fourth screen with health and Hammer Joe
+    replace_entities(0x6A76, 0x6E1E, 0x6E1F)
+
+    # Fifth screen with Returning Monking
+    replace_entities(0x6A78, 0x6E1F, 0x6E20)
+
+    # Sixth screen with Pickelman Bulls, leave the E-Tank
+    replace_entities(0x6A7A, 0x6E20, 0x6E23)
+
+    # Seventh screen with Metalls and health
+    replace_entities(0x6A7C, 0x6E24, 0x6E29)
+
+    # Eighth screen with Have "Su" Bee and Wanaans
+    replace_entities(0x6A7E, 0x6E29, 0x6E34)
+
+    # Ninth screen with Proto Man, do not replace
+    # replace_entities(0x6A80, 0x6E34, 0x6E35)
+
+    # Tenth screen with health pickup, I'll let the player have this one
+    # replace_entities(0x6A82, 0x6E35, 0x6E36)
+
+    # Eleventh screen with Bikky
+    replace_entities(0x6A84, 0x6E36, 0x6E37)
+
+    # Randomize the boss himself
+    edit_nes_byte(GAME_PATH, 0x6E37, RANDOMIZED_BOSSES[3][0])
+    edit_nes_byte(GAME_PATH, 0x6A88, RANDOMIZED_BOSSES[3][1])
+ 
+
+def scramble_stage_entities():
 # This scrambles all the stage entities.
-    randomize_needle_man()
-    randomize_magnet_man()
+    randomize_needle_man_entities()
+    randomize_magnet_man_entities()
+    randomize_gemini_man_entities()
+    randomize_hard_man_entities()
 
 
 def scramble_music():
@@ -328,6 +408,9 @@ def scramble_sprite_palettes():
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
     # Specific check for Hard Man's sprite since he's composed of two dark colors and looks awful with totally random colors lmao
     edit_nes_byte(GAME_PATH, 0x2166, 0x10)
+    # Another check for Proto Man since he suffers from the same issue
+    edit_nes_byte(GAME_PATH, 0x20F2, 0x10) # Proto Man grey
+    edit_nes_byte(GAME_PATH, 0x20F3, random.randint(0x11, 0x1C)) # Proto Man red
 
 
 def scramble_sprite_health():
@@ -344,9 +427,8 @@ def scramble_sprite_speed():
             edit_nes_byte(GAME_PATH, i, random.randint(0x01, 0x0A))
 
 
-def scramble_stage_palettes():
-# This scrambles the color schemes for the stages in the game. Black and white are not replaced to maintain some level of graphical integrity, and black and white are excluded from the possible color options to prevent extreme eyesore.
-    # Needle Man
+def randomize_needle_man_graphics():
+# Randomizes the graphics for Needle Man's stage.
     for i in range(0xA92, 0xAB6):
         if i not in [0xAA2, 0xAA3, 0xAA4, 0xAA5]:
             if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
@@ -354,6 +436,7 @@ def scramble_stage_palettes():
                     edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
                 else:
                     edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
     # Some fixes for bizarre color shenanigans with ladders and backgrounds
     edit_nes_byte(GAME_PATH, 0xA9D, random.randint(0x00, 0x0C))
     edit_nes_byte(GAME_PATH, 0xAA1, int(read_nes_byte(GAME_PATH, 0xA99), 16))
@@ -363,37 +446,45 @@ def scramble_stage_palettes():
     edit_nes_byte(GAME_PATH, 0xAB0, int(read_nes_byte(GAME_PATH, 0xA9C), 16))
     edit_nes_byte(GAME_PATH, 0xAB1, int(read_nes_byte(GAME_PATH, 0xA9D), 16))
 
-    # Magnet Man
+
+def randomize_magnet_man_graphics():
+# Randomizes the graphics for Magnet Man's stage.
     for i in range(0x2A92, 0x2AB5):
         if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
             if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
     # This check is made for the sky colors at the beginning so they don't look incoherent.
     edit_nes_byte(GAME_PATH, 0x2AA0, int(read_nes_byte(GAME_PATH, 0x2A9B), 16))
     edit_nes_byte(GAME_PATH, 0x2AA1, int(read_nes_byte(GAME_PATH, 0x2A9C), 16))
+
     # Magnet Man's background is very harsh on the eyes with randomized colors; this should alleviate some of the visual pain
     magnet_background = random.randint(0x00, 0x0C)
     edit_nes_byte(GAME_PATH, 0x2A97, magnet_background + 0x10)
     edit_nes_byte(GAME_PATH, 0x2A98, magnet_background)
     edit_nes_byte(GAME_PATH, 0x2AB4, int(read_nes_byte(GAME_PATH, 0x2A98), 16))
+
     # Prevent the screen from weirdly changing palette after first screen
     for i in range(0x2AA6, 0x2AAE):
         edit_nes_byte(GAME_PATH, i, int(read_nes_byte(GAME_PATH, i - 0x14), 16))
+
     # Fix background colors after that palette shift
     edit_nes_byte(GAME_PATH, 0x2AAF, int(read_nes_byte(GAME_PATH, 0x2AAB), 16))
 
-    # Gemini Man
-    for i in range(0x4A92, 0x4ADE):
+
+def randomize_gemini_man_graphics():
+# Randomizes the graphics for Gemini Man's stage.
+    for i in range(0x4A92, 0x4AA2):
         if i not in [0x4AA2, 0x4AA3, 0x4AA4, 0x4AA5, 0x4AB6, 0x4AB7, 0x4AB8, 0x4AB9, 0x4ACA, 0x4ACB, 0x4ACC, 0x4ACD]: # Animated tile values, do not change
             if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
                 if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
                     edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
                 else:
                     edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
-    # Animated tiles
-    # Gemini Man's animations are more complicated than the rest of the stages and are stored in a different way as well
+
+    # Animated tiles; Gemini Man's animations are more complicated than the rest of the stages and are stored in a different, more annoying to parse way as well
     # Flashing stringy things in the background of the cave segments
     gemini_string_color = random.randint(0x11, 0x1C)
     edit_nes_byte(GAME_PATH, 0x4AAF, gemini_string_color + 0x10)
@@ -415,13 +506,63 @@ def scramble_stage_palettes():
     edit_nes_byte(GAME_PATH, 0x125D8, gemini_string_color)
     edit_nes_byte(GAME_PATH, 0x125D9, gemini_string_color + 0x10)
 
-    # Hard Man
+    # Fix block colors; block animations begin at 0x125BF
+    color_1 = int(read_nes_byte(GAME_PATH, 0x125BF), 16) # Light blue highlight
+    color_2 = int(read_nes_byte(GAME_PATH, 0x125C0), 16) # Blue 
+    color_3 = int(read_nes_byte(GAME_PATH, 0x125C3), 16) # Red
+    color_4 = int(read_nes_byte(GAME_PATH, 0x125C6), 16) # Yellow
+    new_color_1 = random.randint(0x31, 0x3C)
+    new_color_2 = random.randint(0x11, 0x1C)
+    new_color_3 = random.randint(0x11, 0x1C)
+    new_color_4 = random.randint(0x11, 0x1C)
+
+    for i in range(0x4AA6, 0x4ADE):
+        if int(read_nes_byte(GAME_PATH, i), 16) == color_1:
+           edit_nes_byte(GAME_PATH, i, new_color_1)
+        elif int(read_nes_byte(GAME_PATH, i), 16) == color_2:
+           edit_nes_byte(GAME_PATH, i, new_color_2)
+        elif int(read_nes_byte(GAME_PATH, i), 16) == color_3:
+           edit_nes_byte(GAME_PATH, i, new_color_3)
+        elif int(read_nes_byte(GAME_PATH, i), 16) == color_4:
+           edit_nes_byte(GAME_PATH, i, new_color_4)
+
+    for i in range(0x125BF, 0x125D1):
+        if int(read_nes_byte(GAME_PATH, i), 16) == color_1:
+           edit_nes_byte(GAME_PATH, i, new_color_1)
+        elif int(read_nes_byte(GAME_PATH, i), 16) == color_2:
+           edit_nes_byte(GAME_PATH, i, new_color_2)
+        elif int(read_nes_byte(GAME_PATH, i), 16) == color_3:
+           edit_nes_byte(GAME_PATH, i, new_color_3)
+        elif int(read_nes_byte(GAME_PATH, i), 16) == color_4:
+           edit_nes_byte(GAME_PATH, i, new_color_4)
+
+    # Fix for the ground changing color after Proto Man cutscene
+    edit_nes_byte(GAME_PATH, 0x4ADB, int(read_nes_byte(GAME_PATH, 0x4A9F), 16))
+    edit_nes_byte(GAME_PATH, 0x4ADC, int(read_nes_byte(GAME_PATH, 0x4AA0), 16))
+    edit_nes_byte(GAME_PATH, 0x4ADD, int(read_nes_byte(GAME_PATH, 0x4AA1), 16))
+
+
+def randomize_hard_man_graphics():
+# Randomizes the graphics for Hard Man's stage.
     for i in range(0x6A92, 0x6AA2):
         if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
             if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+    
+    # The rocks look really terrible with totally random color schemes, so apply a gradient
+    rock_base_color = random.randint(0x01, 0x0C)
+    edit_nes_byte(GAME_PATH, 0x6A95, rock_base_color)
+    edit_nes_byte(GAME_PATH, 0x6A94, rock_base_color + 0x20)
+    edit_nes_byte(GAME_PATH, 0x6A93, rock_base_color + 0x30)
+
+def scramble_stage_palettes():
+# This scrambles the color schemes for the stages in the game. Black and white are not replaced to maintain some level of graphical integrity, and black and white are excluded from the possible color options to prevent extreme eyesore.
+    randomize_needle_man_graphics()
+    randomize_magnet_man_graphics()
+    randomize_gemini_man_graphics()
+    randomize_hard_man_graphics()
 
     # Top Man
     for i in range(0x8A92, 0x8AC6):
@@ -558,8 +699,8 @@ def scramble_stage_select_palettes():
     # Stage select background, Mega Man, and blue Robot Masters (Needle, Shadow, Hard)
     #edit_nes_byte(GAME_PATH, 0x31C44, random.choice(VIABLE_COLORS))
     # Assign a color palette for the stage select to create consistency between selection screen and boss intro screen
-    stage_select_primary = random.choice(LIGHT_COLORS)
-    stage_select_secondary = random.choice(DARK_COLORS)
+    stage_select_primary = random.choice(LIGHT_COLORS_NW)
+    stage_select_secondary = random.choice(DARK_COLORS_NB)
     edit_nes_byte(GAME_PATH, 0x31C45, stage_select_primary)
     edit_nes_byte(GAME_PATH, 0x31C46, stage_select_secondary)
 
@@ -659,8 +800,10 @@ def scramble_robot_master_names():
 def scramble_weapon_palettes():
 # This scrambles the color palettes for all of the weapons except the Mega Buster.
     # Gemini Laser
-    edit_nes_byte(GAME_PATH, 0x4656, random.choice(LIGHT_COLORS))
-    edit_nes_byte(GAME_PATH, 0x4657, random.choice(DARK_COLORS))
+    gemini_primary = random.randint(0x20, 0x2C)
+    gemini_secondary = random.randint(0x10, 0x1C)
+    edit_nes_byte(GAME_PATH, 0x4656, gemini_primary)
+    edit_nes_byte(GAME_PATH, 0x4657, gemini_secondary)
 
     # Needle Cannon
     edit_nes_byte(GAME_PATH, 0x465A, random.choice(LIGHT_COLORS))
@@ -699,6 +842,17 @@ def scramble_weapon_palettes():
     edit_nes_byte(GAME_PATH, 0x4677, rush_secondary)
     edit_nes_byte(GAME_PATH, 0x467E, rush_primary)
     edit_nes_byte(GAME_PATH, 0x467F, rush_secondary)
+
+    # Weapon get screen palettes
+    # Gemini Laser
+    edit_nes_byte(GAME_PATH, 0x31BD8, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BD9, gemini_primary + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BDA, gemini_secondary)
+    edit_nes_byte(GAME_PATH, 0x31BDC, gemini_secondary - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BDD, gemini_primary)
+    edit_nes_byte(GAME_PATH, 0x31BDE, gemini_secondary)
+
+    # Needle Cannon
 
 
 def scramble_weapon_energy_costs():
@@ -824,7 +978,7 @@ def scramble_boss_behaviors():
     # Needle Man
     edit_nes_byte(GAME_PATH, 0x88A6, random.randint(0x02, 0x06)) # Speed of Needle Man's needles (default 04)
     edit_nes_byte(GAME_PATH, 0xC0C9, random.randint(0x01, 0x02)) # Related to number of needles are shot per round? (default 01)
-    edit_nes_byte(GAME_PATH, 0xC0F9, random.randint(0x02, 0x1D)) # This value governs how Needle Man moves in the air. The lower the value, the longer he stays in the air and shoots needles (default 10)
+    edit_nes_byte(GAME_PATH, 0xC0F9, random.randint(0x0A, 0x16)) # This value governs how Needle Man moves in the air. The lower the value, the longer he stays in the air and shoots needles (default 10)
     edit_nes_byte(GAME_PATH, 0xC19F, random.randint(0x01, 0x02)) # Related to jump height (default 01)
     edit_nes_byte(GAME_PATH, 0xC1B0, random.randint(0x04, 0x07)) # Related to jump height (default 06)
     edit_nes_byte(GAME_PATH, 0xC1B1, random.randint(0x07, 0x0A)) # Related to jump height (default 09)
@@ -864,14 +1018,21 @@ def scramble_boss_behaviors():
     edit_nes_byte(GAME_PATH, 0xE133, random.randint(0x03, 0x07)) # Hard Man's gravity after jumping (default 05)
     # edit_nes_byte(GAME_PATH, 0xE138, 0xBD) # Speed related variable; don't mess with this one (default BD)
     edit_nes_byte(GAME_PATH, 0xE195, random.randint(0x01, 0x07)) # Jumping height after tackle attack (default 04)
-    edit_nes_byte(GAME_PATH, 0xE19D, random.randint(0x01, 0x02)) # Shaking intensity during tackle attack (do not set higher than 02) (default 01)
+    # edit_nes_byte(GAME_PATH, 0xE19D, 0x01) # Shaking intensity during tackle attack (do not set higher than 02) (default 01)
     edit_nes_byte(GAME_PATH, 0xE1C5, random.randint(0x08, 0x18)) # Time until shooting Hard Knuckle after recovering from tackle (default 10)
-    edit_nes_byte(GAME_PATH, 0xE1F5, random.randint(0x1D, 0x3D)) # Length of time the ground shakes for during Hard Man's tackle; this setting can sometimes cause the ground to be disjointed if set too high (default 3D)
+    # edit_nes_byte(GAME_PATH, 0xE1F5, 0x3D) # Length of time the ground shakes for during Hard Man's tackle; this setting can sometimes cause the ground to be disjointed if changed (still trying to figure this out) (default 3D)
     edit_nes_byte(GAME_PATH, 0xE237, random.randint(0x02, 0x04)) # Hard Man horizontal speed during jump? (default 03)
     edit_nes_byte(GAME_PATH, 0xE238, random.randint(0x02, 0x04)) # Hard Man horizontal speed during jump? (default 03)
-    edit_nes_byte(GAME_PATH, 0xE2AA, random.randint(0x06, 0x0A)) # Influences the height of Hard Knuckle after it reverses direction (default 08)
+    edit_nes_byte(GAME_PATH, 0xE2AA, random.randint(0x07, 0x09)) # Influences the height of Hard Knuckle after it reverses direction (default 08)
     edit_nes_byte(GAME_PATH, 0xE31D, random.randint(0x02, 0x05)) # Speed of the Hard Knuckle, perhaps the first one? (default 03)
     edit_nes_byte(GAME_PATH, 0xE31F, random.randint(0x02, 0x05)) # Another speed variable, perhaps the second Hard Knuckle? (default 03)
+
+    # Top Man
+    edit_nes_byte(GAME_PATH, 0xC57D, random.randint(0x28, 0x88)) # Time until Top Man starts spinning after shooting (default 78)
+    edit_nes_byte(GAME_PATH, 0xC593, random.randint(0xC0, 0xF0)) # How far Top Man goes to the right before stopping (default D0)
+    edit_nes_byte(GAME_PATH, 0xC5A0, random.randint(0x10, 0x40)) # How far Top Man goes to the left before stopping (default 30)
+    edit_nes_byte(GAME_PATH, 0xC5EF, random.randint(0x0A, 0x12)) # Where tops originate from (default 0E)
+    edit_nes_byte(GAME_PATH, 0xC602, random.randint(0x02, 0x07)) # Speed of thrown tops (default 04)
 
 
 def scramble_boss_weakness_tables():
@@ -982,7 +1143,7 @@ if __name__ == "__main__":
     scramble_stage_select_palettes()
     scramble_stage_palettes()
     scramble_music()
-    scramble_stages()
+    scramble_stage_entities()
     scramble_sprite_palettes()
     scramble_sprite_health()
     scramble_sprite_speed()
