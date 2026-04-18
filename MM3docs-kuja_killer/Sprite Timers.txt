@@ -1,18 +1,19 @@
-Misc Sprite Data:
+Miscellaneous Sprite Data:
 
-Magnet Man stage
-___________________
-Pellet Shooter 
-39DF2 - Time until next pellet is shot (during close range)
-39E0C - Rest time after shooting 2 pellets in close range
-39E29 -  time until next pellet shooting phase) Affects all 3 pellets if modified
-39E38 - Rest time after shooting 3 pellets
-
+Magnet Man stage 
+39DF2 - (New Shotman) Time until next pellet is shot (during close range)
+39E0C - (New Shotman) Rest time after shooting 2 pellets in close range
+39E29 - (New Shotman) Time until next pellet shooting phase (affects all 3 pellets if modified)
+39E38 - (New Shotman) Rest time after shooting 3 pellets
 
 ___________________
 
-Snakeman Stage
-_______________
+Top Man stage
+3B259 - Top platforms Y speed value
+
+___________________
+
+Snake Man Stage
 39645 - How long snakehead/upside down snakehead keeps mouth open after shooting
 3964A - Time until next pellet shot from Snakehead and upside down snakehead
 396A9 - Speed of small snakes bullets
@@ -28,17 +29,17 @@ $0535 (RAM) - the number determines how many shots the Giant Snake will shoot on
 
 _____________________
 
-
-Sparkman Stage
+Spark Man Stage
 39503 - Spark Trap: Time left until next sparking phase
-3B3B3 - How far sparker flys up and down repeatedly
-39CF2 - Metool Bulldozer: Rest time when not moving
+3B3B3 - How far Elec'n flies up and down repeatedly
+39CF2 - Metall Bulldozer: Rest time when not moving
 3958C - Time until next piece of trash sprite appears
 3ABC4 - Bolt: How fast/slow the bolt moves as it's about to connect with the other side
 3ACC1 - Bolt: Time until you can freely attack the bolt when it's connected. NOTE: in order for the bolt enemy to function properly, both values MUST be the same otherwise it'll mess up the connecting process of this enemy. Also, if value is set too high, then the bolt will NEVER connect thus making it so you can never defeat it.
 
+_____________________
 
-Needleman Stage
+Needle Man Stage
 3A376 - Delay timer 1 for after needler releases needles until rolling up in a ball
 3A394 - Needler: How long he rolls on the ground for when curled up
 3A422 - Delay timer 2 (2nd phase of delay timer 1)
@@ -49,7 +50,7 @@ Needleman Stage
 3B352 - Needle Upward, Downward: Time for how long the needle stays stretched out/invisable
 
 
-shadowman: 
+Shadow Man Stage 
 3b5b3 - dark bulbs: delay timer for when dark bulb starts to move after making the screen dark
 3b5c4 - how fast it moves across the screen
 

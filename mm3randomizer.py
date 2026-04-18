@@ -2,6 +2,9 @@ import struct
 import random
 import math
 
+# Change this seed for a specific generated ROM.
+#random.seed(54)
+
 GAME_PATH = "MegaMan3.nes"
 
 # The NES palette has 64 different colors, but many of them are repeats. This list excludes the duplicate instances of black.
@@ -162,9 +165,6 @@ RANDOMIZED_BOSSES = [
     ]
 random.shuffle(RANDOMIZED_BOSSES)
 
-# Change this seed for a specific generated ROM.
-#random.seed(54)
-
 
 def edit_nes_byte(file_path, offset, new_value):
     with open(file_path, "rb+") as f:
@@ -193,6 +193,7 @@ def replace_entities(graphics_set, enemy_lower_bound, enemy_upper_bound, *args):
     if args:
         replace_enemies = args[0]
     replace_enemy_set = []
+
     for i in ENEMY_GRAPHICS:
         if replace_enemies in i[1]: # add only enemies that exist in this graphics set to the possible enemy pool
             replace_enemy_set.append(i[0])
@@ -371,7 +372,49 @@ def randomize_hard_man_entities():
     # Randomize the boss himself
     edit_nes_byte(GAME_PATH, 0x6E37, RANDOMIZED_BOSSES[3][0])
     edit_nes_byte(GAME_PATH, 0x6A88, RANDOMIZED_BOSSES[3][1])
- 
+
+
+def randomize_top_man_entities():
+# Randomizes the entities for Top Man's stage.
+    # First screen with Bolton & Nuttons and Mechakkeros
+    replace_entities(0x8A70, 0x8E10, 0x8E1C)
+
+    # Second screen with Komasaburo
+    replace_entities(0x8A72, 0x8E1C, 0x8E1D)
+
+    # Third screen with pickups... we don't need this many pickups hehe
+    replace_entities(0x8A74, 0x8E1D, 0x8E21)
+
+    # Fourth screen with just a Bolton & Nutton
+    replace_entities(0x8A76, 0x8E21, 0x8E22)
+
+    # Fifth screen with Pickelman Bulls... I suppose I'll leave the pickups alone
+    replace_entities(0x8A78, 0x8E22, 0x8E27)
+    edit_nes_byte(GAME_PATH, 0x8E24, 0x55)
+    edit_nes_byte(GAME_PATH, 0x8E25, 0x50)
+
+    # Sixth screen with Metalls
+    replace_entities(0x8A7A, 0x8E27, 0x8E29)
+
+    # Seventh screen with Tama, we won't replace it
+    # replace_entities(0x8A7C, 0x8E29, 0x8E2E)
+
+    # Eighth screen with Komasaburo
+    replace_entities(0x8A7E, 0x8E2E, 0x8E2F)
+
+    # Ninth screen with Tama, we won't replace this either
+    # replace_entities(0x8A80, 0x8E2F, 0x8E34)
+
+    # Tenth screen with Metall and health pickup
+    replace_entities(0x8A82, 0x8E34, 0x8E35)
+
+    # Eleventh screen with Komasaburo and top platforms (do not replace the platforms)
+    replace_entities(0x8A84, 0x8E36, 0x8E37)
+
+    # Randomize the boss himself
+    edit_nes_byte(GAME_PATH, 0x8E3D, RANDOMIZED_BOSSES[4][0])
+    edit_nes_byte(GAME_PATH, 0x8A88, RANDOMIZED_BOSSES[4][1])
+
 
 def scramble_stage_entities():
 # This scrambles all the stage entities.
@@ -379,6 +422,16 @@ def scramble_stage_entities():
     randomize_magnet_man_entities()
     randomize_gemini_man_entities()
     randomize_hard_man_entities()
+    randomize_top_man_entities()
+
+
+def scramble_entity_properties():
+# This scrambles certain properties of the entities in the game.
+    # Needle Man
+    edit_nes_byte(GAME_PATH, 0x3B352, random.randint(0x10, 0x2A)) # Length of time that needle obstacles are extended for (default 1E)
+
+    # Top Man
+    edit_nes_byte(GAME_PATH, 0x3B259, random.choice([0x01, 0x02])) # Vertical speed of tops at the end of the stage, any setting higher than 2 makes it almost impossible to cross (default 01)
 
 
 def scramble_music():
@@ -387,12 +440,15 @@ def scramble_music():
     random.shuffle(robot_master_music_list)
     wily_stage_music_list = [0x09, 0x09, 0x0A, 0x0A, 0x0B, 0x0B]
     random.shuffle(wily_stage_music_list)
+
     # Equally distribute the eight initial stage themes to random stages
     for i in range(0x3CD1C, 0x3CD24):
         edit_nes_byte(GAME_PATH, i, robot_master_music_list[i - 0x3CD1C]) 
+
     # For Doc Robot stages, just pull stage themes from the previously built array
     for i in range(0x3CD24, 0x3CD28):
         edit_nes_byte(GAME_PATH, i, robot_master_music_list[(i - 0x3CD24) * 2])
+
     # Pull equally distributed Wily stage themes for the fortress stages
     for i in range(0x3CD28, 0x3CD2E):
         edit_nes_byte(GAME_PATH, i, wily_stage_music_list[i - 0x3CD28])
@@ -406,8 +462,10 @@ def scramble_sprite_palettes():
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
     # Specific check for Hard Man's sprite since he's composed of two dark colors and looks awful with totally random colors lmao
     edit_nes_byte(GAME_PATH, 0x2166, 0x10)
+
     # Another check for Proto Man since he suffers from the same issue
     edit_nes_byte(GAME_PATH, 0x20F2, 0x10) # Proto Man grey
     edit_nes_byte(GAME_PATH, 0x20F3, random.randint(0x11, 0x1C)) # Proto Man red
@@ -417,11 +475,11 @@ def scramble_sprite_health():
 # Scrambles the health values for the enemies of the game. Bosses are not affected.
     for i in range(0x410, 0x49F):
         if int(read_nes_byte(GAME_PATH, i), 16) not in [0x1C, 0xFF, 0x00]: # Do not scramble bosses or any entity with null/zero HP
-            edit_nes_byte(GAME_PATH, i, random.randint(0x01, math.floor(int(read_nes_byte(GAME_PATH, i), 16) * 1.5)))
+            edit_nes_byte(GAME_PATH, i, random.randint(math.ceil(int(read_nes_byte(GAME_PATH, i), 16) * 0.5), math.ceil(int(read_nes_byte(GAME_PATH, i), 16) * 1.5))) # Move HP values between half and one and a half times normal HP
 
 
 def scramble_sprite_speed():
-# Scrambles the speed values for the enemies of the game.
+# Scrambles the speed values for the sprites of the game.
     for i in range(0x510, 0x58F):
         if int(read_nes_byte(GAME_PATH, i), 16) not in [0x1C, 0xFF, 0x00]: # Do not scramble bosses or any entity with no movement value to avoid causing weird issues
             edit_nes_byte(GAME_PATH, i, random.randint(0x01, 0x0A))
@@ -557,38 +615,60 @@ def randomize_hard_man_graphics():
     edit_nes_byte(GAME_PATH, 0x6A94, rock_base_color + 0x20)
     edit_nes_byte(GAME_PATH, 0x6A93, rock_base_color + 0x30)
 
-def scramble_stage_palettes():
-# This scrambles the color schemes for the stages in the game. Black and white are not replaced to maintain some level of graphical integrity, and black and white are excluded from the possible color options to prevent extreme eyesore.
-    randomize_needle_man_graphics()
-    randomize_magnet_man_graphics()
-    randomize_gemini_man_graphics()
-    randomize_hard_man_graphics()
 
-    # Top Man
+def randomize_top_man_graphics():
+# Randomizes the graphics for Top Man's stage.
     for i in range(0x8A92, 0x8AC6):
-        if i not in [0x8AB6, 0x8AB7, 0x8AB8, 0x8AB9]: # These specific values are for tile animation and should not be messed with
+        if i not in [0x8AA2, 0x8AA3, 0x8AA4, 0x8AA5, 0x8AB6, 0x8AB7, 0x8AB8, 0x8AB9]: # These specific values are for tile animation and should not be messed with
             if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
                 if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
                     edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
                 else:
                     edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
     # This ensures that the background of the panels and pipes is the same color as the stage background.
     edit_nes_byte(GAME_PATH, 0x8AB5, int(read_nes_byte(GAME_PATH, 0x8AA9), 16))
-    # Animated tiles
-    edit_nes_byte(GAME_PATH, 0x125F2, int(read_nes_byte(GAME_PATH, 0x8A9F), 16))
-    edit_nes_byte(GAME_PATH, 0x125F3, random.choice(LIGHT_COLORS))
-    edit_nes_byte(GAME_PATH, 0x125F4, int(read_nes_byte(GAME_PATH, 0x8AA9), 16))
-    edit_nes_byte(GAME_PATH, 0x125F5, int(read_nes_byte(GAME_PATH, 0x8A9F), 16))
-    edit_nes_byte(GAME_PATH, 0x125F6, random.choice(LIGHT_COLORS))
-    edit_nes_byte(GAME_PATH, 0x125F7, int(read_nes_byte(GAME_PATH, 0x8AA9), 16))
-    edit_nes_byte(GAME_PATH, 0x125F8, int(read_nes_byte(GAME_PATH, 0x8A9F), 16))
-    edit_nes_byte(GAME_PATH, 0x125F9, random.choice(LIGHT_COLORS))
-    edit_nes_byte(GAME_PATH, 0x125FA, int(read_nes_byte(GAME_PATH, 0x8AA9), 16))
-    edit_nes_byte(GAME_PATH, 0x12601, int(read_nes_byte(GAME_PATH, 0x8A9F), 16))
-    edit_nes_byte(GAME_PATH, 0x12602, random.choice(LIGHT_COLORS))
-    edit_nes_byte(GAME_PATH, 0x12603, int(read_nes_byte(GAME_PATH, 0x8AA9), 16)) 
 
-    # Snake Man
+    # Apply a gradient to make the leaves look coherent
+    top_leaves = random.choice(DARK_COLORS_NB)
+    edit_nes_byte(GAME_PATH, 0x8AAC, top_leaves)
+    edit_nes_byte(GAME_PATH, 0x8AAD, top_leaves + 0x10)
+
+    # Ensure that the leaves under the glass match the leaves outside of the glass
+    edit_nes_byte(GAME_PATH, 0x8AA8, int(read_nes_byte(GAME_PATH, 0x8AAC), 16))
+
+    # Animated tiles
+    edit_nes_byte(GAME_PATH, 0x125F2, int(read_nes_byte(GAME_PATH, 0x8AB3), 16))
+    edit_nes_byte(GAME_PATH, 0x125F3, random.choice(LIGHT_COLORS_NW))
+    edit_nes_byte(GAME_PATH, 0x125F4, int(read_nes_byte(GAME_PATH, 0x8AA9), 16))
+    edit_nes_byte(GAME_PATH, 0x125F5, int(read_nes_byte(GAME_PATH, 0x8AB3), 16))
+    edit_nes_byte(GAME_PATH, 0x125F6, random.choice(LIGHT_COLORS_NW))
+    edit_nes_byte(GAME_PATH, 0x125F7, int(read_nes_byte(GAME_PATH, 0x8AA9), 16))
+    edit_nes_byte(GAME_PATH, 0x125F8, int(read_nes_byte(GAME_PATH, 0x8AB3), 16))
+    edit_nes_byte(GAME_PATH, 0x125F9, random.choice(LIGHT_COLORS_NW))
+    edit_nes_byte(GAME_PATH, 0x125FA, int(read_nes_byte(GAME_PATH, 0x8AA9), 16))
+    edit_nes_byte(GAME_PATH, 0x12601, int(read_nes_byte(GAME_PATH, 0x8AB3), 16))
+    edit_nes_byte(GAME_PATH, 0x12602, random.choice(LIGHT_COLORS_NW))
+    edit_nes_byte(GAME_PATH, 0x12603, int(read_nes_byte(GAME_PATH, 0x8AA9), 16))
+
+    # Top Man's stage changes palette very frequently. Here are some fixes for the constantly shifting colors
+    edit_nes_byte(GAME_PATH, 0x8A95, int(read_nes_byte(GAME_PATH, 0x8AA9), 16))
+    edit_nes_byte(GAME_PATH, 0x8A94, top_leaves)
+    edit_nes_byte(GAME_PATH, 0x8A98, top_leaves)
+    edit_nes_byte(GAME_PATH, 0x8A99, top_leaves + 0x10)
+    edit_nes_byte(GAME_PATH, 0x8AA1, int(read_nes_byte(GAME_PATH, 0x8A9C), 16))
+    edit_nes_byte(GAME_PATH, 0x8AB0, int(read_nes_byte(GAME_PATH, 0x8A9C), 16))
+    edit_nes_byte(GAME_PATH, 0x8AB1, int(read_nes_byte(GAME_PATH, 0x8A9D), 16))
+    edit_nes_byte(GAME_PATH, 0x8ABC, top_leaves)
+    edit_nes_byte(GAME_PATH, 0x8ABD, int(read_nes_byte(GAME_PATH, 0x8AA9), 16))
+    edit_nes_byte(GAME_PATH, 0x8AC0, top_leaves)
+    edit_nes_byte(GAME_PATH, 0x8AC1, top_leaves + 0x10)
+    edit_nes_byte(GAME_PATH, 0x8AC4, int(read_nes_byte(GAME_PATH, 0x8A9C), 16))
+    edit_nes_byte(GAME_PATH, 0x8AC5, int(read_nes_byte(GAME_PATH, 0x8A9D), 16))
+
+
+def randomize_snake_man_graphics():
+# Randomizes the graphics for Snake Man's stage.
     for i in range(0xAA92, 0xAAA2):
         if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
             if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
@@ -606,8 +686,10 @@ def scramble_stage_palettes():
         edit_nes_byte(GAME_PATH, 0x1259F, 0x20)
     else:
         edit_nes_byte(GAME_PATH, 0x1259F, int(read_nes_byte(GAME_PATH, 0xAAA0), 16) + 0x10)
-    
-    # Spark Man
+
+
+def randomize_spark_man_graphics():
+# Randomizes the graphics for Spark Man's stage.
     for i in range(0xCA92, 0xCAB6):
         if i not in [0xCAA2, 0xCAA3, 0xCAA4, 0xCAA5]: # These specific values are for tile animation and should not be messed with
             if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
@@ -615,11 +697,13 @@ def scramble_stage_palettes():
                     edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
                 else:
                     edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
     # The following few lines standardize the floor colors so that changing screens doesn't create weird jumbled color visuals
     edit_nes_byte(GAME_PATH, 0xCA98, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
     edit_nes_byte(GAME_PATH, 0xCA99, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
     edit_nes_byte(GAME_PATH, 0xCA9C, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
     edit_nes_byte(GAME_PATH, 0xCA9F, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
+
     # Animated tiles. Pull values from existing randomized stuff so your eyes don't get fried and to avoid weird color changes on transition
     edit_nes_byte(GAME_PATH, 0x125DD, int(read_nes_byte(GAME_PATH, 0xCA93), 16))
     edit_nes_byte(GAME_PATH, 0x125DE, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
@@ -630,6 +714,17 @@ def scramble_stage_palettes():
     edit_nes_byte(GAME_PATH, 0x125E4, int(read_nes_byte(GAME_PATH, 0xCAA0), 16)) 
     edit_nes_byte(GAME_PATH, 0x125E6, int(read_nes_byte(GAME_PATH, 0xCA9F), 16)) 
     edit_nes_byte(GAME_PATH, 0x125E8, int(read_nes_byte(GAME_PATH, 0x125E4), 16))
+
+
+def scramble_stage_palettes():
+# This scrambles the color schemes for the stages in the game. Black and white are not replaced to maintain some level of graphical integrity, and black and white are excluded from the possible color options to prevent extreme eyesore.
+    randomize_needle_man_graphics()
+    randomize_magnet_man_graphics()
+    randomize_gemini_man_graphics()
+    randomize_hard_man_graphics()
+    randomize_top_man_graphics()
+    randomize_snake_man_graphics()
+    randomize_spark_man_graphics() 
 
     # Shadow Man
     for i in range(0xEA92, 0xEAA2):
@@ -778,7 +873,7 @@ def scramble_robot_master_names():
     for i in range(0x6237, 0x623D): # "Shadow Man"   
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(shadow_new_name)[i - 0x6237])
 
-    # Actual stage select stuff?
+    # Actual stage select stuff
     for i in range(0x639E, 0x63A4): # "Needle Man"
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(needle_new_name)[i - 0x639E])
     for i in range(0x63F0, 0x63F6): # "Magnet Man"
@@ -801,37 +896,51 @@ def scramble_weapon_palettes():
 # This scrambles the color palettes for all of the weapons except the Mega Buster.
     # Gemini Laser
     gemini_primary = random.randint(0x20, 0x2C)
-    gemini_secondary = random.randint(0x10, 0x1C)
+    gemini_secondary = random.randint(0x10, 0x1D)
     edit_nes_byte(GAME_PATH, 0x4656, gemini_primary)
     edit_nes_byte(GAME_PATH, 0x4657, gemini_secondary)
 
     # Needle Cannon
-    edit_nes_byte(GAME_PATH, 0x465A, random.choice(LIGHT_COLORS))
-    edit_nes_byte(GAME_PATH, 0x465B, random.choice(DARK_COLORS))
+    needle_primary = random.randint(0x20, 0x2C)
+    needle_secondary = random.randint(0x10, 0x1D)
+    edit_nes_byte(GAME_PATH, 0x465A, needle_primary)
+    edit_nes_byte(GAME_PATH, 0x465B, needle_secondary)
 
     # Hard Knuckle
-    edit_nes_byte(GAME_PATH, 0x465E, random.choice(LIGHT_COLORS))
-    edit_nes_byte(GAME_PATH, 0x465F, random.choice(DARK_COLORS))
+    hard_primary = random.randint(0x20, 0x2C)
+    hard_secondary = random.randint(0x10, 0x1D)
+    edit_nes_byte(GAME_PATH, 0x465E, hard_primary)
+    edit_nes_byte(GAME_PATH, 0x465F, hard_secondary)
 
     # Magnet Missile
-    edit_nes_byte(GAME_PATH, 0x4662, random.choice(LIGHT_COLORS))
-    edit_nes_byte(GAME_PATH, 0x4663, random.choice(DARK_COLORS))
+    magnet_primary = random.randint(0x20, 0x2C)
+    magnet_secondary = random.randint(0x10, 0x1D)
+    edit_nes_byte(GAME_PATH, 0x4662, magnet_primary)
+    edit_nes_byte(GAME_PATH, 0x4663, magnet_secondary)
 
     # Top Spin
-    edit_nes_byte(GAME_PATH, 0x4666, random.choice(LIGHT_COLORS))
-    edit_nes_byte(GAME_PATH, 0x4667, random.choice(DARK_COLORS))
+    top_primary = random.randint(0x20, 0x2C)
+    top_secondary = random.randint(0x10, 0x1D)
+    edit_nes_byte(GAME_PATH, 0x4666, top_primary)
+    edit_nes_byte(GAME_PATH, 0x4667, top_secondary)
 
     # Search Snake
-    edit_nes_byte(GAME_PATH, 0x466A, random.choice(LIGHT_COLORS))
-    edit_nes_byte(GAME_PATH, 0x466B, random.choice(DARK_COLORS))
+    snake_primary = random.randint(0x20, 0x2C)
+    snake_secondary = random.randint(0x10, 0x1D)
+    edit_nes_byte(GAME_PATH, 0x466A, snake_primary)
+    edit_nes_byte(GAME_PATH, 0x466B, snake_secondary)
 
     # Spark Shock
-    edit_nes_byte(GAME_PATH, 0x4672, random.choice(LIGHT_COLORS))
-    edit_nes_byte(GAME_PATH, 0x4673, random.choice(DARK_COLORS))
+    spark_primary = random.randint(0x20, 0x2C)
+    spark_secondary = random.randint(0x10, 0x1D)
+    edit_nes_byte(GAME_PATH, 0x4672, spark_primary)
+    edit_nes_byte(GAME_PATH, 0x4673, spark_secondary)
 
     # Shadow Blade
-    edit_nes_byte(GAME_PATH, 0x467A, random.choice(LIGHT_COLORS))
-    edit_nes_byte(GAME_PATH, 0x467B, random.choice(DARK_COLORS))
+    shadow_primary = random.randint(0x20, 0x2C)
+    shadow_secondary = random.randint(0x10, 0x1D)
+    edit_nes_byte(GAME_PATH, 0x467A, shadow_primary)
+    edit_nes_byte(GAME_PATH, 0x467B, shadow_secondary)
 
     # Rush Coil, Rush Jet, Rush Marine (all set to the same palette for consistency)
     rush_primary = random.choice(LIGHT_COLORS)
@@ -844,6 +953,22 @@ def scramble_weapon_palettes():
     edit_nes_byte(GAME_PATH, 0x467F, rush_secondary)
 
     # Weapon get screen palettes
+    # Needle Cannon
+    edit_nes_byte(GAME_PATH, 0x31BC8, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BC9, needle_primary + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BCA, needle_secondary)
+    edit_nes_byte(GAME_PATH, 0x31BCC, needle_secondary - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BCD, needle_primary)
+    edit_nes_byte(GAME_PATH, 0x31BCE, needle_secondary)
+
+    # Magnet Missile
+    edit_nes_byte(GAME_PATH, 0x31BD0, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BD1, magnet_primary + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BD2, magnet_secondary)
+    edit_nes_byte(GAME_PATH, 0x31BD4, magnet_secondary - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BD5, magnet_primary)
+    edit_nes_byte(GAME_PATH, 0x31BD6, magnet_secondary)
+
     # Gemini Laser
     edit_nes_byte(GAME_PATH, 0x31BD8, 0x30)
     edit_nes_byte(GAME_PATH, 0x31BD9, gemini_primary + 0x10)
@@ -852,7 +977,45 @@ def scramble_weapon_palettes():
     edit_nes_byte(GAME_PATH, 0x31BDD, gemini_primary)
     edit_nes_byte(GAME_PATH, 0x31BDE, gemini_secondary)
 
-    # Needle Cannon
+    # Hard Knuckle
+    edit_nes_byte(GAME_PATH, 0x31BE0, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BE1, hard_primary + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BE2, hard_secondary)
+    edit_nes_byte(GAME_PATH, 0x31BE4, hard_secondary - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BE5, hard_primary)
+    edit_nes_byte(GAME_PATH, 0x31BE6, hard_secondary)
+
+    # Top Spin
+    edit_nes_byte(GAME_PATH, 0x31BE8, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BE9, top_primary + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BEA, top_secondary)
+    edit_nes_byte(GAME_PATH, 0x31BEC, top_secondary - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BED, top_primary)
+    edit_nes_byte(GAME_PATH, 0x31BEE, top_secondary)
+
+    # Search Snake
+    edit_nes_byte(GAME_PATH, 0x31BF0, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BF1, snake_primary + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BF2, snake_secondary)
+    edit_nes_byte(GAME_PATH, 0x31BF4, snake_secondary - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BF5, snake_primary)
+    edit_nes_byte(GAME_PATH, 0x31BF6, snake_secondary)
+
+    # Spark Shock
+    edit_nes_byte(GAME_PATH, 0x31BF8, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BF9, spark_primary + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BFA, spark_secondary)
+    edit_nes_byte(GAME_PATH, 0x31BFC, spark_secondary - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BFD, spark_primary)
+    edit_nes_byte(GAME_PATH, 0x31BFE, spark_secondary)
+
+    # Shadow Blade
+    edit_nes_byte(GAME_PATH, 0x31C00, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31C01, shadow_primary + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31C02, shadow_secondary)
+    edit_nes_byte(GAME_PATH, 0x31C04, shadow_secondary - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31C05, shadow_primary)
+    edit_nes_byte(GAME_PATH, 0x31C06, shadow_secondary)
 
 
 def scramble_weapon_energy_costs():
@@ -957,7 +1120,7 @@ def scramble_weapon_behaviors():
     # Shadow Blade variables
     edit_nes_byte(GAME_PATH, 0x3D2EB, random.choice([0x04, 0x07, 0x08, 0x0B, 0x0F])) # Shadow Blade shooting directions: see documentation for more info, but determines Shadow Blade throwable angles. Randomized between 5 upwards, 5 downwards, all 8, up/left/right, down/left right (Default 0B)
     edit_nes_byte(GAME_PATH, 0x3D2F7, random.randint(0x02, 0x07)) # Shadow Blade vertical launch speed (default 04)
-    shadow_blade_returns = random.randint(0, 3) # Little randomization to see if Shadow Blade will boomerang at all. Default is a 25% chance to act like Metal Blade
+    shadow_blade_returns = random.randint(0, 2) # Little randomization to see if Shadow Blade will boomerang at all. Default is a 33.33% chance to act like Metal Blade
     if shadow_blade_returns:
         edit_nes_byte(GAME_PATH, 0x3D2FC, random.randint(0x0A, 0x28)) # Shadow Blade range, i.e. how long it travels before boomeranging. Setting it high enough causes it to act like Metal Blade (default 14)
     else:
@@ -978,7 +1141,7 @@ def scramble_boss_behaviors():
     # Needle Man
     edit_nes_byte(GAME_PATH, 0x88A6, random.randint(0x02, 0x06)) # Speed of Needle Man's needles (default 04)
     edit_nes_byte(GAME_PATH, 0xC0C9, random.randint(0x01, 0x02)) # Related to number of needles are shot per round? (default 01)
-    edit_nes_byte(GAME_PATH, 0xC0F9, random.randint(0x0A, 0x16)) # This value governs how Needle Man moves in the air. The lower the value, the longer he stays in the air and shoots needles (default 10)
+    edit_nes_byte(GAME_PATH, 0xC0F9, random.randint(0x0B, 0x15)) # This value governs how Needle Man moves in the air. The lower the value, the longer he stays in the air and shoots needles (default 10)
     edit_nes_byte(GAME_PATH, 0xC19F, random.randint(0x01, 0x02)) # Related to jump height (default 01)
     edit_nes_byte(GAME_PATH, 0xC1B0, random.randint(0x04, 0x07)) # Related to jump height (default 06)
     edit_nes_byte(GAME_PATH, 0xC1B1, random.randint(0x07, 0x0A)) # Related to jump height (default 09)
@@ -1031,8 +1194,22 @@ def scramble_boss_behaviors():
     edit_nes_byte(GAME_PATH, 0xC57D, random.randint(0x28, 0x88)) # Time until Top Man starts spinning after shooting (default 78)
     edit_nes_byte(GAME_PATH, 0xC593, random.randint(0xC0, 0xF0)) # How far Top Man goes to the right before stopping (default D0)
     edit_nes_byte(GAME_PATH, 0xC5A0, random.randint(0x10, 0x40)) # How far Top Man goes to the left before stopping (default 30)
-    edit_nes_byte(GAME_PATH, 0xC5EF, random.randint(0x0A, 0x12)) # Where tops originate from (default 0E)
+    edit_nes_byte(GAME_PATH, 0xC5EF, random.randint(0x09, 0x13)) # Where tops originate from (default 0E)
     edit_nes_byte(GAME_PATH, 0xC602, random.randint(0x02, 0x07)) # Speed of thrown tops (default 04)
+
+    # Snake Man
+    edit_nes_byte(GAME_PATH, 0xA8A4, random.randint(0x01, 0x04)) # Speed of snakes that Snake Man shoots (default 02)
+    edit_nes_byte(GAME_PATH, 0xE610, random.randint(0x0A, 0x1F)) # Time until Snake Man moves after shooting Search Snake (default 1A)
+    edit_nes_byte(GAME_PATH, 0xE64F, random.randint(0x08, 0x24)) # Number of snakes Snake Man shoots, or some timer related to it? (default 14)
+    edit_nes_byte(GAME_PATH, 0xE66F, random.randint(0x01, 0x05)) # Height of snakes shot? (default 03)
+    edit_nes_byte(GAME_PATH, 0xE6BC, random.randint(0x03, 0x07)) # Snake Man jump height setting (default 05)
+    edit_nes_byte(GAME_PATH, 0xE6BD, random.randint(0x06, 0x09)) # Snake Man's jump height when shooting Search Snake (default 08)
+
+    # Spark Man
+
+    # Shadow Man
+
+    # Doc Metal
 
 
 def scramble_boss_weakness_tables():
@@ -1135,23 +1312,33 @@ def scramble_boss_weakness_tables():
 
 if __name__ == "__main__":
 # Mix it all up!
-    # Core randomizer features
-    scramble_stage_order()
+    # Core randomizer features; mix and match as you please
+    # Title screen and stage select related
     scramble_title_screen_palette()
-    scramble_weapon_palettes()
-    scramble_robot_master_names()
     scramble_stage_select_palettes()
-    scramble_stage_palettes()
-    scramble_music()
-    scramble_stage_entities()
+    scramble_stage_order() # not currently functional
+    scramble_robot_master_names()
+
+    # Related to special weapons
+    scramble_weapon_palettes()
+    scramble_weapon_energy_costs()
+    scramble_weapon_behaviors()
+
+    # Related to enemies, gimmicks, and entities
     scramble_sprite_palettes()
     scramble_sprite_health()
     scramble_sprite_speed()
-    scramble_weapon_energy_costs()
-    scramble_weapon_behaviors()
+    scramble_stage_entities()
+    scramble_entity_properties()
     scramble_enemy_weakness_tables()
+
+    # Related to bosses
     scramble_boss_behaviors()
     scramble_boss_weakness_tables() # Make sure to scramble boss tables after enemy tables, otherwise the enemy scrambling will overwrite those memory values
+
+    # Related to stages
+    scramble_stage_palettes()
+    scramble_music()
 
     # Bonus stuff
     fix_scanline() # Disable if you want to preserve the annoying scanline issue on the stage select...?
