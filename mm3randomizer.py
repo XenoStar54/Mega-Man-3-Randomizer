@@ -81,7 +81,7 @@ ENEMY_GRAPHICS = [
     [0x18, [0x04, 0x14, 0x1A, 0x1C, 0x1D, 0x20, 0x2F, 0x39]], # Nitron
     # [0x19] No clue what this is (do not use)
     [0x1A, [0x03, 0x33, 0x38]], # Gyoraibo (Normal Gemini variant?)
-    [0x1B, [0x12, 0x2E]], # Hari Hari
+    [0x1B, [0x2E]], # Hari Hari
     # [0x1C] # Penpen Maker (handle) (probably shouldn't use)
     [0x1D, [0x05, 0x1F]], # Returning Monking
     # [0x1E], # Weird invincible moving Returning Monking? Apparently unused (probably shouldn't use)
@@ -210,7 +210,7 @@ def activate_burst_chaser():
     edit_nes_byte(GAME_PATH, 0x3CD57, 0x03) # Mega Man's movement speed (default 01)
     edit_nes_byte(GAME_PATH, 0x3D166, 0x07) # Bullet speed (default 04)
     edit_nes_byte(GAME_PATH, 0x3D77D, 0x4C) # Invicibility time after taking damage (default 3C)
-    edit_nes_byte(GAME_PATH, 0x3D3D5, 0x03) # Mega Man's sliding speed (default 02)
+    edit_nes_byte(GAME_PATH, 0x3D3D5, 0x04) # Mega Man's sliding speed (default 02)
     edit_nes_byte(GAME_PATH, 0x3D4CC, 0x02) # Ladder climbing speed (default 01)
 
 
@@ -254,7 +254,7 @@ def randomize_needle_man_entities():
     # Bikky on the sixth screen
     replace_entities(0xA7A, 0xE2D, 0xE2E)
 
-    # Randomizes the boss himself
+    # Randomize the boss himself
     edit_nes_byte(GAME_PATH, 0xE2E, RANDOMIZED_BOSSES[0][0])
     edit_nes_byte(GAME_PATH, 0xA7E, RANDOMIZED_BOSSES[0][1])
 
@@ -291,7 +291,7 @@ def randomize_magnet_man_entities():
     # Tenth screen with Giant Springer
     replace_entities(0x2A82, 0x2E32, 0x2E33)
 
-    # Randomizes the boss himself
+    # Randomize the boss himself
     edit_nes_byte(GAME_PATH, 0x2E33, RANDOMIZED_BOSSES[1][0])
     edit_nes_byte(GAME_PATH, 0x2A86, RANDOMIZED_BOSSES[1][1])
 
@@ -409,7 +409,7 @@ def randomize_top_man_entities():
     replace_entities(0x8A82, 0x8E34, 0x8E35)
 
     # Eleventh screen with Komasaburo and top platforms (do not replace the platforms)
-    replace_entities(0x8A84, 0x8E36, 0x8E37)
+    replace_entities(0x8A84, 0x8E36, 0x8E37, random.choice([0x16, 0x31]))
 
     # Randomize the boss himself
     edit_nes_byte(GAME_PATH, 0x8E3D, RANDOMIZED_BOSSES[4][0])
@@ -417,7 +417,86 @@ def randomize_top_man_entities():
 
 
 def randomize_snake_man_entities():
-    pass
+# Randomizes the entities for Snake Man's stage.
+    # First screen with Dadas and Petit Snakeys
+    replace_entities(0xAA70, 0xAE10, 0xAE17)
+    
+    # Second screen with more Petit Snakeys
+    replace_entities(0xAA72, 0xAE17, 0xAE1A)
+
+    # Third screen with Big Snakey, do not replace
+    # replace_entities(0xAA74, 0xAE1A, 0xAE25)
+
+    # Fourth screen with Pottons and Petit Snakeys... leave one health pickup
+    replace_entities(0xAA76, 0xAE25, 0xAE2D)
+    edit_nes_byte(GAME_PATH, 0xAE2A, 0x50)
+
+    # Fifth screen with Pottons and Bubukans
+    replace_entities(0xAA78, 0xAE2D, 0xAE33)
+
+    # Sixth screen with Hammer Joe
+    replace_entities(0xAA7A, 0xAE33, 0xAE34)
+
+    # Seventh screen with Hammer Joe
+    replace_entities(0xAA7C, 0xAE34, 0xAE35)
+
+    # Eighth screen with the surprise boxes... I'll leave these be
+    # replace_entities(0xAA7E, 0xAE35, 0xAE37)
+
+    # Ninth screen with Big Snakey, do not replace
+    # replace_entities(0xAA80, 0xAE37, 0xAE42)
+
+    # Tenth screen with Bubukans
+    replace_entities(0xAA82, 0xAE42, 0xAE47)
+
+    # Eleventh screen with Jamacy
+    replace_entities(0xAA84, 0xAE47, 0xAE48)
+
+    # Twelfth screen with Bomb Fliers and cloud platforms, do not replace the platforms
+    replace_entities(0xAA86, 0xAE4C, 0xAE5A, random.choice([0x06, 0x1B]))
+    edit_nes_byte(GAME_PATH, 0xAE4D, 0x0B)
+    edit_nes_byte(GAME_PATH, 0xAE50, 0x0B)
+    edit_nes_byte(GAME_PATH, 0xAE54, 0x0B)
+
+    # Randomize the boss himself
+    edit_nes_byte(GAME_PATH, 0xAE5A, RANDOMIZED_BOSSES[5][0])
+    edit_nes_byte(GAME_PATH, 0xAA8A, RANDOMIZED_BOSSES[5][1])
+
+
+def randomize_spark_man_entities():
+# Randomizes the entities for Spark Man's stage.   
+    # First screen with Peterchy
+    replace_entities(0xCA70, 0xCE10, 0xCE11)
+
+    # Second screen with Electric Gabyoalls and Elec'ns
+    replace_entities(0xCA72, 0xCE11, 0xCE18)
+
+    # Third screen with Hammer Joe
+    replace_entities(0xCA74, 0xCE18, 0xCE19)
+
+    # Fourth screen with rising platforms and Electric Gabyoalls, do not replace the platforms
+    replace_entities(0xCA76, 0xCE1D, 0xCE1F, random.choice([0x02, 0x03, 0x13, 0x1A, 0x22, 0x2D]))
+
+    # Fifth screen with Pickelman Bull
+    replace_entities(0xCA78, 0xCE1F, 0xCE20)
+
+    # Sixth screen with Peterchys
+    replace_entities(0xCA7A, 0xCE22, 0xCE26)
+
+    # Seventh, eighth, and ninth screens are all empty
+
+    # Tenth screen with junk blocks
+    replace_entities(0xCA82, 0xCE26, 0xCE29)
+
+    # Eleventh screen with rising platforms and Bolton & Nuttons, put the platforms back
+    replace_entities(0xCA84, 0xCE2E, 0xCE38, random.choice([0x02, 0x03, 0x13, 0x1A, 0x22, 0x2D]))
+    edit_nes_byte(GAME_PATH, 0xCE2F, 0x2D)
+    edit_nes_byte(GAME_PATH, 0xCE32, 0x2D)
+    edit_nes_byte(GAME_PATH, 0xCE35, 0x2D)
+
+    # Randomize the boss himself
+    edit_nes_byte(GAME_PATH, 0xCE38, RANDOMIZED_BOSSES[6][0])
+    edit_nes_byte(GAME_PATH, 0xCA88, RANDOMIZED_BOSSES[6][1])
 
 
 def scramble_stage_entities():
@@ -427,6 +506,8 @@ def scramble_stage_entities():
     randomize_gemini_man_entities()
     randomize_hard_man_entities()
     randomize_top_man_entities()
+    randomize_snake_man_entities()
+    randomize_spark_man_entities()
 
 
 def scramble_entity_properties():
@@ -715,6 +796,13 @@ def randomize_spark_man_graphics():
     edit_nes_byte(GAME_PATH, 0xCA99, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
     edit_nes_byte(GAME_PATH, 0xCA9C, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
     edit_nes_byte(GAME_PATH, 0xCA9F, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
+
+    # This fixes the visuals on the junk block screen
+    edit_nes_byte(GAME_PATH, 0xCAA8, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
+    edit_nes_byte(GAME_PATH, 0xCAA9, int(read_nes_byte(GAME_PATH, 0xCA95), 16))
+    edit_nes_byte(GAME_PATH, 0xCAAC, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
+    edit_nes_byte(GAME_PATH, 0xCAAD, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
+    edit_nes_byte(GAME_PATH, 0xCAB0, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
 
     # Animated tiles. Pull values from existing randomized stuff so your eyes don't get fried and to avoid weird color changes on transition
     edit_nes_byte(GAME_PATH, 0x125DD, int(read_nes_byte(GAME_PATH, 0xCA93), 16))
@@ -1219,7 +1307,7 @@ def scramble_boss_behaviors():
     edit_nes_byte(GAME_PATH, 0xE610, random.randint(0x0A, 0x1F)) # Time until Snake Man moves after shooting Search Snake (default 1A)
     edit_nes_byte(GAME_PATH, 0xE64F, random.randint(0x08, 0x24)) # Number of snakes Snake Man shoots, or some timer related to it? (default 14)
     edit_nes_byte(GAME_PATH, 0xE66F, random.randint(0x01, 0x05)) # Height of snakes shot? (default 03)
-    edit_nes_byte(GAME_PATH, 0xE6BC, random.randint(0x04, 0x07)) # Snake Man jump height setting (default 05)
+    edit_nes_byte(GAME_PATH, 0xE6BC, random.randint(0x05, 0x07)) # Snake Man jump height setting; lower settings seem to cause him to get stuck (default 05)
     edit_nes_byte(GAME_PATH, 0xE6BD, random.randint(0x06, 0x09)) # Snake Man's jump height when shooting Search Snake (default 08)
 
     # Spark Man
