@@ -416,6 +416,10 @@ def randomize_top_man_entities():
     edit_nes_byte(GAME_PATH, 0x8A88, RANDOMIZED_BOSSES[4][1])
 
 
+def randomize_snake_man_entities():
+    pass
+
+
 def scramble_stage_entities():
 # This scrambles all the stage entities.
     randomize_needle_man_entities()
@@ -675,12 +679,20 @@ def randomize_snake_man_graphics():
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
+    # Snake Man's stage benefits a lot from a gradient color scheme much like some other graphical assets
+    snake_middle_color = random.randint(0x11, 0x1C)
+    edit_nes_byte(GAME_PATH, 0xAA93, snake_middle_color + 0x10)
+    edit_nes_byte(GAME_PATH, 0xAA94, snake_middle_color )
+    edit_nes_byte(GAME_PATH, 0xAA95, snake_middle_color - 0x10)
+
     # Animated tile values (sky and clouds)
     edit_nes_byte(GAME_PATH, 0x125A0, random.choice(LIGHT_COLORS_NW))
     edit_nes_byte(GAME_PATH, 0xAAA0, int(read_nes_byte(GAME_PATH, 0x125A0), 16))
     edit_nes_byte(GAME_PATH, 0xAAA1, int(read_nes_byte(GAME_PATH, 0x125A0), 16))
     edit_nes_byte(GAME_PATH, 0x125A2, int(read_nes_byte(GAME_PATH, 0x125A0), 16))
     edit_nes_byte(GAME_PATH, 0x125A3, int(read_nes_byte(GAME_PATH, 0x125A0), 16))
+
     # This controls the color for the cloud animation, turn it to white if this would cause a color overflow when adding 0x10
     if int(read_nes_byte(GAME_PATH, 0xAAA0), 16) > 0x2F:
         edit_nes_byte(GAME_PATH, 0x1259F, 0x20)
@@ -716,23 +728,15 @@ def randomize_spark_man_graphics():
     edit_nes_byte(GAME_PATH, 0x125E8, int(read_nes_byte(GAME_PATH, 0x125E4), 16))
 
 
-def scramble_stage_palettes():
-# This scrambles the color schemes for the stages in the game. Black and white are not replaced to maintain some level of graphical integrity, and black and white are excluded from the possible color options to prevent extreme eyesore.
-    randomize_needle_man_graphics()
-    randomize_magnet_man_graphics()
-    randomize_gemini_man_graphics()
-    randomize_hard_man_graphics()
-    randomize_top_man_graphics()
-    randomize_snake_man_graphics()
-    randomize_spark_man_graphics() 
-
-    # Shadow Man
+def randomize_shadow_man_graphics():
+# Randomizes the graphics for Shadow Man's stage.
     for i in range(0xEA92, 0xEAA2):
         if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
             if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
     # Animated tiles
     # Shadow Man's lava/sewer water works with a gradient across NES color palette rows (26, 16, 06). I think preserving this structure is best for graphical integrity.
     shadow_middle_color = random.randint(0x11, 0x1C)
@@ -745,10 +749,23 @@ def scramble_stage_palettes():
     edit_nes_byte(GAME_PATH, 0x125EF, shadow_middle_color - 0x10)
     edit_nes_byte(GAME_PATH, 0x125F0, shadow_middle_color + 0x10)
     edit_nes_byte(GAME_PATH, 0x125F1, shadow_middle_color)
+
     # Put these values back into the unanimated tileset to prevent weird colors on screen transition
     edit_nes_byte(GAME_PATH, 0xEA97, int(read_nes_byte(GAME_PATH, 0x125E9), 16))
     edit_nes_byte(GAME_PATH, 0xEA98, int(read_nes_byte(GAME_PATH, 0x125EA), 16))
     edit_nes_byte(GAME_PATH, 0xEA99, int(read_nes_byte(GAME_PATH, 0x125EB), 16))
+
+
+def scramble_stage_palettes():
+# This scrambles the color schemes for the stages in the game. Black and white are not replaced to maintain some level of graphical integrity, and black and white are excluded from the possible color options to prevent extreme eyesore.
+    randomize_needle_man_graphics()
+    randomize_magnet_man_graphics()
+    randomize_gemini_man_graphics()
+    randomize_hard_man_graphics()
+    randomize_top_man_graphics()
+    randomize_snake_man_graphics()
+    randomize_spark_man_graphics() 
+    randomize_shadow_man_graphics()
 
     # Break Man's fight?
     for i in range(0x31E2A, 0x31E57):
@@ -1118,7 +1135,7 @@ def scramble_weapon_behaviors():
     edit_nes_byte(GAME_PATH, 0x3D2D9, random.randint(0x00, 0x04)) # Search Snake horizontal launch speed (default 01)
 
     # Shadow Blade variables
-    edit_nes_byte(GAME_PATH, 0x3D2EB, random.choice([0x04, 0x07, 0x08, 0x0B, 0x0F])) # Shadow Blade shooting directions: see documentation for more info, but determines Shadow Blade throwable angles. Randomized between 5 upwards, 5 downwards, all 8, up/left/right, down/left right (Default 0B)
+    edit_nes_byte(GAME_PATH, 0x3D2EB, random.choice([0x07, 0x0B, 0x0F])) # Shadow Blade shooting directions: see documentation for more info, but determines Shadow Blade throwable angles. Randomized between 5 upwards, 5 downwards, all 8 (Default 0B)
     edit_nes_byte(GAME_PATH, 0x3D2F7, random.randint(0x02, 0x07)) # Shadow Blade vertical launch speed (default 04)
     shadow_blade_returns = random.randint(0, 2) # Little randomization to see if Shadow Blade will boomerang at all. Default is a 33.33% chance to act like Metal Blade
     if shadow_blade_returns:
@@ -1141,8 +1158,8 @@ def scramble_boss_behaviors():
     # Needle Man
     edit_nes_byte(GAME_PATH, 0x88A6, random.randint(0x02, 0x06)) # Speed of Needle Man's needles (default 04)
     edit_nes_byte(GAME_PATH, 0xC0C9, random.randint(0x01, 0x02)) # Related to number of needles are shot per round? (default 01)
-    edit_nes_byte(GAME_PATH, 0xC0F9, random.randint(0x0B, 0x15)) # This value governs how Needle Man moves in the air. The lower the value, the longer he stays in the air and shoots needles (default 10)
-    edit_nes_byte(GAME_PATH, 0xC19F, random.randint(0x01, 0x02)) # Related to jump height (default 01)
+    edit_nes_byte(GAME_PATH, 0xC0F9, random.randint(0x0B, 0x16)) # This value governs how Needle Man moves in the air. The lower the value, the longer he stays in the air and shoots needles (default 10)
+    # edit_nes_byte(GAME_PATH, 0xC19F, 0x01) # Related to jump height (default 01)
     edit_nes_byte(GAME_PATH, 0xC1B0, random.randint(0x04, 0x07)) # Related to jump height (default 06)
     edit_nes_byte(GAME_PATH, 0xC1B1, random.randint(0x07, 0x0A)) # Related to jump height (default 09)
     edit_nes_byte(GAME_PATH, 0xC1B8, random.randint(0x05, 0x07)) # Related to jump height (default 06)
@@ -1202,14 +1219,52 @@ def scramble_boss_behaviors():
     edit_nes_byte(GAME_PATH, 0xE610, random.randint(0x0A, 0x1F)) # Time until Snake Man moves after shooting Search Snake (default 1A)
     edit_nes_byte(GAME_PATH, 0xE64F, random.randint(0x08, 0x24)) # Number of snakes Snake Man shoots, or some timer related to it? (default 14)
     edit_nes_byte(GAME_PATH, 0xE66F, random.randint(0x01, 0x05)) # Height of snakes shot? (default 03)
-    edit_nes_byte(GAME_PATH, 0xE6BC, random.randint(0x03, 0x07)) # Snake Man jump height setting (default 05)
+    edit_nes_byte(GAME_PATH, 0xE6BC, random.randint(0x04, 0x07)) # Snake Man jump height setting (default 05)
     edit_nes_byte(GAME_PATH, 0xE6BD, random.randint(0x06, 0x09)) # Snake Man's jump height when shooting Search Snake (default 08)
 
     # Spark Man
+    edit_nes_byte(GAME_PATH, 0xE360, random.randint(0x04, 0x07)) # Spark Man's jump height (default 06)
+    edit_nes_byte(GAME_PATH, 0xE393, random.randint(0x01, 0x05)) # Number of time Spark Man jumps before attacking (random, possibly determined in RAM?) (default 03)
+    edit_nes_byte(GAME_PATH, 0xE396, random.randint(0x00, 0x02)) # Related to Spark Man's jump quantity (default 01)
+    # edit_nes_byte(GAME_PATH, 0xE3BE, 0x21) # Some value related to jumping settings (default 21)
+    # edit_nes_byte(GAME_PATH, 0xE3C3, 0x20) # Value related to jumping settings (default 20)
+    edit_nes_byte(GAME_PATH, 0xE415, random.randint(0x44, 0x67)) # Time that Spark Man waits after firing the large spark, seems to screw with the large spark attack if edited (default 64)
+    # edit_nes_byte(GAME_PATH, 0xE440, 0x07) # Number of sparks Spark Man shoots? Better not to edit (default 07)
+    # edit_nes_byte(GAME_PATH, 0xE469, 0x00) # Related to small sparks (default 00)
+    edit_nes_byte(GAME_PATH, 0xE4C7, random.randint(0x01, 0x04)) # Speed of large spark (default 02)
+    # edit_nes_byte(GAME_PATH, 0xE4E9, 0x99) # 0xE4E7 - E4FE # Jumping settings (default 99)
+    # edit_nes_byte(GAME_PATH, 0xE4ED, 0x0E) # 0xE4E7 - E4FE # Jumping settings (default 0E)
+    # edit_nes_byte(GAME_PATH, 0xE4F0, 0x80) # 0xE4E7 - E4FE # Jumping settings (default 80)
+    edit_nes_byte(GAME_PATH, 0xE50B, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 00)
+    edit_nes_byte(GAME_PATH, 0xE50C, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 01)
+    edit_nes_byte(GAME_PATH, 0xE50D, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 02)
+    edit_nes_byte(GAME_PATH, 0xE50E, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 01)
+    edit_nes_byte(GAME_PATH, 0xE50F, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 00)
+    edit_nes_byte(GAME_PATH, 0xE510, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 01)
+    edit_nes_byte(GAME_PATH, 0xE511, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 02)
+    edit_nes_byte(GAME_PATH, 0xE512, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 01)
+    edit_nes_byte(GAME_PATH, 0xE513, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 00)
 
     # Shadow Man
+    edit_nes_byte(GAME_PATH, 0xC6D1, random.randint(0x60, 0xA0)) # Influences how far Shadow Man moves forward during jump (default 80)
+    edit_nes_byte(GAME_PATH, 0xC6D6, random.randint(0x00, 0x01)) # Influences how far Shadow Man moves forward during jump (default 00)
+    edit_nes_byte(GAME_PATH, 0xC70C, random.randint(0x02, 0x08)) # Delay time for jumping after landing (default 04)
+    edit_nes_byte(GAME_PATH, 0xC71D, random.randint(0x01, 0x05)) # Number of times Shadow Man will jump until shooting Shadow Blade (default 03)
+    edit_nes_byte(GAME_PATH, 0xC79C, random.randint(0x02, 0x06)) # Sliding speed (default 04)
+    edit_nes_byte(GAME_PATH, 0xC7BA, random.randint(0x08, 0x2A)) # Delay for how long Shadow Man holds up arm before throwing Shadow Blades (default 14)
+    edit_nes_byte(GAME_PATH, 0xC87C, random.randint(0x03, 0x05)) # 0xC87C - C883 Jumping settings (default 04)
+    edit_nes_byte(GAME_PATH, 0xC87D, random.randint(0x05, 0x07)) # 0xC87C - C883 Jumping settings (default 06)
+    edit_nes_byte(GAME_PATH, 0xC87E, random.randint(0x07, 0x09)) # 0xC87C - C883 Jumping settings (default 08)
+    edit_nes_byte(GAME_PATH, 0xC87F, random.randint(0x05, 0x07)) # 0xC87C - C883 Jumping settings (default 06)
+    edit_nes_byte(GAME_PATH, 0xC880, random.randint(0x00, 0x01)) # 0xC87C - C883 Jumping settings (default 00)              
+    edit_nes_byte(GAME_PATH, 0xC881, random.randint(0x00, 0x02)) # 0xC87C - C883 Jumping settings (default 01)
+    edit_nes_byte(GAME_PATH, 0xC882, random.randint(0x00, 0x01)) # 0xC87C - C883 Jumping settings (default 00)
+    edit_nes_byte(GAME_PATH, 0xC883, random.randint(0x00, 0x02)) # 0xC87C - C883 Jumping settings (default 01)
+    edit_nes_byte(GAME_PATH, 0xC8ED, random.randint(0x01, 0x05)) # Speed of top Shadow Blade (default 03)
+    edit_nes_byte(GAME_PATH, 0xC8EF, random.randint(0x02, 0x06)) # Speed of bottom Shadow Blade (default 04)
 
     # Doc Metal
+
 
 
 def scramble_boss_weakness_tables():
