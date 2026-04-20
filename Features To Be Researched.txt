@@ -1,4 +1,4 @@
 Memory locations for the following:
 - Top Man spin speed
 - Piece of Proto Man's code that changes the music (to revert music back to randomized stage music as opposed to original stage music)
-- Behaviors of Doc Heat, Doc Quick, Doc Flash
+- Behaviors of Doc Heat, Doc Quick, Doc Flash, Wily bosses

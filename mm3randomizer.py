@@ -499,6 +499,33 @@ def randomize_spark_man_entities():
     edit_nes_byte(GAME_PATH, 0xCA88, RANDOMIZED_BOSSES[6][1])
 
 
+def randomize_shadow_man_entities():
+    # First screen with nothing on it
+    # replace_entities(0xEA70, 0xEE10, 0xEE11)
+
+    # Second screen with New Shotman
+    replace_entities(0xEA72, 0xEE10, 0xEE11)
+
+    # Third screen with nothing on it
+    # replace_entities(0xEA74, 0xEE11, 0xEE12)
+
+    # Fourth screen with Mechakkeros and Pickelman Bull
+    replace_entities(0xEA76, 0xEE11, 0xEE14)
+
+    # Fifth screen with Proto Man (do not replace)
+    # replace_entities(0xEA78, 0xEE14, 0xEE15)
+
+    # Sixth screen with Peterchys, Holograns, Walking Bombs
+    replace_entities(0xEA7A, 0xEE15, 0xEE2A)
+
+    # Seventh screen with Mechakkeros, Parasyus, Yambows
+    replace_entities(0xEA7C, 0xEE2E, 0xEE3D)
+
+    # Randomize the boss himself
+    edit_nes_byte(GAME_PATH, 0xEE3D, RANDOMIZED_BOSSES[7][0])
+    edit_nes_byte(GAME_PATH, 0xEA80, RANDOMIZED_BOSSES[7][1])
+
+
 def scramble_stage_entities():
 # This scrambles all the stage entities.
     randomize_needle_man_entities()
@@ -508,6 +535,7 @@ def scramble_stage_entities():
     randomize_top_man_entities()
     randomize_snake_man_entities()
     randomize_spark_man_entities()
+    randomize_shadow_man_entities()
 
 
 def scramble_entity_properties():
@@ -552,8 +580,13 @@ def scramble_sprite_palettes():
     edit_nes_byte(GAME_PATH, 0x2166, 0x10)
 
     # Another check for Proto Man since he suffers from the same issue
+    proto_color = random.randint(0x11, 0x1C)
+    # Version that appears to blow up barrier in Gemini Man's stage
     edit_nes_byte(GAME_PATH, 0x20F2, 0x10) # Proto Man grey
-    edit_nes_byte(GAME_PATH, 0x20F3, random.randint(0x11, 0x1C)) # Proto Man red
+    edit_nes_byte(GAME_PATH, 0x20F3, proto_color) # Proto Man red
+    # Fight version
+    edit_nes_byte(GAME_PATH, 0x20B2, 0x10) # Proto Man grey
+    edit_nes_byte(GAME_PATH, 0x20B3, proto_color) # Proto Man red
 
 
 def scramble_sprite_health():
@@ -580,8 +613,12 @@ def randomize_needle_man_graphics():
                 else:
                     edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
+    # Shading fix for the background walls
+    needle_background = random.randint(0x10, 0x1C)
+    edit_nes_byte(GAME_PATH, 0xA9C, needle_background)
+    edit_nes_byte(GAME_PATH, 0xA9D, needle_background - 0x10)
+
     # Some fixes for bizarre color shenanigans with ladders and backgrounds
-    edit_nes_byte(GAME_PATH, 0xA9D, random.randint(0x00, 0x0C))
     edit_nes_byte(GAME_PATH, 0xAA1, int(read_nes_byte(GAME_PATH, 0xA99), 16))
     edit_nes_byte(GAME_PATH, 0xAA8, int(read_nes_byte(GAME_PATH, 0xA94), 16))
     edit_nes_byte(GAME_PATH, 0xAA9, int(read_nes_byte(GAME_PATH, 0xA95), 16))
@@ -654,10 +691,16 @@ def randomize_gemini_man_graphics():
     color_2 = int(read_nes_byte(GAME_PATH, 0x125C0), 16) # Blue 
     color_3 = int(read_nes_byte(GAME_PATH, 0x125C3), 16) # Red
     color_4 = int(read_nes_byte(GAME_PATH, 0x125C6), 16) # Yellow
+
+    # Randomize some new block colors, ensure no colors are repeated for maximum graphical variety
     new_color_1 = random.randint(0x31, 0x3C)
     new_color_2 = random.randint(0x11, 0x1C)
     new_color_3 = random.randint(0x11, 0x1C)
+    while new_color_3 == new_color_2:
+        new_color_3 = random.randint(0x11, 0x1C)
     new_color_4 = random.randint(0x11, 0x1C)
+    while new_color_4 == new_color_2 or new_color_4 == new_color_3:
+        new_color_4 = random.randint(0x11, 0x1C)
 
     for i in range(0x4AA6, 0x4ADE):
         if int(read_nes_byte(GAME_PATH, i), 16) == color_1:
@@ -844,6 +887,16 @@ def randomize_shadow_man_graphics():
     edit_nes_byte(GAME_PATH, 0xEA99, int(read_nes_byte(GAME_PATH, 0x125EB), 16))
 
 
+def randomize_doc_needle_graphics():
+# Randomizes the graphics for the Doc Needle Man stage.
+    for i in range(0x10A92, 0x10AB6):
+        if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
+            if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
+                edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
+            else:
+                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
+
 def scramble_stage_palettes():
 # This scrambles the color schemes for the stages in the game. Black and white are not replaced to maintain some level of graphical integrity, and black and white are excluded from the possible color options to prevent extreme eyesore.
     randomize_needle_man_graphics()
@@ -852,8 +905,9 @@ def scramble_stage_palettes():
     randomize_hard_man_graphics()
     randomize_top_man_graphics()
     randomize_snake_man_graphics()
-    randomize_spark_man_graphics() 
+    randomize_spark_man_graphics()
     randomize_shadow_man_graphics()
+    randomize_doc_needle_graphics()
 
     # Break Man's fight?
     for i in range(0x31E2A, 0x31E57):
@@ -903,6 +957,9 @@ def scramble_stage_select_palettes():
     stage_select_secondary = random.choice(DARK_COLORS_NB)
     edit_nes_byte(GAME_PATH, 0x31C45, stage_select_primary)
     edit_nes_byte(GAME_PATH, 0x31C46, stage_select_secondary)
+    # Palette changes after Doc Robot stages appear for some reason
+    edit_nes_byte(GAME_PATH, 0x31D48, stage_select_primary)
+    edit_nes_byte(GAME_PATH, 0x31D49, stage_select_secondary)
 
     # Snake Man
     #edit_nes_byte(GAME_PATH, 0x31C48, random.choice(VIABLE_COLORS))
@@ -1352,7 +1409,7 @@ def scramble_boss_behaviors():
     edit_nes_byte(GAME_PATH, 0xC8EF, random.randint(0x02, 0x06)) # Speed of bottom Shadow Blade (default 04)
 
     # Doc Metal
-
+    # Doc Air
 
 
 def scramble_boss_weakness_tables():
@@ -1367,11 +1424,23 @@ def scramble_boss_weakness_tables():
     [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
     [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01],
     [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01]]
-    # Mega Man 3 bosses all have 2 weaknesses so let's preserve the chance for that in the randomization
+
+    # Mega Man 3 bosses all have 2 weaknesses so let's preserve that in the randomization
     weaknesses_1 = [0, 1, 2, 3, 4, 5, 6, 7]
     random.shuffle(weaknesses_1)
     weaknesses_2 = [0, 1, 2, 3, 4, 5, 6, 7]
     random.shuffle(weaknesses_2)
+
+    # This prevents a boss from being weak to the same weapon "twice" from the above randomization; shuffle weaknesses 2 list until no entries are in the same place in the lists
+    overlapping_weaknesses = True
+    while(overlapping_weaknesses):
+        random.shuffle(weaknesses_2)
+        weakness_overlap_counter = 0
+        for i in range(len(weaknesses_1)):
+            if weaknesses_1[i] != weaknesses_2[i]:
+                weakness_overlap_counter += 1
+        if weakness_overlap_counter == 8:
+            overlapping_weaknesses = False       
 
     # These loops set immunities, weaknesses and semi-weaknesses across the Robot Master damage tables
     for i in range(len(effectiveness)):
@@ -1428,6 +1497,7 @@ def scramble_boss_weakness_tables():
             edit_nes_byte(GAME_PATH, i + 0xE4, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Snake Man
             edit_nes_byte(GAME_PATH, i + 0xE6, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Gemini Man
             edit_nes_byte(GAME_PATH, i + 0xE7, random.choice([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02])) # VS Gemini Man's clone (yes it has a separate damage table for some reason)
+        
         else:
             # Doc Robots (yes these are first in memory interestingly)
             edit_nes_byte(GAME_PATH, i + 0xB0, doc_effectiveness[counter][0]) # VS Doc Flash Man
