@@ -1,4 +1,9 @@
+To Do:
+
+
 Memory locations for the following:
+- Boss stage select animations (for randomizing stage positions)
 - Top Man spin speed
+- Doc Flash walk speed
 - Piece of Proto Man's code that changes the music (to revert music back to randomized stage music as opposed to original stage music)
-- Behaviors of Doc Heat, Doc Quick, Doc Flash, Wily bosses
+- Behaviors of Doc Heat, Doc Quick, Wily bosses

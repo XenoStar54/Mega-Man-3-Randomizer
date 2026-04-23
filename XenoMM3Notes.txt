@@ -25,7 +25,7 @@ Break Man Battle? - $00031E2A - $00031E57
 ROM Addresses for Mega Man's variables:
 Mega Man's movement speed (default 01) - $0003CD57
 Bullet speed (default 04) - $0003D166
-Invicibility time after taking damage (default 3C) - $0003D77D
+Invincibility time after taking damage (default 3C) - $0003D77D
 Mega Man's sliding speed (default 02) - $0003D3D5
 Mega Man's ladder climbing speed (default 01) - $0003D4CC
 
