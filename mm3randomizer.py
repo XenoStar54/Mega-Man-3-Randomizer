@@ -605,25 +605,21 @@ def randomize_spark_man_graphics():
                 else:
                     edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
-    # The following few lines standardize the floor colors so that changing screens doesn't create weird jumbled color visuals
-    edit_nes_byte(GAME_PATH, 0xCA98, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
-    edit_nes_byte(GAME_PATH, 0xCA99, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
-    edit_nes_byte(GAME_PATH, 0xCA9C, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
-    edit_nes_byte(GAME_PATH, 0xCA9F, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
+    # Standardize the floor colors so that changing screens doesn't create weird jumbled color visuals
+    edit_nes_byte(GAME_PATH, 0xCA9C, int(read_nes_byte(GAME_PATH, 0xCA98), 16))
 
     # This fixes the visuals on the junk block screen
     edit_nes_byte(GAME_PATH, 0xCAA8, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
     edit_nes_byte(GAME_PATH, 0xCAA9, int(read_nes_byte(GAME_PATH, 0xCA95), 16))
-    edit_nes_byte(GAME_PATH, 0xCAAC, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
-    edit_nes_byte(GAME_PATH, 0xCAAD, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
-    edit_nes_byte(GAME_PATH, 0xCAB0, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
+    edit_nes_byte(GAME_PATH, 0xCAAC, int(read_nes_byte(GAME_PATH, 0xCA98), 16))
+    edit_nes_byte(GAME_PATH, 0xCAB0, int(read_nes_byte(GAME_PATH, 0xCA98), 16))
 
     # Animated tiles. Pull values from existing randomized stuff so your eyes don't get fried and to avoid weird color changes on transition
-    edit_nes_byte(GAME_PATH, 0x125DD, int(read_nes_byte(GAME_PATH, 0xCA93), 16))
-    edit_nes_byte(GAME_PATH, 0x125DE, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
+    edit_nes_byte(GAME_PATH, 0x125DE, int(read_nes_byte(GAME_PATH, 0xCA98), 16))
     edit_nes_byte(GAME_PATH, 0x125DF, random.choice(LIGHT_COLORS_NW)) # Flashing floor light color
-    edit_nes_byte(GAME_PATH, 0x125E0, int(read_nes_byte(GAME_PATH, 0xCA93), 16))
-    edit_nes_byte(GAME_PATH, 0x125E1, int(read_nes_byte(GAME_PATH, 0xCA94), 16)) 
+    edit_nes_byte(GAME_PATH, 0xCA99, int(read_nes_byte(GAME_PATH, 0x125DF), 16))
+    edit_nes_byte(GAME_PATH, 0xCAAD, int(read_nes_byte(GAME_PATH, 0xCA99), 16))
+    edit_nes_byte(GAME_PATH, 0x125E1, int(read_nes_byte(GAME_PATH, 0x125DE), 16)) 
     edit_nes_byte(GAME_PATH, 0x125E3, int(read_nes_byte(GAME_PATH, 0xCA9F), 16)) # Moving conveyors/gears/meters
     edit_nes_byte(GAME_PATH, 0x125E4, int(read_nes_byte(GAME_PATH, 0xCAA0), 16)) 
     edit_nes_byte(GAME_PATH, 0x125E6, int(read_nes_byte(GAME_PATH, 0xCA9F), 16)) 
@@ -760,16 +756,17 @@ def randomize_doc_spark_graphics():
                     edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
     # The following few lines standardize the floor colors so that changing screens doesn't create weird jumbled color visuals
-    edit_nes_byte(GAME_PATH, 0x14A98, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
-    edit_nes_byte(GAME_PATH, 0x14A99, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
-    edit_nes_byte(GAME_PATH, 0x14A9C, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
-    edit_nes_byte(GAME_PATH, 0x14A9F, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
+    edit_nes_byte(GAME_PATH, 0x14A98, int(read_nes_byte(GAME_PATH, 0x125DE), 16))
+    edit_nes_byte(GAME_PATH, 0x14A99, int(read_nes_byte(GAME_PATH, 0x125DF), 16))
+    edit_nes_byte(GAME_PATH, 0x14A9C, int(read_nes_byte(GAME_PATH, 0x125DE), 16))
+    edit_nes_byte(GAME_PATH, 0x14A9F, int(read_nes_byte(GAME_PATH, 0x125E6), 16))
     edit_nes_byte(GAME_PATH, 0x14AA0, int(read_nes_byte(GAME_PATH, 0x125E4), 16))
-    edit_nes_byte(GAME_PATH, 0x14AA8, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
-    edit_nes_byte(GAME_PATH, 0x14AA9, int(read_nes_byte(GAME_PATH, 0xCA95), 16))
-    edit_nes_byte(GAME_PATH, 0x14AAC, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
-    edit_nes_byte(GAME_PATH, 0x14AAD, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
-    edit_nes_byte(GAME_PATH, 0x14AB0, int(read_nes_byte(GAME_PATH, 0xCA94), 16))
+    edit_nes_byte(GAME_PATH, 0x14AA8, int(read_nes_byte(GAME_PATH, 0x14A94), 16))
+    edit_nes_byte(GAME_PATH, 0x14AA9, int(read_nes_byte(GAME_PATH, 0x14A95), 16))
+    edit_nes_byte(GAME_PATH, 0x14AAC, int(read_nes_byte(GAME_PATH, 0x125DE), 16))
+    edit_nes_byte(GAME_PATH, 0x14AAD, int(read_nes_byte(GAME_PATH, 0x125DF), 16))
+    edit_nes_byte(GAME_PATH, 0x14AB0, int(read_nes_byte(GAME_PATH, 0x125DE), 16))
+    
 
 
 def scramble_stage_palettes():
@@ -1739,7 +1736,18 @@ def randomize_shadow_man_boss():
 def randomize_doc_metal_boss():
 # Randomizes Doc Metal's boss attributes.
 
-    pass
+    edit_nes_byte(GAME_PATH, 0x86FD, random.randint(0x84, 0xC4)) # Delay time for Doc Metal throwing the Metal Blade when the battle starts (default B4)
+    edit_nes_byte(GAME_PATH, 0x873A, random.randint(0x84, 0xC4)) # Delay time for Doc Metal throwing the Metal Blade after the first time (default B4)
+    edit_nes_byte(GAME_PATH, 0x8729, random.randint(0x06, 0x09)) # Jumping height when Doc Metal jumps to the other side of the room (default 08)
+    edit_nes_byte(GAME_PATH, 0x8789, random.randint(0x05, 0x09)) # Delay time between Metal Blades being thrown (default 07)
+    edit_nes_byte(GAME_PATH, 0x8853, random.randint(0x05, 0x09)) # Jumping height setting (default 08)
+    edit_nes_byte(GAME_PATH, 0x8854, random.randint(0x01, 0x07)) # Jumping height setting (default 04)
+    edit_nes_byte(GAME_PATH, 0x8855, random.randint(0x03, 0x09)) # Jumping height setting (default 06)
+    edit_nes_byte(GAME_PATH, 0x8856, random.randint(0x07, 0x0D)) # Gravity setting (default 0A)
+    edit_nes_byte(GAME_PATH, 0x8857, random.randint(0x05, 0x0B)) # Gravity setting (default 08)
+    edit_nes_byte(GAME_PATH, 0x8858, random.randint(0x0A, 0x0F)) # Gravity setting (default 0D)
+    edit_nes_byte(GAME_PATH, 0x8859, random.randint(0x07, 0x0D)) # Gravity setting (default 0A)
+    edit_nes_byte(GAME_PATH, 0x88A6, random.randint(0x03, 0x07)) # Speed of Metal Blades (default 05)
 
 
 def randomize_doc_air_boss():

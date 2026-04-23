@@ -125,12 +125,12 @@ ROM Addresses for Stage Music:
 $0003CD1C - $0003CD2D
 
 ROM Addresses for Stage Entity Graphics
-Needle Man's Stage (graphics set): $00000A70 - $00000A7F
-Magnet Man's Stage (graphics set): $00002A70 - 
+Needle Man's Stage (graphics set): $00000A70
+Magnet Man's Stage (graphics set): $00002A70
 
 ROM Addresses for Stage Entities:
-Needle Man's Stage - $00000E10 - $00000E2E
-Magnet Man's Stage - $00002E10 - 
+Needle Man's Stage - $00000E10
+Magnet Man's Stage - $00002E10
 
 ROM Addresses for Gimmicks:
 Top Man platform Y speed (default 01) - $0003B259
