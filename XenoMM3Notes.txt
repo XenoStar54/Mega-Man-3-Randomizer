@@ -1,4 +1,4 @@
-All info is based on the USA version of Mega Man 3.
+All info is based on the USA version of Mega Man 3. Check the mm3randomizer.py file for detailed notes on a per-memory address basis.
 
 Resources:
 https://github.com/refreshing-lemonade/megaman3-disassembly/blob/master/bank0A.asm
@@ -28,6 +28,9 @@ Bullet speed (default 04) - $0003D166
 Invincibility time after taking damage (default 3C) - $0003D77D
 Mega Man's sliding speed (default 02) - $0003D3D5
 Mega Man's ladder climbing speed (default 01) - $0003D4CC
+
+ROM Addresses for Weapons Received After Defeating Boss:
+In Robot Master order (NE, MA, GE, HA, TO, SN, SP, SH) - $0003DD14 - $0003DD1B
 
 ROM Addresses for Weapon Ammo Consumption (Bars Used Per Shot):
 Gemini Laser - $0003DF2C
@@ -127,10 +130,12 @@ $0003CD1C - $0003CD2D
 ROM Addresses for Stage Entity Graphics
 Needle Man's Stage (graphics set): $00000A70
 Magnet Man's Stage (graphics set): $00002A70
+(so on and so forth for every subsequent stage in $2000 increments)
 
 ROM Addresses for Stage Entities:
 Needle Man's Stage - $00000E10
 Magnet Man's Stage - $00002E10
+(so on and so forth for every subsequent stage in $2000 increments)
 
 ROM Addresses for Gimmicks:
 Top Man platform Y speed (default 01) - $0003B259
@@ -279,7 +284,3 @@ D0 $HA, $H1, $SP, $--, $SN, $--, $GE, $GC, $--, $--, $--, $--, $--, $--, $--, $-
 E0 $YD, $Y1, $Y2, $W2, $W3, $W1, $--, $--, $G1, $G2, $--, $--, $--, $W4, $--, $--
 F0 $KM, $K1, $K2, $--, $--, $HM, $--, $--, $--, $--, $--, $--, $E%, $--, $--, $--
 Note that this table is not structured the same way as the enemy HP table, but does appear to be structured the same way as the enemy damage table.
-
-Miscellaneous Notes: 
-- Needle Man is listed twice in memory. The second value is specifically for his headbutt attack.
-- Gemini Man's clone actually has a separate (but identical) damage table. Very odd.

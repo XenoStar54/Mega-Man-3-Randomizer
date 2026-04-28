@@ -30,7 +30,7 @@ THREE_LETTER_NOUNS = [
 FOUR_LETTER_NOUNS = [
     "book", "desk", "lamp", "door", "wall", "roof", "sofa", "seat", "rack", "sack",
     "lock", "safe", "case", "tree", "cart", "tote", "bowl", "dish", "slap", "vase",
-    "tank", "tube", "pipe", "wire", "cord", "plug", "chip", "disk", "gear", "tool",
+    "tank", "tube", "pipe", "wire", "cord", "xeno", "chip", "disk", "gear", "tool",
     "drum", "bell", "horn", "lens", "mask", "coat", "shoe", "boot", "sock", "belt",
     "coin", "bill", "card", "note", "file", "page", "pack", "clip", "hook", "tray"
 ] 
@@ -48,6 +48,49 @@ SIX_LETTER_NOUNS = [
     "gadget", "camera", "sensor", "screen", "bottle", "bucket", "basket", "drawer", "closet", "window",
     "mirror", "statue", "figure", "symbol", "pencil", "guitar", "ladder", "napkin", "quartz", "tablet"
 ] 
+
+# This name list is used to generate a new, globally accessible name for each robot master
+list_new_names = [] # This just ensures that no name is generated twice
+NEEDLE_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+list_new_names.append(NEEDLE_NEW_NAME)
+MAGNET_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+while MAGNET_NEW_NAME in list_new_names: # If the chosen name is already in the list of names, reroll
+    MAGNET_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+list_new_names.append(MAGNET_NEW_NAME)
+GEMINI_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+while GEMINI_NEW_NAME in list_new_names: # If the chosen name is already in the list of names, reroll
+    GEMINI_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+list_new_names.append(GEMINI_NEW_NAME)
+HARD_NEW_NAME = random.choice(FOUR_LETTER_NOUNS)
+list_new_names.append(HARD_NEW_NAME)
+TOP_NEW_NAME = random.choice(THREE_LETTER_NOUNS)
+list_new_names.append(TOP_NEW_NAME)
+SNAKE_NEW_NAME = random.choice(FIVE_LETTER_NOUNS)
+while SNAKE_NEW_NAME in list_new_names: # If the chosen name is already in the list of names, reroll
+    SNAKE_NEW_NAME = random.choice(FIVE_LETTER_NOUNS)
+list_new_names.append(SNAKE_NEW_NAME)
+SPARK_NEW_NAME = random.choice(FIVE_LETTER_NOUNS)
+while SPARK_NEW_NAME in list_new_names: # If the chosen name is already in the list of names, reroll
+    SPARK_NEW_NAME = random.choice(FIVE_LETTER_NOUNS)
+list_new_names.append(SPARK_NEW_NAME)
+SHADOW_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+while SHADOW_NEW_NAME in list_new_names: # If the chosen name is already in the list of names, reroll
+    SHADOW_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+list_new_names.append(SHADOW_NEW_NAME)
+
+# These lists provide new words for randomizing the weapon names.
+FOUR_LETTER_WEAPONS = [
+    "spin", "slap", "ball", "beam", "bomb", "shot", "ring", "kick", "hold", "bolt", "mine", "hole", "dash", "club", "clap"
+]
+FIVE_LETTER_WEAPONS = [
+    "blade", "laser", "shock", "blast", "slash", "smack", "storm", "spear", "flash", "crush", "flush", "blast", "sword", "punch"
+]
+SIX_LETTER_WEAPONS = [
+    "cannon", "attack", "cutter", "shield", "strike", "string", "burner", "digger", "mortar", "rocket", "bullet", "katana"
+]
+SEVEN_LETTER_WEAPONS = [
+    "missile", "knuckle", "stopper", "slasher", "shooter", "barrier", "crusher", "blaster", "striker", "grenade", "bazooka"
+]
 
 # Enumerate which graphics sets actually have usable assets (i.e. not bosses)
 VIABLE_GFX_SETS = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x38, 0x39]
@@ -161,7 +204,7 @@ RANDOMIZED_ROBOT_MASTERS = [
     [0x4B, 0x2A], # Top Man
     [0x4C, 0x26], # Snake Man
     [0x4D, 0x28], # Spark Man
-    [0x4E, 0x29] # Shadow Man
+    [0x4E, 0x29]  # Shadow Man
     ]
 random.shuffle(RANDOMIZED_ROBOT_MASTERS)
 
@@ -174,9 +217,33 @@ RANDOMIZED_DOC_ROBOTS = [
     [0x6C, 0x0F], # Doc Crash
     [0x6D, 0x10], # Doc Air
     [0x6E, 0x0F], # Doc Metal
-    [0x6F, 0x10], # Doc Heat
+    [0x6F, 0x10]  # Doc Heat
 ]
 random.shuffle(RANDOMIZED_DOC_ROBOTS)
+
+# Special weapons are assigned during the weapon bar cutscene after a boss is defeated. The first two values are programmed in pairs of position and the menu page (00 or 06) the weapon is located on. The second two values are the primary and secondary colors for the respective weapon.
+WEAPON_POSITIONS = [
+    [0x02, 0x00, random.randint(0x20, 0x2C), random.randint(0x10, 0x1D), NEEDLE_NEW_NAME], # Needle Cannon
+    [0x04, 0x00, random.randint(0x20, 0x2C), random.randint(0x10, 0x1D), MAGNET_NEW_NAME], # Magnet Missile
+    [0x01, 0x00, random.randint(0x20, 0x2C), random.randint(0x10, 0x1D), GEMINI_NEW_NAME], # Gemini Laser
+    [0x03, 0x00, random.randint(0x20, 0x2C), random.randint(0x10, 0x1D), HARD_NEW_NAME],   # Hard Knuckle
+    [0x05, 0x00, random.randint(0x20, 0x2C), random.randint(0x10, 0x1D), TOP_NEW_NAME],    # Top Spin
+    [0x00, 0x06, random.randint(0x20, 0x2C), random.randint(0x10, 0x1D), SNAKE_NEW_NAME],  # Search Snake
+    [0x02, 0x06, random.randint(0x20, 0x2C), random.randint(0x10, 0x1D), SPARK_NEW_NAME],  # Spark Shock
+    [0x04, 0x06, random.randint(0x20, 0x2C), random.randint(0x10, 0x1D), SHADOW_NEW_NAME]  # Shadow Blade
+]
+# This list contains the weapon colors in the order they're actually placed on the weapon get menu. This is used for Mega Man's color during actual gameplay, as opposed to the previous list which is primarily for randomizing weapon locations and the weapon get screen.
+ORDERED_WEAPONS = [
+    [WEAPON_POSITIONS[2][2], WEAPON_POSITIONS[2][3]], # Gemini Laser
+    [WEAPON_POSITIONS[0][2], WEAPON_POSITIONS[0][3]], # Needle Cannon
+    [WEAPON_POSITIONS[3][2], WEAPON_POSITIONS[3][3]], # Hard Knuckle
+    [WEAPON_POSITIONS[1][2], WEAPON_POSITIONS[1][3]], # Magnet Missile
+    [WEAPON_POSITIONS[4][2], WEAPON_POSITIONS[4][3]], # Top Spin
+    [WEAPON_POSITIONS[5][2], WEAPON_POSITIONS[5][3]], # Search Snake
+    [WEAPON_POSITIONS[6][2], WEAPON_POSITIONS[6][3]], # Spark Shock
+    [WEAPON_POSITIONS[7][2], WEAPON_POSITIONS[7][3]], # Shadow Blade
+]
+random.shuffle(WEAPON_POSITIONS)
 
 
 def edit_nes_byte(file_path, offset, new_value):
@@ -296,69 +363,111 @@ def convert_string_to_mm3_text(text):
 def scramble_robot_master_names():
 # Purely cosmetic, but changes the Robot Master names.
 
-    list_new_names = [] # This just ensures that no name is generated twice
-    needle_new_name = random.choice(SIX_LETTER_NOUNS)
-    list_new_names.append(needle_new_name)
-    magnet_new_name = random.choice(SIX_LETTER_NOUNS)
-    while magnet_new_name in list_new_names: # If the chosen name is already in the list of names, reroll
-        magnet_new_name = random.choice(SIX_LETTER_NOUNS)
-    list_new_names.append(magnet_new_name)
-    gemini_new_name = random.choice(SIX_LETTER_NOUNS)
-    while gemini_new_name in list_new_names: # If the chosen name is already in the list of names, reroll
-        gemini_new_name = random.choice(SIX_LETTER_NOUNS)
-    list_new_names.append(gemini_new_name)
-    hard_new_name = random.choice(FOUR_LETTER_NOUNS)
-    list_new_names.append(hard_new_name)
-    top_new_name = random.choice(THREE_LETTER_NOUNS)
-    list_new_names.append(top_new_name)
-    snake_new_name = random.choice(FIVE_LETTER_NOUNS)
-    while snake_new_name in list_new_names: # If the chosen name is already in the list of names, reroll
-        snake_new_name = random.choice(FIVE_LETTER_NOUNS)
-    list_new_names.append(snake_new_name)
-    spark_new_name = random.choice(FIVE_LETTER_NOUNS)
-    while spark_new_name in list_new_names: # If the chosen name is already in the list of names, reroll
-        spark_new_name = random.choice(FIVE_LETTER_NOUNS)
-    list_new_names.append(spark_new_name)
-    shadow_new_name = random.choice(SIX_LETTER_NOUNS)
-    while shadow_new_name in list_new_names: # If the chosen name is already in the list of names, reroll
-        shadow_new_name = random.choice(SIX_LETTER_NOUNS)
-    list_new_names.append(shadow_new_name)
-
     # This section is used somewhere but unsure where
     for i in range(0x61F1, 0x61F7): # "Needle Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(needle_new_name)[i - 0x61F1])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(NEEDLE_NEW_NAME)[i - 0x61F1])
     for i in range(0x61FB, 0x6201): # "Magnet Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(magnet_new_name)[i - 0x61FB])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(MAGNET_NEW_NAME)[i - 0x61FB])
     for i in range(0x6205, 0x620B): # "Gemini Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(gemini_new_name)[i - 0x6205])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(GEMINI_NEW_NAME)[i - 0x6205])
     for i in range(0x620F, 0x6213): # "Hard Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(hard_new_name)[i - 0x620F])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(HARD_NEW_NAME)[i - 0x620F])
     for i in range(0x6219, 0x621C): # "Top Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(top_new_name)[i - 0x6219])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(TOP_NEW_NAME)[i - 0x6219])
     for i in range(0x6223, 0x6228): # "Snake Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(snake_new_name)[i - 0x6223])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SNAKE_NEW_NAME)[i - 0x6223])
     for i in range(0x622D, 0x6232): # "Spark Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(spark_new_name)[i - 0x622D])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SPARK_NEW_NAME)[i - 0x622D])
     for i in range(0x6237, 0x623D): # "Shadow Man"   
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(shadow_new_name)[i - 0x6237])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SHADOW_NEW_NAME)[i - 0x6237])
 
     # Actual stage select stuff
     for i in range(0x639E, 0x63A4): # "Needle Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(needle_new_name)[i - 0x639E])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(NEEDLE_NEW_NAME)[i - 0x639E])
     for i in range(0x63F0, 0x63F6): # "Magnet Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(magnet_new_name)[i - 0x63F0])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(MAGNET_NEW_NAME)[i - 0x63F0])
     for i in range(0x63E7, 0x63ED): # "Gemini Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(gemini_new_name)[i - 0x63E7])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(GEMINI_NEW_NAME)[i - 0x63E7])
     for i in range(0x63C3, 0x63C7): # "Hard Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(hard_new_name)[i - 0x63C3])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(HARD_NEW_NAME)[i - 0x63C3])
     for i in range(0x63CC, 0x63CF): # "Top Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(top_new_name)[i - 0x63CC])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(TOP_NEW_NAME)[i - 0x63CC])
     for i in range(0x6395, 0x639A): # "Snake Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(snake_new_name)[i - 0x6395])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SNAKE_NEW_NAME)[i - 0x6395])
     for i in range(0x638C, 0x6391): # "Spark Man"
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(spark_new_name)[i - 0x638C])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SPARK_NEW_NAME)[i - 0x638C])
     for i in range(0x63F9, 0x63FF): # "Shadow Man"   
-        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(shadow_new_name)[i - 0x63F9])
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SHADOW_NEW_NAME)[i - 0x63F9])
+
+    # Generate new names for weapons
+    needle_weapon_name = random.choice(SIX_LETTER_WEAPONS)
+    magnet_weapon_name = random.choice(SEVEN_LETTER_WEAPONS)
+    gemini_weapon_name = random.choice(FIVE_LETTER_WEAPONS)
+    hard_weapon_name = random.choice(SEVEN_LETTER_WEAPONS)
+    top_weapon_name = random.choice(FOUR_LETTER_WEAPONS)
+    snake_weapon_name = random.choice(SIX_LETTER_WEAPONS)
+    spark_weapon_name = random.choice(FIVE_LETTER_WEAPONS)
+    shadow_weapon_name = random.choice(FIVE_LETTER_WEAPONS)
+
+    # Replace names on weapon get screen
+    for i in range(0x6429, 0x642F): # "Needle"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(NEEDLE_NEW_NAME)[i - 0x6429])
+    for i in range(0x6430, 0x6436): # "Cannon"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(needle_weapon_name)[i - 0x6430])
+    for i in range(0x644C, 0x6452): # "Magnet"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(MAGNET_NEW_NAME)[i - 0x644C])
+    for i in range(0x6453, 0x6459): # "Missile"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(magnet_weapon_name)[i - 0x6453])
+    for i in range(0x645E, 0x6464): # "Gemini"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(GEMINI_NEW_NAME)[i - 0x645E])
+    for i in range(0x6465, 0x646A): # "Laser"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(gemini_weapon_name)[i - 0x6465])
+    for i in range(0x646E, 0x6472): # "Hard"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(HARD_NEW_NAME)[i - 0x646E])
+    for i in range(0x6473, 0x6479): # "Knuckle"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(hard_weapon_name)[i - 0x6473])
+    for i in range(0x647E, 0x6481): # "Top"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(TOP_NEW_NAME)[i - 0x647E])
+    for i in range(0x6482, 0x6486): # "Spin"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(top_weapon_name)[i - 0x6482])
+    for i in range(0x648A, 0x6490): # "Search"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(snake_weapon_name)[i - 0x648A])
+    for i in range(0x6491, 0x6496): # "Snake"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SNAKE_NEW_NAME)[i - 0x6491])
+    for i in range(0x649A, 0x649F): # "Spark"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SPARK_NEW_NAME)[i - 0x649A])
+    for i in range(0x64A0, 0x64A4): # "Shock"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(spark_weapon_name)[i - 0x64A0])
+    for i in range(0x64A9, 0x64AF): # "Shadow"   
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SHADOW_NEW_NAME)[i - 0x64A9])
+    for i in range(0x64B0, 0x64B5): # "Blade"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(shadow_weapon_name)[i - 0x64B0])
+
+    # Weapon menu weapon initials
+    # edit_nes_byte(GAME_PATH, 0x45E8) "P"
+    # edit_nes_byte(GAME_PATH, 0x45F4) " "
+    edit_nes_byte(GAME_PATH, 0x45E9, convert_string_to_mm3_text(GEMINI_NEW_NAME)[0]) # "G"
+    edit_nes_byte(GAME_PATH, 0x45F5, convert_string_to_mm3_text(GEMINI_NEW_NAME)[1]) # "E"
+    edit_nes_byte(GAME_PATH, 0x45EA, convert_string_to_mm3_text(NEEDLE_NEW_NAME)[0]) # "N"
+    edit_nes_byte(GAME_PATH, 0x45F6, convert_string_to_mm3_text(NEEDLE_NEW_NAME)[1]) # "E"
+    edit_nes_byte(GAME_PATH, 0x45EB, convert_string_to_mm3_text(MAGNET_NEW_NAME)[0]) # "M"
+    edit_nes_byte(GAME_PATH, 0x45F7, convert_string_to_mm3_text(MAGNET_NEW_NAME)[1]) # "A"
+    edit_nes_byte(GAME_PATH, 0x45EC, convert_string_to_mm3_text(HARD_NEW_NAME)[0]) # "H"
+    edit_nes_byte(GAME_PATH, 0x45F8, convert_string_to_mm3_text(HARD_NEW_NAME)[1]) # "A"
+    edit_nes_byte(GAME_PATH, 0x45ED, convert_string_to_mm3_text(TOP_NEW_NAME)[0]) # "T"
+    edit_nes_byte(GAME_PATH, 0x45F9, convert_string_to_mm3_text(TOP_NEW_NAME)[1]) # "O"
+    edit_nes_byte(GAME_PATH, 0x45EE, convert_string_to_mm3_text(SNAKE_NEW_NAME)[0]) # "S"
+    edit_nes_byte(GAME_PATH, 0x45FA, convert_string_to_mm3_text(SNAKE_NEW_NAME)[1]) # "N"
+    # edit_nes_byte(GAME_PATH, 0x45EF,) "R"
+    # edit_nes_byte(GAME_PATH, 0x45FB,) "C"
+    edit_nes_byte(GAME_PATH, 0x45F0, convert_string_to_mm3_text(SPARK_NEW_NAME)[0]) # "S"
+    edit_nes_byte(GAME_PATH, 0x45FC, convert_string_to_mm3_text(SPARK_NEW_NAME)[1]) # "P"
+    # edit_nes_byte(GAME_PATH, 0x45F1,) "R"
+    # edit_nes_byte(GAME_PATH, 0x45FD,) "M"
+    edit_nes_byte(GAME_PATH, 0x45F2, convert_string_to_mm3_text(SHADOW_NEW_NAME)[0]) # "S"
+    edit_nes_byte(GAME_PATH, 0x45FE, convert_string_to_mm3_text(SHADOW_NEW_NAME)[1]) # "H"
+    # edit_nes_byte(GAME_PATH, 0x45F3,) "R"
+    # edit_nes_byte(GAME_PATH, 0x45FF,) "J"
 
 
 def randomize_needle_man_graphics():
@@ -768,10 +877,29 @@ def randomize_doc_spark_graphics():
     edit_nes_byte(GAME_PATH, 0x14AB0, int(read_nes_byte(GAME_PATH, 0x125DE), 16))
     
 
+def randomize_doc_shadow_graphics():
+# Randomizes the graphics for the Doc Shadow Man stage.
+
+    for i in range(0x16A92, 0x16AA2):
+        if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
+            if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
+                edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
+            else:
+                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
+    # Put animated water values into base tileset to prevent weird color changes on transition
+    edit_nes_byte(GAME_PATH, 0x16A97, int(read_nes_byte(GAME_PATH, 0x125E9), 16))
+    edit_nes_byte(GAME_PATH, 0x16A98, int(read_nes_byte(GAME_PATH, 0x125EA), 16))
+    edit_nes_byte(GAME_PATH, 0x16A99, int(read_nes_byte(GAME_PATH, 0x125EB), 16))
+
+    # Fix spike background
+    edit_nes_byte(GAME_PATH, 0x16A95, int(read_nes_byte(GAME_PATH, 0x16A9D), 16))
+
 
 def scramble_stage_palettes():
 # This scrambles the color schemes for the stages in the game. Black and white are not replaced to maintain some level of graphical integrity, and black and white are excluded from the possible color options to prevent extreme eyesore.
 
+    # Robot Masters
     randomize_needle_man_graphics()
     randomize_magnet_man_graphics()
     randomize_gemini_man_graphics()
@@ -780,9 +908,12 @@ def scramble_stage_palettes():
     randomize_snake_man_graphics()
     randomize_spark_man_graphics()
     randomize_shadow_man_graphics()
+
+    # Doc Robots
     randomize_doc_needle_graphics()
     randomize_doc_gemini_graphics()
     randomize_doc_spark_graphics()
+    randomize_doc_shadow_graphics()
 
     # Break Man's fight?
     for i in range(0x31E2A, 0x31E57):
@@ -814,56 +945,113 @@ def scramble_music():
         edit_nes_byte(GAME_PATH, i, wily_stage_music_list[i - 0x3CD28])
 
 
+def scramble_weapon_locations():
+# This scrambles the stages where special weapons are found.
+
+    for i in range(0x3DD14, 0x3DD1C):
+        edit_nes_byte(GAME_PATH, i, WEAPON_POSITIONS[i - 0x3DD14][0])
+        edit_nes_byte(GAME_PATH, i + 0x08, WEAPON_POSITIONS[i - 0x3DD14][1])
+
+    # Weapon get screen palettes, set here to match the color of the randomized weapon locations
+    # Weapon located in Needle Man's stage
+    edit_nes_byte(GAME_PATH, 0x31BC8, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BC9, WEAPON_POSITIONS[0][2] + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BCA, WEAPON_POSITIONS[0][3])
+    edit_nes_byte(GAME_PATH, 0x31BCC, WEAPON_POSITIONS[0][3] - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BCD, WEAPON_POSITIONS[0][2])
+    edit_nes_byte(GAME_PATH, 0x31BCE, WEAPON_POSITIONS[0][3])
+
+    # Weapon located in Magnet Man's stage
+    edit_nes_byte(GAME_PATH, 0x31BD0, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BD1, WEAPON_POSITIONS[1][2] + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BD2, WEAPON_POSITIONS[1][3])
+    edit_nes_byte(GAME_PATH, 0x31BD4, WEAPON_POSITIONS[1][3] - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BD5, WEAPON_POSITIONS[1][2])
+    edit_nes_byte(GAME_PATH, 0x31BD6, WEAPON_POSITIONS[1][3])
+
+    # Weapon located in Gemini Man's stage
+    edit_nes_byte(GAME_PATH, 0x31BD8, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BD9, WEAPON_POSITIONS[2][2] + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BDA, WEAPON_POSITIONS[2][3])
+    edit_nes_byte(GAME_PATH, 0x31BDC, WEAPON_POSITIONS[2][3] - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BDD, WEAPON_POSITIONS[2][2])
+    edit_nes_byte(GAME_PATH, 0x31BDE, WEAPON_POSITIONS[2][3])
+
+    # Weapon located in Hard Man's stage
+    edit_nes_byte(GAME_PATH, 0x31BE0, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BE1, WEAPON_POSITIONS[3][2] + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BE2, WEAPON_POSITIONS[3][3])
+    edit_nes_byte(GAME_PATH, 0x31BE4, WEAPON_POSITIONS[3][3] - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BE5, WEAPON_POSITIONS[3][2])
+    edit_nes_byte(GAME_PATH, 0x31BE6, WEAPON_POSITIONS[3][3])
+
+    # Weapon located in Top Man's stage
+    edit_nes_byte(GAME_PATH, 0x31BE8, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BE9, WEAPON_POSITIONS[4][2] + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BEA, WEAPON_POSITIONS[4][3])
+    edit_nes_byte(GAME_PATH, 0x31BEC, WEAPON_POSITIONS[4][3] - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BED, WEAPON_POSITIONS[4][2])
+    edit_nes_byte(GAME_PATH, 0x31BEE, WEAPON_POSITIONS[4][3])
+
+    # Weapon located in Snake Man's stage
+    edit_nes_byte(GAME_PATH, 0x31BF0, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BF1, WEAPON_POSITIONS[5][2] + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BF2, WEAPON_POSITIONS[5][3])
+    edit_nes_byte(GAME_PATH, 0x31BF4, WEAPON_POSITIONS[5][3] - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BF5, WEAPON_POSITIONS[5][2])
+    edit_nes_byte(GAME_PATH, 0x31BF6, WEAPON_POSITIONS[5][3])
+
+    # Weapon located in Spark Man's stage
+    edit_nes_byte(GAME_PATH, 0x31BF8, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31BF9, WEAPON_POSITIONS[6][2] + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BFA, WEAPON_POSITIONS[6][3])
+    edit_nes_byte(GAME_PATH, 0x31BFC, WEAPON_POSITIONS[6][3] - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31BFD, WEAPON_POSITIONS[6][2])
+    edit_nes_byte(GAME_PATH, 0x31BFE, WEAPON_POSITIONS[6][3])
+
+    # Weapon located in Shadow Man's stage
+    edit_nes_byte(GAME_PATH, 0x31C00, 0x30)
+    edit_nes_byte(GAME_PATH, 0x31C01, WEAPON_POSITIONS[7][2] + 0x10)
+    edit_nes_byte(GAME_PATH, 0x31C02, WEAPON_POSITIONS[7][3])
+    edit_nes_byte(GAME_PATH, 0x31C04, WEAPON_POSITIONS[7][3] - 0x10)
+    edit_nes_byte(GAME_PATH, 0x31C05, WEAPON_POSITIONS[7][2])
+    edit_nes_byte(GAME_PATH, 0x31C06, WEAPON_POSITIONS[7][3])
+
+
 def scramble_weapon_palettes():
 # This scrambles the color palettes for all of the weapons except the Mega Buster.
 
     # Gemini Laser
-    gemini_primary = random.randint(0x20, 0x2C)
-    gemini_secondary = random.randint(0x10, 0x1D)
-    edit_nes_byte(GAME_PATH, 0x4656, gemini_primary)
-    edit_nes_byte(GAME_PATH, 0x4657, gemini_secondary)
+    edit_nes_byte(GAME_PATH, 0x4656, ORDERED_WEAPONS[0][0])
+    edit_nes_byte(GAME_PATH, 0x4657, ORDERED_WEAPONS[0][1])
 
     # Needle Cannon
-    needle_primary = random.randint(0x20, 0x2C)
-    needle_secondary = random.randint(0x10, 0x1D)
-    edit_nes_byte(GAME_PATH, 0x465A, needle_primary)
-    edit_nes_byte(GAME_PATH, 0x465B, needle_secondary)
+    edit_nes_byte(GAME_PATH, 0x465A, ORDERED_WEAPONS[1][0])
+    edit_nes_byte(GAME_PATH, 0x465B, ORDERED_WEAPONS[1][1])
 
     # Hard Knuckle
-    hard_primary = random.randint(0x20, 0x2C)
-    hard_secondary = random.randint(0x10, 0x1D)
-    edit_nes_byte(GAME_PATH, 0x465E, hard_primary)
-    edit_nes_byte(GAME_PATH, 0x465F, hard_secondary)
+    edit_nes_byte(GAME_PATH, 0x465E, ORDERED_WEAPONS[2][0])
+    edit_nes_byte(GAME_PATH, 0x465F, ORDERED_WEAPONS[2][1])
 
     # Magnet Missile
-    magnet_primary = random.randint(0x20, 0x2C)
-    magnet_secondary = random.randint(0x10, 0x1D)
-    edit_nes_byte(GAME_PATH, 0x4662, magnet_primary)
-    edit_nes_byte(GAME_PATH, 0x4663, magnet_secondary)
+    edit_nes_byte(GAME_PATH, 0x4662, ORDERED_WEAPONS[3][0])
+    edit_nes_byte(GAME_PATH, 0x4663, ORDERED_WEAPONS[3][1])
 
     # Top Spin
-    top_primary = random.randint(0x20, 0x2C)
-    top_secondary = random.randint(0x10, 0x1D)
-    edit_nes_byte(GAME_PATH, 0x4666, top_primary)
-    edit_nes_byte(GAME_PATH, 0x4667, top_secondary)
+    edit_nes_byte(GAME_PATH, 0x4666, ORDERED_WEAPONS[4][0])
+    edit_nes_byte(GAME_PATH, 0x4667, ORDERED_WEAPONS[4][1])
 
     # Search Snake
-    snake_primary = random.randint(0x20, 0x2C)
-    snake_secondary = random.randint(0x10, 0x1D)
-    edit_nes_byte(GAME_PATH, 0x466A, snake_primary)
-    edit_nes_byte(GAME_PATH, 0x466B, snake_secondary)
+    edit_nes_byte(GAME_PATH, 0x466A, ORDERED_WEAPONS[5][0])
+    edit_nes_byte(GAME_PATH, 0x466B, ORDERED_WEAPONS[5][1])
 
     # Spark Shock
-    spark_primary = random.randint(0x20, 0x2C)
-    spark_secondary = random.randint(0x10, 0x1D)
-    edit_nes_byte(GAME_PATH, 0x4672, spark_primary)
-    edit_nes_byte(GAME_PATH, 0x4673, spark_secondary)
+    edit_nes_byte(GAME_PATH, 0x4672, ORDERED_WEAPONS[6][0])
+    edit_nes_byte(GAME_PATH, 0x4673, ORDERED_WEAPONS[6][1])
 
     # Shadow Blade
-    shadow_primary = random.randint(0x20, 0x2C)
-    shadow_secondary = random.randint(0x10, 0x1D)
-    edit_nes_byte(GAME_PATH, 0x467A, shadow_primary)
-    edit_nes_byte(GAME_PATH, 0x467B, shadow_secondary)
+    edit_nes_byte(GAME_PATH, 0x467A, ORDERED_WEAPONS[7][0])
+    edit_nes_byte(GAME_PATH, 0x467B, ORDERED_WEAPONS[7][1])
 
     # Rush Coil, Rush Jet, Rush Marine (all set to the same palette for consistency)
     rush_primary = random.choice(LIGHT_COLORS)
@@ -874,71 +1062,6 @@ def scramble_weapon_palettes():
     edit_nes_byte(GAME_PATH, 0x4677, rush_secondary)
     edit_nes_byte(GAME_PATH, 0x467E, rush_primary)
     edit_nes_byte(GAME_PATH, 0x467F, rush_secondary)
-
-    # Weapon get screen palettes
-    # Needle Cannon
-    edit_nes_byte(GAME_PATH, 0x31BC8, 0x30)
-    edit_nes_byte(GAME_PATH, 0x31BC9, needle_primary + 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BCA, needle_secondary)
-    edit_nes_byte(GAME_PATH, 0x31BCC, needle_secondary - 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BCD, needle_primary)
-    edit_nes_byte(GAME_PATH, 0x31BCE, needle_secondary)
-
-    # Magnet Missile
-    edit_nes_byte(GAME_PATH, 0x31BD0, 0x30)
-    edit_nes_byte(GAME_PATH, 0x31BD1, magnet_primary + 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BD2, magnet_secondary)
-    edit_nes_byte(GAME_PATH, 0x31BD4, magnet_secondary - 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BD5, magnet_primary)
-    edit_nes_byte(GAME_PATH, 0x31BD6, magnet_secondary)
-
-    # Gemini Laser
-    edit_nes_byte(GAME_PATH, 0x31BD8, 0x30)
-    edit_nes_byte(GAME_PATH, 0x31BD9, gemini_primary + 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BDA, gemini_secondary)
-    edit_nes_byte(GAME_PATH, 0x31BDC, gemini_secondary - 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BDD, gemini_primary)
-    edit_nes_byte(GAME_PATH, 0x31BDE, gemini_secondary)
-
-    # Hard Knuckle
-    edit_nes_byte(GAME_PATH, 0x31BE0, 0x30)
-    edit_nes_byte(GAME_PATH, 0x31BE1, hard_primary + 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BE2, hard_secondary)
-    edit_nes_byte(GAME_PATH, 0x31BE4, hard_secondary - 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BE5, hard_primary)
-    edit_nes_byte(GAME_PATH, 0x31BE6, hard_secondary)
-
-    # Top Spin
-    edit_nes_byte(GAME_PATH, 0x31BE8, 0x30)
-    edit_nes_byte(GAME_PATH, 0x31BE9, top_primary + 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BEA, top_secondary)
-    edit_nes_byte(GAME_PATH, 0x31BEC, top_secondary - 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BED, top_primary)
-    edit_nes_byte(GAME_PATH, 0x31BEE, top_secondary)
-
-    # Search Snake
-    edit_nes_byte(GAME_PATH, 0x31BF0, 0x30)
-    edit_nes_byte(GAME_PATH, 0x31BF1, snake_primary + 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BF2, snake_secondary)
-    edit_nes_byte(GAME_PATH, 0x31BF4, snake_secondary - 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BF5, snake_primary)
-    edit_nes_byte(GAME_PATH, 0x31BF6, snake_secondary)
-
-    # Spark Shock
-    edit_nes_byte(GAME_PATH, 0x31BF8, 0x30)
-    edit_nes_byte(GAME_PATH, 0x31BF9, spark_primary + 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BFA, spark_secondary)
-    edit_nes_byte(GAME_PATH, 0x31BFC, spark_secondary - 0x10)
-    edit_nes_byte(GAME_PATH, 0x31BFD, spark_primary)
-    edit_nes_byte(GAME_PATH, 0x31BFE, spark_secondary)
-
-    # Shadow Blade
-    edit_nes_byte(GAME_PATH, 0x31C00, 0x30)
-    edit_nes_byte(GAME_PATH, 0x31C01, shadow_primary + 0x10)
-    edit_nes_byte(GAME_PATH, 0x31C02, shadow_secondary)
-    edit_nes_byte(GAME_PATH, 0x31C04, shadow_secondary - 0x10)
-    edit_nes_byte(GAME_PATH, 0x31C05, shadow_primary)
-    edit_nes_byte(GAME_PATH, 0x31C06, shadow_secondary)
 
 
 def scramble_weapon_energy_costs():
@@ -1566,9 +1689,63 @@ def randomize_doc_gemini_entities():
     edit_nes_byte(GAME_PATH, 0x12A8A, RANDOMIZED_DOC_ROBOTS[3][1])
 
 
+def randomize_doc_spark_entities():
+# Randomizes the entities for the Doc Spark Man stage.
+    
+    # First screen with Peterchy; I've replaced this with a conveyor wheel to prevent softlocks
+    # replace_entities(0x14A70, 0x14E10, 0x14E11)
+
+    # Second screen with Jamacy; this needs to be converted into something non-threatening (i.e. health pickup) because in the vast majority of cases it will become impassable
+    # replace_entities(0x14A72, 0x14E11, 0x14E12)
+    edit_nes_byte(GAME_PATH, 0x14E11, 0x51)
+
+    # Third screen with wheels and Elec'ns; this is a very restrictive screen since only one graphics set has the wheel graphics alongside any other enemies
+    replace_entities(0x14A74, 0x14E12, 0x14E1B, 0x39)
+    edit_nes_byte(GAME_PATH, 0x14E13, 0x59)
+    edit_nes_byte(GAME_PATH, 0x14E15, 0x59)
+    edit_nes_byte(GAME_PATH, 0x14E17, 0x58)
+    edit_nes_byte(GAME_PATH, 0x14E19, 0x59)
+
+    # Fourth screen is exclusively wheels, do not replace
+    # replace_entities(0x14A76, 0x14E1C, 0x14E20)
+
+    # Fifth screen with Giant Springers
+    replace_entities(0x14A78, 0x14E21, 0x14E23)
+
+    # Sixth screen is a door transition
+
+    # Seventh screen with first Doc Robot boss
+    edit_nes_byte(GAME_PATH, 0x14E23, RANDOMIZED_DOC_ROBOTS[4][0])
+    edit_nes_byte(GAME_PATH, 0x14A7C, RANDOMIZED_DOC_ROBOTS[4][1])
+
+    # Eighth screen is spike drop start
+
+    # Ninth screen is spike drop
+    
+    # Tenth screen is spike drop
+
+    # Eleventh screen is spike drop
+
+    # Twelfth screen is long hallway with Bolton & Nuttons and Electric Gabyoalls
+    replace_entities(0x14A86, 0x14E25, 0x14E31)
+
+    # Thirteenth screen with junk blocks
+    replace_entities(0x14A88, 0x14E31, 0x14E34)
+
+    # Fourteenth screen is a door transition
+
+    # Randomize the second Doc Robot boss
+    edit_nes_byte(GAME_PATH, 0x14E34, RANDOMIZED_DOC_ROBOTS[5][0])
+    edit_nes_byte(GAME_PATH, 0x14A8C, RANDOMIZED_DOC_ROBOTS[5][1])
+
+
+def randomize_doc_shadow_entities():
+    pass
+
 def scramble_stage_entities():
 # This scrambles all the stage entities.
 
+    # Robot Masters
     randomize_needle_man_entities()
     randomize_magnet_man_entities()
     randomize_gemini_man_entities()
@@ -1577,8 +1754,12 @@ def scramble_stage_entities():
     randomize_snake_man_entities()
     randomize_spark_man_entities()
     randomize_shadow_man_entities()
+
+    # Doc Robots
     randomize_doc_needle_entities()
     randomize_doc_gemini_entities()
+    randomize_doc_spark_entities()
+    randomize_doc_shadow_entities()
 
 
 def scramble_entity_properties():
@@ -1673,6 +1854,7 @@ def randomize_top_man_boss():
     edit_nes_byte(GAME_PATH, 0xC5A0, random.randint(0x10, 0x40)) # How far Top Man goes to the left before stopping (default 30)
     edit_nes_byte(GAME_PATH, 0xC5EF, random.randint(0x09, 0x13)) # Where tops originate from (default 0E)
     edit_nes_byte(GAME_PATH, 0xC602, random.randint(0x02, 0x07)) # Speed of thrown tops (default 04)
+    edit_nes_byte(GAME_PATH, 0xC67D, random.randint(0x03, 0x07)) # Impacts speed of thrown tops (default 05)
 
 
 def randomize_snake_man_boss():
@@ -1892,6 +2074,27 @@ def randomize_doc_bubble_boss():
     edit_nes_byte(GAME_PATH, 0xA364, random.randint(0x0E, 0x2E)) # Delay time between bubbles being shot (default 1E)
 
 
+def randomize_doc_quick_boss():
+# Randomizes Doc Quick's boss attributes.
+
+    edit_nes_byte(GAME_PATH, 0xA43B, random.randint(0x01, 0x05)) # Speed at which Doc Quick runs at you during running phase (default 02)
+    edit_nes_byte(GAME_PATH, 0xA440, random.randint(0x2C, 0x4C)) # Length of Doc Quick's running phase (default 3C)
+    edit_nes_byte(GAME_PATH, 0xA4AB, random.randint(0x01, 0x05)) # Number of boomerangs Doc Quick shoots (minus 1) (default 02)
+    edit_nes_byte(GAME_PATH, 0xA4C8, random.randint(0x15, 0x35)) # Length of time before boomerangs halt after initially being shot (default 25)
+    edit_nes_byte(GAME_PATH, 0xA544, random.randint(0x10, 0x2C)) # Length of time until boomerangs home in on the player after stopping initially (default 1F)
+    edit_nes_byte(GAME_PATH, 0xA50B, random.randint(0x03, 0x09)) # Table for Doc Quick jump heights (A50B - A50E) (default 06)
+    edit_nes_byte(GAME_PATH, 0xA50C, random.randint(0x05, 0x0A)) # Table for Doc Quick jump heights (A50B - A50E) (default 08)
+    edit_nes_byte(GAME_PATH, 0xA50D, random.randint(0x06, 0x0A)) # Table for Doc Quick jump heights (A50B - A50E) (default 09)
+    edit_nes_byte(GAME_PATH, 0xA50E, random.randint(0x05, 0x0A)) # Table for Doc Quick jump heights (A50B - A50E) (default 08)
+    edit_nes_byte(GAME_PATH, 0xA513, random.randint(0x01, 0x05)) # Table for number of jumps Doc Quick will do before running (A513 - A518) (randomly decides between these) (default 03)
+    edit_nes_byte(GAME_PATH, 0xA514, random.randint(0x01, 0x05)) # Table for number of jumps Doc Quick will do before running (A513 - A518) (randomly decides between these) (default 02)
+    edit_nes_byte(GAME_PATH, 0xA515, random.randint(0x01, 0x05)) # Table for number of jumps Doc Quick will do before running (A513 - A518) (randomly decides between these) (default 02)
+    edit_nes_byte(GAME_PATH, 0xA516, random.randint(0x01, 0x05)) # Table for number of jumps Doc Quick will do before running (A513 - A518) (randomly decides between these) (default 01)
+    edit_nes_byte(GAME_PATH, 0xA517, random.randint(0x01, 0x05)) # Table for number of jumps Doc Quick will do before running (A513 - A518) (randomly decides between these) (default 01)
+    edit_nes_byte(GAME_PATH, 0xA518, random.randint(0x01, 0x05)) # Table for number of jumps Doc Quick will do before running (A513 - A518) (randomly decides between these) (default 01)
+    edit_nes_byte(GAME_PATH, 0xA52D, random.randint(0x02, 0x06)) # Speed of boomerangs (default 04)
+
+
 def randomize_doc_crash_boss():
 # Randomizes Doc Crash's boss attributes.
 
@@ -1917,6 +2120,44 @@ def randomize_doc_flash_boss():
     edit_nes_byte(GAME_PATH, 0x80F3, random.randint(0x30, 0x90)) # Delay between each usage of Time Stopper (default 60)
 
 
+def randomize_doc_heat_boss():
+# Randomizes Doc Heat's boss attributes.    
+    
+    edit_nes_byte(GAME_PATH, 0xA147, random.randint(0x01, 0x07)) # Number of fire projectiles shot; set this too high and the game becomes a laggy mess (minus 01) (default 02)
+    edit_nes_byte(GAME_PATH, 0xA1B6, random.randint(0x0F, 0x5F)) # Doc Heat tackle delay 1 (default 1E)
+    edit_nes_byte(GAME_PATH, 0xA1B7, random.randint(0x0F, 0x5F)) # Doc Heat tackle delay 2 (default 3C)
+    edit_nes_byte(GAME_PATH, 0xA1B8, random.randint(0x0F, 0x5F)) # Doc Heat tackle delay 3 (default 5A)
+    edit_nes_byte(GAME_PATH, 0xA1BE, random.randint(0x02, 0x06)) # Fire projectile 1 vertical speed (default 04)
+    edit_nes_byte(GAME_PATH, 0xA1BF, random.randint(0x03, 0x09)) # Fire projectile 2 vertical speed (default 06)
+    edit_nes_byte(GAME_PATH, 0xA1C0, random.randint(0x06, 0x0A)) # Fire projectile 3 vertical speed (default 08)
+    edit_nes_byte(GAME_PATH, 0xA1C1, random.randint(0x14, 0x44)) # Fire projectile 1 horizontal speed (default 1C)
+    edit_nes_byte(GAME_PATH, 0xA1C2, random.randint(0x14, 0x44)) # Fire projectile 2 horizontal speed (default 2A)
+    edit_nes_byte(GAME_PATH, 0xA1C3, random.randint(0x14, 0x44)) # Fire projectile 3 horizontal speed (default 34)
+
+
+def randomize_doc_wood_boss():
+# Randomizes Doc Wood's boss attributes.    
+    
+    edit_nes_byte(GAME_PATH, 0x8285, random.randint(0x02, 0x08)) # Doc Wood initial jump height (default 04)
+    edit_nes_byte(GAME_PATH, 0x8337, random.randint(0x02, 0x08)) # Doc Wood jump height after first time (default 04)
+    edit_nes_byte(GAME_PATH, 0x8295, random.randint(0x0C, 0x17)) # Delay time for when small leaves appear (default 12)
+    edit_nes_byte(GAME_PATH, 0x829A, random.randint(0x40, 0x90)) # Length of time Doc Wood stays open after throwing Leaf Shield (default 60)
+    edit_nes_byte(GAME_PATH, 0x8379, random.randint(0x40, 0x90)) # Length of time Doc Wood stays open after throwing Leaf Shield after the first time (default 60)
+    edit_nes_byte(GAME_PATH, 0x82E3, random.randint(0x08, 0x18)) # Related to length of time Doc Wood stays open after throwing Leaf Shield after the first time (default 0F)
+    edit_nes_byte(GAME_PATH, 0x82A8, random.randint(0x0D, 0x17)) # Delay for falling leaves (default 12)
+    edit_nes_byte(GAME_PATH, 0x82BA, random.randint(0x18, 0x3F)) # Delay time for how long falling leaves stay up before falling (default 2E)
+    edit_nes_byte(GAME_PATH, 0x82D5, random.randint(0x10, 0x38)) # Delay time for Doc Wood throwing Leaf Shield after falling leaves begin to fall (default 24)
+    edit_nes_byte(GAME_PATH, 0x83CC, random.randint(0x02, 0x06)) # Speed of thrown Leaf Shield (default 04)
+    edit_nes_byte(GAME_PATH, 0x8430, random.randint(0x52, 0x72)) # Speed of falling leaves (default 62)
+    edit_nes_byte(GAME_PATH, 0x8438, random.randint(0x01, 0x03)) # Speed of falling leaves (default 01)
+    edit_nes_byte(GAME_PATH, 0x8459, random.randint(0x30, 0xE0)) # X position of falling leaf 1 (default 40)
+    edit_nes_byte(GAME_PATH, 0x845A, random.randint(0x30, 0xE0)) # X position of falling leaf 2 (default 70)
+    edit_nes_byte(GAME_PATH, 0x845B, random.randint(0x30, 0xE0)) # X position of falling leaf 3 (default A0)
+    edit_nes_byte(GAME_PATH, 0x845C, random.randint(0x30, 0xE0)) # X position of falling leaf 4 (default D0)
+    edit_nes_byte(GAME_PATH, 0x847D, random.randint(0x0A, 0x15)) # Controls leftwards sway of falling leaves (default 0F)
+    edit_nes_byte(GAME_PATH, 0x84A5, random.randint(0x0A, 0x15)) # Controls rightwards sway of falling leaves (default 0F)
+
+
 def scramble_boss_behaviors():
 # Scrambles the AI for the bosses in the game.
 
@@ -1934,8 +2175,11 @@ def scramble_boss_behaviors():
     randomize_doc_metal_boss()
     randomize_doc_air_boss()
     randomize_doc_bubble_boss()
+    randomize_doc_quick_boss()
     randomize_doc_crash_boss()
     randomize_doc_flash_boss()
+    randomize_doc_heat_boss()
+    randomize_doc_wood_boss()
     
 
 def assign_weaknesses(mode, *args):
@@ -2074,6 +2318,8 @@ def fix_softlocks():
     edit_nes_byte(GAME_PATH, 0x14D10, 0x86)
     edit_nes_byte(GAME_PATH, 0x14E10, 0x59)
 
+    # Add fix for Wily 3
+
 
 def activate_burst_chaser():
 # Speeds up the game a bit by increasing Mega Man's speed, bullet speed, and a few other variables.
@@ -2099,6 +2345,7 @@ if __name__ == "__main__":
     scramble_music()
 
     # Related to special weapons
+    scramble_weapon_locations()
     scramble_weapon_palettes()
     scramble_weapon_energy_costs()
     scramble_weapon_behaviors()
