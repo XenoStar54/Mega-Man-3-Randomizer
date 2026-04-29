@@ -416,7 +416,7 @@ def scramble_robot_master_names():
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(needle_weapon_name)[i - 0x6430])
     for i in range(0x644C, 0x6452): # "Magnet"
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(MAGNET_NEW_NAME)[i - 0x644C])
-    for i in range(0x6453, 0x6459): # "Missile"
+    for i in range(0x6453, 0x645A): # "Missile"
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(magnet_weapon_name)[i - 0x6453])
     for i in range(0x645E, 0x6464): # "Gemini"
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(GEMINI_NEW_NAME)[i - 0x645E])
@@ -424,7 +424,7 @@ def scramble_robot_master_names():
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(gemini_weapon_name)[i - 0x6465])
     for i in range(0x646E, 0x6472): # "Hard"
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(HARD_NEW_NAME)[i - 0x646E])
-    for i in range(0x6473, 0x6479): # "Knuckle"
+    for i in range(0x6473, 0x647A): # "Knuckle"
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(hard_weapon_name)[i - 0x6473])
     for i in range(0x647E, 0x6481): # "Top"
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(TOP_NEW_NAME)[i - 0x647E])
@@ -436,7 +436,7 @@ def scramble_robot_master_names():
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SNAKE_NEW_NAME)[i - 0x6491])
     for i in range(0x649A, 0x649F): # "Spark"
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SPARK_NEW_NAME)[i - 0x649A])
-    for i in range(0x64A0, 0x64A4): # "Shock"
+    for i in range(0x64A0, 0x64A5): # "Shock"
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(spark_weapon_name)[i - 0x64A0])
     for i in range(0x64A9, 0x64AF): # "Shadow"   
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SHADOW_NEW_NAME)[i - 0x64A9])
@@ -535,26 +535,6 @@ def randomize_gemini_man_graphics():
                     edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
     # Animated tiles; Gemini Man's animations are more complicated than the rest of the stages and are stored in a different, more annoying to parse way as well
-    # Flashing stringy things in the background of the cave segments
-    gemini_string_color = random.randint(0x11, 0x1C)
-    edit_nes_byte(GAME_PATH, 0x4AAF, gemini_string_color + 0x10)
-    edit_nes_byte(GAME_PATH, 0x4AB0, gemini_string_color)
-    edit_nes_byte(GAME_PATH, 0x4AB1, gemini_string_color)
-    edit_nes_byte(GAME_PATH, 0x4AC3, gemini_string_color + 0x10)
-    edit_nes_byte(GAME_PATH, 0x4AC4, gemini_string_color)
-    edit_nes_byte(GAME_PATH, 0x4AC5, gemini_string_color)
-    edit_nes_byte(GAME_PATH, 0x4AD7, gemini_string_color + 0x10)
-    edit_nes_byte(GAME_PATH, 0x4AD8, gemini_string_color)
-    edit_nes_byte(GAME_PATH, 0x4AD9, gemini_string_color)
-    edit_nes_byte(GAME_PATH, 0x125D1, gemini_string_color + 0x10)
-    edit_nes_byte(GAME_PATH, 0x125D2, gemini_string_color)
-    edit_nes_byte(GAME_PATH, 0x125D3, gemini_string_color)
-    edit_nes_byte(GAME_PATH, 0x125D4, gemini_string_color)
-    edit_nes_byte(GAME_PATH, 0x125D5, gemini_string_color + 0x10)
-    edit_nes_byte(GAME_PATH, 0x125D6, gemini_string_color)
-    edit_nes_byte(GAME_PATH, 0x125D7, gemini_string_color)
-    edit_nes_byte(GAME_PATH, 0x125D8, gemini_string_color)
-    edit_nes_byte(GAME_PATH, 0x125D9, gemini_string_color + 0x10)
 
     # Fix block colors; block animations begin at 0x125BF
     color_1 = int(read_nes_byte(GAME_PATH, 0x125BF), 16) # Light blue highlight
@@ -592,6 +572,27 @@ def randomize_gemini_man_graphics():
         elif int(read_nes_byte(GAME_PATH, i), 16) == color_4:
            edit_nes_byte(GAME_PATH, i, new_color_4)
 
+    # Flashing stringy things in the background of the cave segments; do this after the block colors to prevent overwrites
+    gemini_string_color = random.randint(0x11, 0x1C)
+    edit_nes_byte(GAME_PATH, 0x4AAF, gemini_string_color + 0x10)
+    edit_nes_byte(GAME_PATH, 0x4AB0, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x4AB1, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x4AC3, gemini_string_color + 0x10)
+    edit_nes_byte(GAME_PATH, 0x4AC4, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x4AC5, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x4AD7, gemini_string_color + 0x10)
+    edit_nes_byte(GAME_PATH, 0x4AD8, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x4AD9, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D1, gemini_string_color + 0x10)
+    edit_nes_byte(GAME_PATH, 0x125D2, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D3, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D4, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D5, gemini_string_color + 0x10)
+    edit_nes_byte(GAME_PATH, 0x125D6, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D7, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D8, gemini_string_color)
+    edit_nes_byte(GAME_PATH, 0x125D9, gemini_string_color + 0x10)
+
     # Fix for the ground changing color after Proto Man cutscene
     edit_nes_byte(GAME_PATH, 0x4ADB, int(read_nes_byte(GAME_PATH, 0x4A9F), 16))
     edit_nes_byte(GAME_PATH, 0x4ADC, int(read_nes_byte(GAME_PATH, 0x4AA0), 16))
@@ -619,6 +620,11 @@ def randomize_hard_man_graphics():
     edit_nes_byte(GAME_PATH, 0x6A95, rock_base_color)
     edit_nes_byte(GAME_PATH, 0x6A94, rock_base_color + 0x20)
     edit_nes_byte(GAME_PATH, 0x6A93, rock_base_color + 0x30)
+
+    # Darken cave background colors
+    edit_nes_byte(GAME_PATH, 0x6A97, random.randint(0x01, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x6A98, random.randint(0x01, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x6A99, random.randint(0x01, 0x0C))
 
 
 def randomize_top_man_graphics():
@@ -744,6 +750,11 @@ def randomize_shadow_man_graphics():
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
+    # Darken the background to be less of an eyesore
+    edit_nes_byte(GAME_PATH, 0xEA9A, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0xEA9B, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0xEA9C, random.randint(0x00, 0x0C))
 
     # Animated tiles
     # Shadow Man's lava/sewer water works with a gradient across NES color palette rows (26, 16, 06). I think preserving this structure is best for graphical integrity.
@@ -887,6 +898,11 @@ def randomize_doc_shadow_graphics():
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
+    # Darken the background to be less of an eyesore
+    edit_nes_byte(GAME_PATH, 0x16A9A, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x16A9B, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x16A9C, random.randint(0x00, 0x0C))
+
     # Put animated water values into base tileset to prevent weird color changes on transition
     edit_nes_byte(GAME_PATH, 0x16A97, int(read_nes_byte(GAME_PATH, 0x125E9), 16))
     edit_nes_byte(GAME_PATH, 0x16A98, int(read_nes_byte(GAME_PATH, 0x125EA), 16))
@@ -894,6 +910,35 @@ def randomize_doc_shadow_graphics():
 
     # Fix spike background
     edit_nes_byte(GAME_PATH, 0x16A95, int(read_nes_byte(GAME_PATH, 0x16A9D), 16))
+
+
+def randomize_break_man_graphics():
+# Randomizes the graphics for Break Man's fight.
+
+    # Incredibly weird but it seems that Mega Man's palette and Proto Man's palette are actually stored here along with the stage graphics? Editing the palettes around these values screws up their color schemes
+    for i in range(0x31E3E, 0x31E4A):
+        if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
+            if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
+                edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
+            else:
+                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
+    # The rocks look really terrible with totally random color schemes, so apply a gradient
+    rock_base_color = random.randint(0x01, 0x0C)
+    edit_nes_byte(GAME_PATH, 0x31E3D, rock_base_color)
+    edit_nes_byte(GAME_PATH, 0x31E3C, rock_base_color + 0x20)
+    edit_nes_byte(GAME_PATH, 0x31E3B, rock_base_color + 0x30)
+
+
+def randomize_wily_1_graphics():
+# Randomizes the graphics for the first Wily fortress stage.
+
+    for i in range(0x18A92, 0x18AA2):
+        if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
+            if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
+                edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
+            else:
+                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
 
 def scramble_stage_palettes():
@@ -915,13 +960,11 @@ def scramble_stage_palettes():
     randomize_doc_spark_graphics()
     randomize_doc_shadow_graphics()
 
-    # Break Man's fight?
-    for i in range(0x31E2A, 0x31E57):
-        if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
-            if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
-                edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
-            else:
-                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+    # Break Man
+    randomize_break_man_graphics()
+
+    # Wily Fortress
+    randomize_wily_1_graphics()
 
 
 def scramble_music():
@@ -1740,7 +1783,63 @@ def randomize_doc_spark_entities():
 
 
 def randomize_doc_shadow_entities():
-    pass
+# Randomizes the entities for the Doc Shadow stage.
+
+    # First screen that's empty
+    # replace_entities(0x16A70, 0x16E10, 0x16E11)
+
+    # Second screen that's empty
+    # replace_entities(0x16A72, 0x16E10, 0x16E11)
+
+    # Third screen that's empty
+    # replace_entities(0x16A74, 0x16E10, 0x16E11)
+
+    # Fourth screen with Peterchys
+    replace_entities(0x16A76, 0x16E10, 0x16E13)
+
+    # Fifth screen with Bikky
+    replace_entities(0x16A78, 0x16E13, 0x16E14)
+
+    # Sixth screen with Peterchys, Walking Bombs, and Holograns; keep the dropping platforms
+    replace_entities(0x16A7A, 0x16E14, 0x16E2E, random.choice([0x08, 0x0B, 0x14]))
+    edit_nes_byte(GAME_PATH, 0x16E18, 0x5A)
+    edit_nes_byte(GAME_PATH, 0x16E19, 0x5A)
+    edit_nes_byte(GAME_PATH, 0x16E1B, 0x5A)
+    edit_nes_byte(GAME_PATH, 0x16E1D, 0x5A)
+    edit_nes_byte(GAME_PATH, 0x16E21, 0x5A)
+    edit_nes_byte(GAME_PATH, 0x16E22, 0x5A)
+    edit_nes_byte(GAME_PATH, 0x16E24, 0x5A)
+    edit_nes_byte(GAME_PATH, 0x16E25, 0x5A)
+    edit_nes_byte(GAME_PATH, 0x16E26, 0x5A)
+    edit_nes_byte(GAME_PATH, 0x16E27, 0x5A)
+    edit_nes_byte(GAME_PATH, 0x16E28, 0x5A)
+    edit_nes_byte(GAME_PATH, 0x16E29, 0x5A)
+    edit_nes_byte(GAME_PATH, 0x16E2B, 0x5A)
+
+    # Seventh screen with Peterchys
+    replace_entities(0x16A7C, 0x16E2E, 0x16E30)
+
+    # Eighth screen is a door transition
+
+    # Ninth screen with the first Doc Robot boss
+    edit_nes_byte(GAME_PATH, 0x16E30, RANDOMIZED_DOC_ROBOTS[6][0])
+    edit_nes_byte(GAME_PATH, 0x16A80, RANDOMIZED_DOC_ROBOTS[6][1])
+
+    # Tenth screen with Hammer Joes; leave the health pickup
+    replace_entities(0x16A82, 0x16E32, 0x16E35)
+
+    # Eleventh screen with Parasyus and Mechakkeros
+    replace_entities(0x16A84, 0x16E35, 0x16E44)
+
+    # Twelfth screen with Giant Springer
+    replace_entities(0x16A86, 0x16E44, 0x16E45)
+
+    # Thirteenth screen is a door transition
+
+    # Randomize the second Doc Robot boss
+    edit_nes_byte(GAME_PATH, 0x16E45, RANDOMIZED_DOC_ROBOTS[7][0])
+    edit_nes_byte(GAME_PATH, 0x16A8A, RANDOMIZED_DOC_ROBOTS[7][1])
+
 
 def scramble_stage_entities():
 # This scrambles all the stage entities.
@@ -1804,7 +1903,7 @@ def randomize_magnet_man_boss():
     edit_nes_byte(GAME_PATH, 0xC30F, random.randint(0xA0, 0xF0)) # Timer for Magnet Man's pulling phase (default F0)
     edit_nes_byte(GAME_PATH, 0xC34C, random.randint(0x02, 0x0A)) # Delay time between Magnet Missiles being fired (default 06)
     edit_nes_byte(GAME_PATH, 0xC366, random.randint(0x01, 0x06)) # Number of Magnet Missiles used before falling back to the ground (default 03)
-    edit_nes_byte(GAME_PATH, 0xC381, random.randint(0x04, 0x08)) # Gravity after firing Magnet Missile (default 06)
+    edit_nes_byte(GAME_PATH, 0xC381, random.randint(0x03, 0x09)) # Gravity after firing Magnet Missile (default 06)
     edit_nes_byte(GAME_PATH, 0xC42C, random.randint(0x02, 0x06)) # First jump height (default 04)
     edit_nes_byte(GAME_PATH, 0xC42D, random.randint(0x04, 0x08)) # Second jump height (default 06)
     edit_nes_byte(GAME_PATH, 0xC42F, random.randint(0xA3, 0xC8)) # Horizontal distance Magnet Man travels with each jump? (default B3)
@@ -1883,15 +1982,15 @@ def randomize_spark_man_boss():
     # edit_nes_byte(GAME_PATH, 0xE4E9, 0x99) # 0xE4E7 - E4FE # Jumping settings (default 99)
     # edit_nes_byte(GAME_PATH, 0xE4ED, 0x0E) # 0xE4E7 - E4FE # Jumping settings (default 0E)
     # edit_nes_byte(GAME_PATH, 0xE4F0, 0x80) # 0xE4E7 - E4FE # Jumping settings (default 80)
-    edit_nes_byte(GAME_PATH, 0xE50B, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 00)
+    edit_nes_byte(GAME_PATH, 0xE50B, random.randint(0x00, 0x02)) # 0xE50B - E513 # Messes with small sparks (default 00)
     edit_nes_byte(GAME_PATH, 0xE50C, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 01)
     edit_nes_byte(GAME_PATH, 0xE50D, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 02)
     edit_nes_byte(GAME_PATH, 0xE50E, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 01)
-    edit_nes_byte(GAME_PATH, 0xE50F, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 00)
-    edit_nes_byte(GAME_PATH, 0xE510, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 01)
+    edit_nes_byte(GAME_PATH, 0xE50F, random.randint(0x00, 0x02)) # 0xE50B - E513 # Messes with small sparks (default 00)
+    edit_nes_byte(GAME_PATH, 0xE510, random.randint(0x00, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 01)
     edit_nes_byte(GAME_PATH, 0xE511, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 02)
     edit_nes_byte(GAME_PATH, 0xE512, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 01)
-    edit_nes_byte(GAME_PATH, 0xE513, random.randint(0x01, 0x03)) # 0xE50B - E513 # Messes with small sparks (default 00)
+    edit_nes_byte(GAME_PATH, 0xE513, random.randint(0x00, 0x02)) # 0xE50B - E513 # Messes with small sparks (default 00)
 
 
 def randomize_shadow_man_boss():
@@ -2318,7 +2417,7 @@ def fix_softlocks():
     edit_nes_byte(GAME_PATH, 0x14D10, 0x86)
     edit_nes_byte(GAME_PATH, 0x14E10, 0x59)
 
-    # Add fix for Wily 3
+    # Wily fix for beginning; adds wheel
 
 
 def activate_burst_chaser():
