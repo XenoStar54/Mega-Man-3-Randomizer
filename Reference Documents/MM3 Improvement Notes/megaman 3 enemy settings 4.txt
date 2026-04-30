@@ -1,0 +1,65 @@
+Megaman 3 Improvement enemy settings
+------------------------
+
+Part 4, enemy ID's 60 to 7F
+
+------------------------
+60: snake head and 61: snake head (upside-down)
+
+39605:
+time until shoot (1st time only)
+
+3964A:
+time until shoot (every other time, after the 1st)
+
+396A2: low speed | 396A9: high speed
+X speed of bullet shoot
+------------------------
+62: top guy
+
+3B09D: timer until very 1st shoot (1-time only)
+3B0A2: timer until 2nd shoot (1-time only also i think)
+
+3B0E9:
+time until shoot tops
+
+3B11B:
+something related to how quickly he'll spawn new tops after you shoot them
+
+3B161: HP of tops (01 default HP)
+
+3B174: high speed
+X speed of tops - note: cant edit slow half speed
+
+3B17C:
+time until tops de-spawn
+3B1C5:
+same as 3B17C but in a different way ?
+------------------------
+63: trash block
+
+3954A:
+Check X position distance, when invisible
+
+3958C:
+time until next trash block is spawned
+
+3959B: HP
+HP for trash block. default 08 HP is way too high
+------------------------
+64: sparking trap and 65: sparking trap (wide)
+
+moving speed:
+674: (slow half), 774: (fast half)
+moving speed:
+675: (slow half), 775: (fast half)
+
+39503:
+time until the sparking animation appears, where you can't jump into it.
+------------------------
+flying pole fish (gemini)
+movement speed (shared with both horizontal and vertical, cant make them seperate)
+3A65E: (slow half), 3A666: (fast half)
+
+3A673: HP of fish (default 1 HP)
+------------------------

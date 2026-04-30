@@ -1,0 +1,110 @@
+;--------------------------------------
+Wily 1 boss notes:
+Main boss:
+
+256B5: Total number of turtles for battle, not recommended to edit at all
+25758-5B: Time from when it starts moving until the next Kamegoro is released (4 bytes)
+2575C-5F: Which way Kamegoro moves after being defeated (4 bytes) - 
+not recommended to edit
+25760-65: Boss life bar that decreases for each turtle defeated
+2577E: Y position to place turtle below the boss, when released -  not recommended to edit
+2578D: HP of turtle (default: 03)
+
+From here, the next three items are the values for each turtle.
+There seems to be 6 bytes, but the last one seems unused
+257D6-DB: Initial movement direction
+257DC-E1: Lower digit of X/Y movement speed (slow half)
+257E2-E7: Upper digit of X/Y movement speed (fast half)
+;--------------------------------------
+Turtle:
+
+257F3: Initial value of time until shell is removed
+However, it will not be removed unless the Y coordinate is 25810 or more
+25810: Shell can be removed at Y axis coordinates above this value
+25814: If shell is not removed within the time, the time until it can be removed again
+
+2593E: Y axis coordinate of the next water surface after coming out of the water once
+The following four items are 6 bytes each for the speed when Kamegoro comes out of the water surface
+25942-47: Lower digit of Y axis speed (slow half)
+25948-4D: Upper digit of Y axis speed (fast half)
+2594E-53: Lower digit of X axis speed (slow half)
+25954-59: Upper digit of X axis speed (fast half)
+
+25963: When moving downwards, this Y coordinate is used to determine that it is underwater
+25987: Same as 25963, these 2 should be the same value
+259E3: Y-axis position from turtle of water splash
+25A26: HP of shell
+;--------------------------------------
+Turtle's shell:
+
+25A4D: Lower digit of Y-axis speed (slow half)
+25A52: Time from appearance to stopping
+25A57: Time to explosion 1
+25A64: Sound effect when dealing damage
+25AA8: Turnaround time when moving up and down after stopping
+25ACF: If it is 02 or higher, it will explode after 25A57 has passed and 25AD3 has been counted
+25AD3: Time until explosion 2
+25ADF: Time until explosion 2 will start flashing when it reaches this time
+;--------------------------------------
+Water vortex tornados (little cross shaped sprite to init):
+
+25AF6: Time from appearance to start
+25B36: Time from when the vortex appearance notice is given until it appears
+25B64: Y-axis position of appearance notice when the vortex appears from below
+25B7D-7E: X-axis position when appearing from left/right (the one with the notice)
+25B7F-80: Direction when appearing from left/right
+25B81-90: Y-axis position when appearing from left/right 16Byte
+25B91-A0: X-axis position when appearing from below 16Byte
+25BFE: Y-axis position of the vortex appearance from the notice of appearance of the vortex from below
+25C10: Upper digit of the X and Y axis speed of the vortex (fast half)
+25C18-19: 2 bytes left and right of the X axis position where the vortex will emerge from the vortex appearance notice
+;--------------------------------------
+Water vortex tornados:
+
+25C2A: Y axis position where the vortex from below disappears
+25C5C: When it appears from the left or right, does it affect up to this X axis distance from the main body?
+25C63: The Y axis distance above
+25C7E: Lower digit of the X axis speed at which megaman is swept away when affected by the vortex appearing from the left or right (slow half)
+25C82: Upper digit of the above (fast half)
+;--------------------------------------
+Wily 2 boss notes:
+Yellow Devil:
+
+240A1: Time until starting battle  after lifebar is filled (first blocks appearing) - this is 1-time only - default: FF (4.15 seconds)
+240D7: X position to spawn blocks from (left side) - not recommended to edit - this is 1-time only at start of battle
+24105: X speed of blocks (fast half only) - cant edit slow half
+2413C: unknown timer (left side)
+24141: Number of times to shoot bullet (left side)
+241B4: Speed of bullets (slow half)
+241BB: Speed of bullets (fast half)
+241D4: Time until next bullet after the 1st
+241EA: Time until starting next block movement phase (after final bullet)
+242C6: Base Y position to place the stacks of vertical blocks ontop of each other, when it breaks apart (left side only)
+
+caution: certain values might cause unexpected results such as more blocks spawning then intended
+242ED: Vertical speed of these vertical stacked blocks when breaking apart left side of screen only - (fast half speed)
+24338: Time until next stack of blocks, not understood but can cause interesting delays, seen in some other romhacks.
+24353: X position where the eyeball appears (right side)
+24358: unknown timer (right side)
+2435D: Number of times to shoot bullet (right side)
+2444F: Time until begin bullet shoot   (right side)
+;--------------------------------------
+note: editing the X/Y speed will not be aligned, to when they're put into place on the right side of screen, so it might look weird
+
+244F5: Jump height Y speed of bouncing blocks (slow half)
+244FA: Jump height Y speed of bouncing blocks (fast half)
+244FF: X speed of bouncing blocks (slow half)
+24504: X speed of bouncing blocks (fast half)
+
+this is only on the final bounce after the first few ones
+2450A: Jump height Y speed of bouncing blocks (slow half)
+2450F: Jump height Y speed of bouncing blocks (fast half)
+24514: X speed of bouncing blocks (slow half)
+24519: X speed of bouncing blocks (fast half)
+;--------------------------------------
+24529: base Y position where to place block on ground when first spawning, for the bounce
+24550: base Y position where to place stack of vertical blocks (right side) - warning!! editing this will cause very unexpected behavior
+24555 and 2455A: Y speed of vertical block stack spawning (right side) - warning!! editing this will cause unexpected behavior if slower than original values
+
+245AB-247C9: Data tables of X/Y positions where each block spawns, draws into place, background drawing of the graphics, etc. I will not attempt to document any of this for now.
+;--------------------------------------

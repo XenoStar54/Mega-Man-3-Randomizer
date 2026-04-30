@@ -1,0 +1,53 @@
+Wily bosses part 2:
+--------------------
+wily 3 megaman clones:
+
+25CC1: Time from when you can move to when the real one appears - Note: this will make them look very out of sync if any other value, this is start of battle only, 1-time.
+
+25CC6: Time until the first real one turns around - Same as above, it can really make it look strange, or might cause softlocks if they walk off screen.
+
+25D03: Time from appearance to when it starts shooting
+25D39: Time from turning around to when it turns around again
+25D44: Number of times to wrap (left-right-left/etc)
+25D4B: After wrapping the number of times, 25D39 - if this number becomes negative, it will stop
+25D52: Time from stopping to disappearing animation
+25DA4: Time from when the real thing disappears to when it reappears - note: similiar to 25CC1 where they will look out of sync with the real vs fake.
+25DC8: Time to adjust the disappearing time and the wrapping time? note: can cause out-of-sync with real vs fake
+25DCD: Time until the first wrap after the real thing?
+25DE4: X position of real appearance from second time onwards
+
+25DEE-F1: Time until firing bullets 4 bytes - Default: 0.50/1.00/0.50/1.00 seconds (1E/3C/1E/3C)
+25E0A: X position of imposter appearance
+25E19: X speed of fake clones walking (fast half only)
+25E3E: Time until first appearance of imposter
+25E43: Time until first turn of imposter
+
+25E5C-6B: Y position where the fake appears 2×8Byte
+25E6C-7B: Initial movement direction of the fake 2×8Byte - only can be 01 or 02
+25EB0-B7: Y position where the real one appears 8Byte
+25EB8-BF: Initial movement direction of the real one 8Byte - only can be 01 or 02
+25EF6: Bullet X speed (slow half)
+25EFD: Bullet X speed (fast half)
+--------------------
+wily 5 - machine (little satellite on bottom)
+
+24824: Time until shooting bullet (first time start of battle only)
+249CB: Time until moving after planting its feet in ground. Warning: may cause softlocks or glitches if it's too high i think.
+24A2F: X position how far away/close mm is from satellite, to start shooting bullets
+24A38: Time until shooting next bullet
+24A4D: Y position where to place bullet - not recommended because it based on the satellite's position
+24A6B: X speed of bullet (fast half only)
+24A84: something related to bullet's speed - really not sure
+24D25: related to rotation of the bullets, dont really understand
+24D9E-AD: Bullet Rotation Y speeds (slow half)
+24DAE-BD: Bullet Rotation Y speeds (fast half)
+24DBE-CD: Bullet Rotation X speeds (slow half)
+24DCE-DD: Bullet Rotation X speeds (fast half)
+
+machine - 2nd half of battle:
+2484F: time spent staying low on ground for you to shoot wily, until moving back up
+24AA7: Bullet Y speed (slow half)
+24AAC: Bullet Y speed (fast half)
+24ABF: Y position to adjust bullet spawn position - not recommended
+24AF0: something about the "homing mm" part of the bullet speed
+24DDE-E3: Timer until next bullet shoot - RNG 6 bytes for left/right cannons

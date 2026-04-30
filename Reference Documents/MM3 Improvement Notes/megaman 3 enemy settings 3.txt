@@ -1,0 +1,22 @@
+Megaman 3 Improvement enemy settings
+------------------------
+
+Part 3, enemy ID's 40 to 5F
+
+------------------------
+5C: missle launcher
+
+391EC: HP
+HP for missles it shoots out
+
+39242:
+Check X position distance, when it stops in front of megaman to start the springy animation
+
+39246:
+timer related to its "stop and go" routine - i dont understand it too well
+------------------------
+5D: wall
+
+3B9C7 + 3B9CB:
+This is what weapon works on the walls (hard knuckle) but instead of telling what weapon is equipped, it uses the animation ID's making it harder to change which weapon you want to use to break them. So i cant dicuss that here
+------------------------

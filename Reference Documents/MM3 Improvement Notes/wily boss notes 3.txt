@@ -1,0 +1,49 @@
+Wily bosses part 3:
+--------------------
+wily 6 gamma:
+
+24EAE: When the distance from the megaman is within this X position distance, bullets are fired from the top of the head
+24EB8: time until shooting next bullet from head (lower = faster, higher = slower)
+24EC8: When the distance from the megaman is within this Y position distance, bullets are fired to the side
+24ED1: Horizontal bullets: Number of bullets fired at the same time
+24ED8: Horizontal bullets: time until shooting next bullet, the left-right ones (lower = faster, higher = slower)
+24EE3: Number of horizontal bullets fired in one pattern
+24EE7: Time to start again after firing the number above
+24EF7: When HP drops to this number, the form changes to wily battle
+24F5E: Time from the moment the first form is defeated to the first bullet fired by the second form
+24F63: Time until the arm appears for the first time - default 4 sec
+
+
+bullet properties (gamma):
+
+24FB4: Horizontal bullets: X speed (slow half)
+24FB9: Horizontal bullets: X speed (fast half)
+
+24FE8: Tossed-air bullets: Y speed (slow half)
+24FED: Tossed-air bullets: Y speed (fast half)
+2503F-42 Relative distance from megaman, where the X position speed of the tossed bullet changes - 4 bytes
+25043-46: Tossed-air bullets: X speed (slow half) - 4 bytes
+25047-4A: Tossed-air bullets: X speed (fast half) - 4 bytes
+--------------------
+wily 6 wily:
+
+2506B: Y position from the main body that fires the bullet
+25075: Object ID of bullet
+2507A: Bullets: X speed (slow half)
+25081: Bullets: X speed (fast half)
+2509A: Time until shooting next bullet from mouth
+
+250BD and 250DD: Maximum X position of arm extension - these must both be the SAME value
+250C5: Arm acceleration X speed (slow half)
+250CD: Arm acceleration X speed (fast half) default: 0.10 pixels per frame
+250D2: Maximum X speed to stop gaining speed (fast half only)
+note: for example default is 03, that means it will not go any faster than 3.00 pixels per frame
+
+250E1: Arm moving back to right - X speed (slow half)
+250E6: Arm moving back to right - X speed (fast half)
+2510F: Time until arm repeats pattern from start (appearing again)
+25167: Wily being shot up in air Y speed (slow half)
+2516C: Wily being shot up in air Y speed (fast half)
+
+251BF: enemy number check - this may need to be edited later after stage is done, unknown...
+--------------------

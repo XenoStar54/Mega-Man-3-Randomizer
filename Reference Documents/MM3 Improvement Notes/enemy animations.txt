@@ -1,0 +1,248 @@
+Basic format for all types of enemy/boss animations
+2 bytes for frames and speed, followed by animation ID for each individual frame
+
+1st byte: Number of frames in animation (00 always counts)
+2nd byte: Speed of animation
+
+example: hedgehog enemy when idle ("not" rolling phase)
+04 0C xx xx xx xx xx (5 frames of animation at 0C speed)
+
+I'm only going to list the ROM offsets of those first 2 bytes because it's the only important part you should be dealing with.
+
+You can sort of delete frames by simply lowering the 1st byte, but do "not" attempt raise the number because you cant actually "add" any additional frames to anything without completely moving all the pointers and data elsewhere.
+
+Warning: Some enemies may use code for specific AI's by checking a specific frame during their animation. I'm not going to include these because it's soooo much extra countless hours of work to even check all that stuff. (for example an enemy might check the 3rd frame of a specific animation and run code based on that) 
+------------------
+Type 00: Jumping Spark
+
+34399: jumping around, only animation
+default: 03 02 (for now on i will always list the starting ROM offset where these 2 bytes begin at, this document is going to be LONG)
+------------------
+Type 01: Airborn Head
+
+3439F: flying back and forth (with head)
+
+343A3: stop to drop head sprite
+
+343AC: flying back and forth (no head)
+------------------
+Type 02: Pellet Head Shooter
+
+344A9: idle when mm is far away
+
+344AD: shooting when mm is close
+------------------
+Type 03: Hammer Joe
+
+343B4: idle/block shots
+
+343BA: open eye/throw cannonball (VERY long!! 18 frames at 2 speed)
+
+343D5: cannonball sprite
+------------------
+Type 04: e04
+
+344E9: running with broomstick
+
+344EF: stop and prepare to jump
+
+344F4: rotating while in air from jumping
+
+344FD: running after landing on ground (no broomstick)
+------------------
+Type 05/15: e05/15 (spiders)
+
+34482: spider climbing ladders
+------------------
+Type 06: Bullet Cloud
+
+3445F: flying before you shoot it
+
+34465: reveal bullet when you shoot it
+
+3446B: flying after it's revealed itself from shooting
+------------------
+Type 08: Mosquito
+
+3453C: flying
+------------------
+Type 09: Metool
+
+3437F: metool hiding in shell/reveal
+
+34384: running
+------------------
+Type 0A: Launcher Cannon
+
+34503: idle/shoot ball (tons of frames, very long!!)
+------------------
+Type 0B: Cloud Platform
+
+34522: idle
+------------------
+Type 0C/0D/14: e0C/e0D/e14 (spiders)
+
+3447E: running on ground
+------------------
+Type 0E/1A: submarine
+
+34411: normal moving
+
+34415: stop and shoot missle
+------------------
+Type 0F: Magnet Guy
+
+344CB: flying
+------------------
+Type 11: Trash/Rock Thrower
+
+3442A: throwing trash block
+------------------
+Type 12: Bulldozer Metool
+
+3440D: normal moving
+------------------
+Type 13: Fly
+
+3452E: idle (shared with jump on final frame)
+animation ID "63" is the jump frame
+------------------
+Type 16/3D: Magnet Force (left/right)
+
+3441F: tile animation in magnet man
+------------------
+Type 18: Space Explorer
+
+34496: flying
+
+36310: large flame wall dropped by space explorer - Might by Heat Man battle, or other enemies
+------------------
+Type 1B: Hedgehog
+
+34540: idle/retracting his body in and out
+
+34547: rolling ball
+------------------
+Type 1C/2C: Penguin (Handle) / Fish
+
+36387: flying penguin enemies spawned from machine (type 2C)
+
+3638E: spinning penguin maker handle
+------------------
+Type 1D/1E: Gorilla
+
+3444F: idle
+
+34453: hanging on ceilings
+------------------
+Type 1F: Momma Wasp
+
+3442E: flying (without beehive)
+
+3443E: flying (with beehive)
+
+34445: tiny bee flying
+------------------
+Type 20: Bolt
+
+both of these have same # of frames and speed
+343FA: flying piece going across screen until reaching static bolt
+
+34405: regular bolt piece (non-moving)
+------------------
+Type 21: Floor Trap
+
+34449: idle/open mouth
+------------------
+Type 22: Needle (Up)
+
+36326: expand/contract
+------------------
+Type 23: Needle (Down)
+
+36398: expand/contract
+------------------
+Type 24: Sparker
+
+3449A: flying
+
+3449F: stop to spawn 8-way sparks. no animations, just delay of 10 frames (maybe delay timer until continue flying)
+------------------
+Type 25/31: Magnet Animation (Left/Right)
+
+343F5: tile animation (magnet man)
+------------------
+Type 26: Hopper
+
+343D9: idle/getting ready to jump
+
+343E1: Landing on ground
+------------------
+Type 27: Top Platform
+
+3637E: idle/spinning
+------------------
+Type 36: Robot Eye
+
+34486: walking on ground
+------------------
+Type 37: Walking Bomb
+
+3448D: walking on ground
+------------------
+Type 38: Parachute Guy
+
+34478: init parachute animation when near mm - the last frame is "held" permantely once the animation is done
+------------------
+Type 39/3A: Dark Bulb + Static
+
+3640F: init black-out screen effect - 1st frame is "held" before/after playing animation
+------------------
+Type 3C: Flying Metool
+
+3438A: show self and prepare to fly
+
+34392: flying
+------------------
+Type 5A: Trap Platform
+
+363D1: open/close platform
+------------------
+Type 5C: Missle Launcher
+
+36438: walking on ground (no missle)
+
+3643C: walking on ground (with missle poking out of top)
+
+3644F: springing it's head back and forth when mm is close
+------------------
+Type 60: Snake Head
+
+364AD: idle/blinking eye on final frame
+------------------
+Type 61: Snake Head (upsidedown
+
+364BE: idle/blinking eye on final frame
+------------------
+Type 62: Top Guy
+
+36471: idle/vibrating body
+------------------
+Type 64: Sparking Trap
+
+36455: idle (no spark hitbox in middle)
+
+36459: flashing (no spark hitbox in middle)
+
+3645F: sparking animation in middle, very long 16 frames
+------------------
+Type 65: Sparking Trap (Wide)
+
+36527: idle (no spark hitbox in middle)
+
+3652B: flashing (no spark hitbox in middle)
+
+36531: sparking animation in middle, very long 16 frames
+------------------
+
+------------------

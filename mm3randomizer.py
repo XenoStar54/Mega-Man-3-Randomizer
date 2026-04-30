@@ -117,7 +117,7 @@ ENEMY_GRAPHICS = [
     [0x11, [0x32, 0x37]], # Junk Golem
     [0x12, [0x02, 0x2D, 0x30]], # Pickelman Bull
     [0x13, [0x0B]], # Bikky
-    # [0x14] Mega Man?? (do not use)
+    # [0x14] Jamacy Generator (do not use)
     [0x15, [0x06, 0x17, 0x1C, 0x20]], # Jamacy (Alternate climbing variant? State for climbing variant?)
     [0x16, [0x09, 0x19]], # Magnet force (left)
     # [0x17] No clue what this is (do not use)
@@ -598,11 +598,10 @@ def randomize_gemini_man_graphics():
     edit_nes_byte(GAME_PATH, 0x4ADC, int(read_nes_byte(GAME_PATH, 0x4AA0), 16))
     edit_nes_byte(GAME_PATH, 0x4ADD, int(read_nes_byte(GAME_PATH, 0x4AA1), 16))
 
-    # Give a gradient to the background of the boss fight to avoid ugly backgrounds
-    gemini_bg = random.randint(0x00, 0x0C)
-    edit_nes_byte(GAME_PATH, 0x4AC8, gemini_bg)
-    edit_nes_byte(GAME_PATH, 0x4AC9, gemini_bg + 0x10)
-    edit_nes_byte(GAME_PATH, 0x4AC7, gemini_bg + 0x20)
+    # Restrict background of the boss fight to avoid ugly backgrounds
+    edit_nes_byte(GAME_PATH, 0x4AC8, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x4AC9, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x4AC7, random.randint(0x20, 0x2C))
 
 
 def randomize_hard_man_graphics():
@@ -857,11 +856,10 @@ def randomize_doc_gemini_graphics():
     edit_nes_byte(GAME_PATH, 0x12AEC, int(read_nes_byte(GAME_PATH, 0x125D2), 16))
     edit_nes_byte(GAME_PATH, 0x12AED, int(read_nes_byte(GAME_PATH, 0x125D3), 16))
 
-    # Give a gradient to the background of the boss fight to avoid ugly backgrounds
-    doc_gemini_bg = random.randint(0x00, 0x0C)
-    edit_nes_byte(GAME_PATH, 0x12AF0, doc_gemini_bg)
-    edit_nes_byte(GAME_PATH, 0x12AF1, doc_gemini_bg + 0x10)
-    edit_nes_byte(GAME_PATH, 0x12AEF, doc_gemini_bg + 0x20)
+    # Restrict background of the middle boss fight to avoid ugly backgrounds
+    edit_nes_byte(GAME_PATH, 0x12AC8, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x12AC9, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x12AC7, random.randint(0x20, 0x2C))
 
 
 def randomize_doc_spark_graphics():
@@ -940,6 +938,23 @@ def randomize_wily_1_graphics():
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
+    # Give the rocks at the beginning a gradient so they don't look awful
+    rock_base_color = random.randint(0x01, 0x0C)
+    edit_nes_byte(GAME_PATH, 0x18A9D, rock_base_color)
+    edit_nes_byte(GAME_PATH, 0x18A9C, rock_base_color + 0x20)
+    edit_nes_byte(GAME_PATH, 0x18A9B, rock_base_color + 0x30)
+
+
+def randomize_wily_2_graphics():
+# Randomizes the graphics for the second Wily fortress stage.
+
+    for i in range(0x1AA92, 0x1AAA2):
+        if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
+            if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
+                edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
+            else:
+                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
 
 def scramble_stage_palettes():
 # This scrambles the color schemes for the stages in the game. Black and white are not replaced to maintain some level of graphical integrity, and black and white are excluded from the possible color options to prevent extreme eyesore.
@@ -965,6 +980,7 @@ def scramble_stage_palettes():
 
     # Wily Fortress
     randomize_wily_1_graphics()
+    randomize_wily_2_graphics()
 
 
 def scramble_music():
@@ -1204,9 +1220,16 @@ def scramble_weapon_behaviors():
     edit_nes_byte(GAME_PATH, 0x3D29A, random.randint(0x08, 0x18)) # Delay, aka how long Mega Man pauses before shooting (default 10)
     edit_nes_byte(GAME_PATH, 0x3D282, random.randint(0x00, 0x02)) # Hard Knuckle acceleration (default 00)
 
+    # Top Spin variables (currently nonfunctional; anti-knockback variables cause immediate drainage of energy)
+    #top_spin_knockback = random.choice([[0x85, 0xF5], [0xEA, 0xEA]]) 
+    #edit_nes_byte(GAME_PATH, 0x38281, 0x85) # Controls knockback from Top Spin; if EA, no knockback occurs
+    #edit_nes_byte(GAME_PATH, 0x38282, 0xF5) # Controls knockback from Top Spin; if EA, no knockback occurs
+
     # Search Snake variables
     edit_nes_byte(GAME_PATH, 0x3D2CF, random.randint(0x00, 0x06)) # Search Snake vertical launch speed (default 03)
     edit_nes_byte(GAME_PATH, 0x3D2D9, random.randint(0x00, 0x04)) # Search Snake horizontal launch speed (default 01)
+    edit_nes_byte(GAME_PATH, 0x3D2DE, random.randint(0x0A, 0x23)) # Timer before Search Snake halts (default 13)
+    edit_nes_byte(GAME_PATH, 0x389F4, random.randint(0x02, 0x05)) # Crawling speed of Search Snake (default 03)
 
     # Shadow Blade variables
     edit_nes_byte(GAME_PATH, 0x3D2EB, random.choice([0x07, 0x0B, 0x0F])) # Shadow Blade shooting directions: see documentation for more info, but determines Shadow Blade throwable angles. Randomized between 5 upwards, 5 downwards, all 8 (Default 0B)
@@ -1216,6 +1239,10 @@ def scramble_weapon_behaviors():
         edit_nes_byte(GAME_PATH, 0x3D2FC, random.randint(0x0A, 0x28)) # Shadow Blade range, i.e. how long it travels before boomeranging. Setting it high enough causes it to act like Metal Blade (default 14)
     else:
         edit_nes_byte(GAME_PATH, 0x3D2FC, 0xFF) # 0xFF is more than enough range for the blade to never boomerang
+    edit_nes_byte(GAME_PATH, 0x38AEB, random.randint(0x04, 0x24)) # Length of time before Shadow Blade is deleted after it boomerangs back (default 14)
+
+    # Rush Jet variables
+    # edit_nes_byte(GAME_PATH, 0x3CFB8, 0x02) # Rush Jet vertical speed; only enabled in burst chaser mode (default 01) 
 
 
 def scramble_sprite_palettes():
@@ -1289,6 +1316,10 @@ def scramble_miniboss_behaviors():
     edit_nes_byte(GAME_PATH, 0x21A7, int(read_nes_byte(GAME_PATH, 0xAA94), 16)) # Big Snakey mouth color 2
     edit_nes_byte(GAME_PATH, 0x3BA96, random.randint(0x58, 0x88)) # Time until next attack phase (default 78)
     edit_nes_byte(GAME_PATH, 0x3BADA, random.randint(0x02, 0x06)) # Speed of shots (default 04)
+    edit_nes_byte(GAME_PATH, 0x3BB61, random.randint(0x01, 0x05)) # Setting for number of energy balls shot (randomly selects between these four values) (default 03)
+    edit_nes_byte(GAME_PATH, 0x3BB62, random.randint(0x01, 0x05)) # Setting for number of energy balls shot (randomly selects between these four values) (default 03)
+    edit_nes_byte(GAME_PATH, 0x3BB63, random.randint(0x01, 0x05)) # Setting for number of energy balls shot (randomly selects between these four values) (default 04)
+    edit_nes_byte(GAME_PATH, 0x3BB64, random.randint(0x01, 0x05)) # Setting for number of energy balls shot (randomly selects between these four values) (default 02)
 
     # Giant Metall
     edit_nes_byte(GAME_PATH, 0x25510, random.randint(0x0E, 0x2E)) # Time until third Metall is released after the first two (default 1E)
@@ -1378,7 +1409,7 @@ def randomize_magnet_man_entities():
     # Health pickups on sixth screen
     replace_entities(0x2A7A, 0x2E23, 0x2E27)
 
-    # Seventh screen with yoku blocks, can only randomize to 0x09 and 0x19 to not mess up yoku block sprites
+    # Seventh screen with Yoku blocks, can only randomize to 0x09 and 0x19 to not mess up Yoku block sprites
     replace_entities(0x2A7C, 0x2E27, 0x2E2D, random.choice([0x09, 0x19]))
 
     # Eighth screen with just pickups
@@ -1723,7 +1754,7 @@ def randomize_doc_gemini_entities():
     replace_entities(0x12A84, 0x12E4B, 0x12E4D)
 
     # Twelfth screen is empty, but there is a mistake with the water graphics set here
-    replace_entities(0x12A86, 0x12E4B, 0x12E4C, random.choice([0x03, 0x33, 0x38]))
+    edit_nes_byte(GAME_PATH, 0x12A86, random.choice([0x03, 0x33, 0x38]))
 
     # Thirteenth screen is a door transition
 
@@ -1801,7 +1832,7 @@ def randomize_doc_shadow_entities():
     replace_entities(0x16A78, 0x16E13, 0x16E14)
 
     # Sixth screen with Peterchys, Walking Bombs, and Holograns; keep the dropping platforms
-    replace_entities(0x16A7A, 0x16E14, 0x16E2E, random.choice([0x08, 0x0B, 0x14]))
+    replace_entities(0x16A7A, 0x16E14, 0x16E2E, random.choice([0x08]))
     edit_nes_byte(GAME_PATH, 0x16E18, 0x5A)
     edit_nes_byte(GAME_PATH, 0x16E19, 0x5A)
     edit_nes_byte(GAME_PATH, 0x16E1B, 0x5A)
@@ -1841,6 +1872,56 @@ def randomize_doc_shadow_entities():
     edit_nes_byte(GAME_PATH, 0x16A8A, RANDOMIZED_DOC_ROBOTS[7][1])
 
 
+def randomize_wily_1_entities():
+# Randomizes the entities for the first Wily fortress stage.
+
+    # First screen with 1-up, Komasaburos, E-Tank; I'm removing the free items because I'm evil >:)
+    replace_entities(0x18A70, 0x18E10, 0x18E14)
+
+    # Second screen with Penpens
+    replace_entities(0x18A72, 0x18E14, 0x18E1E)
+
+    # Third screen with 1-up... this one can stay
+    #replace_entities(0x18A74, 0x18E14, 0x18E1E)
+
+    # Fourth screen with a bunch of items; remove the free health that's available after the first wall
+    replace_entities(0x18A76, 0x18E27, 0x18E28, random.choice([0x06, 0x09, 0x19, 0x1B]))
+
+    # Fifth screen with Hammer Joes
+    replace_entities(0x18A78, 0x18E28, 0x18E2C)
+
+    # Sixth screen, only randomize to graphics sets that contain Yoku blocks; also take one health pickup away >:)
+    replace_entities(0x18A7A, 0x18E2C, 0x18E2D, random.choice([0x09, 0x19]))
+
+    # Seventh screen with weapon energy, leave it alone
+
+    # Eighth screen is door
+
+    # Leave Kamegoro Maker untouched
+
+
+def randomize_wily_2_entities():
+# Randomizes the entities for the second Wily fortress stage.
+
+    # First screen with just the dropping platforms; leave this alone
+    #replace_entities(0x1AA70, 0x1AE10, 0x1AE13)
+
+    # Second screen with more platforms and weapon energy; leave this alone
+    #replace_entities(0x1AA72, 0x1AE13, 0x1AE17)
+
+    # Third screen with 1-up... replace this with an enemy for evil reasons >:)
+    replace_entities(0x1AA74, 0x1AE18, 0x1AE19, random.choice([0x08]))
+
+    # Fourth screen with Wanaans and Have "Su" Bees; replace these and also most of the items because what is this some sort of charity shop lmao
+    replace_entities(0x1AA76, 0x1AE19, 0x1AE33)
+    edit_nes_byte(GAME_PATH, 0x1AE28, 0x52)
+    edit_nes_byte(GAME_PATH, 0x1AE2B, 0x51)
+    edit_nes_byte(GAME_PATH, 0x1AE2F, 0x54)
+    edit_nes_byte(GAME_PATH, 0x1AE31, 0x52)
+
+    # What a lengthy stage, am I right... anyways leave Yellow Devil MK-II alone
+
+
 def scramble_stage_entities():
 # This scrambles all the stage entities.
 
@@ -1860,15 +1941,46 @@ def scramble_stage_entities():
     randomize_doc_spark_entities()
     randomize_doc_shadow_entities()
 
+    # Wily Fortress
+    randomize_wily_1_entities()
+    randomize_wily_2_entities()
+
 
 def scramble_entity_properties():
 # This scrambles certain properties of the entities in the game.
 
-    # Needle Man
+    # Dada (entity ID 00)
+    edit_nes_byte(GAME_PATH, 0x38B65, random.randint(0x01, 0x05)) # Dada jump height 1 (default 03)
+    edit_nes_byte(GAME_PATH, 0x38B66, random.randint(0x01, 0x05)) # Dada jump height 2 (default 03)
+    edit_nes_byte(GAME_PATH, 0x38B67, random.randint(0x05, 0x09)) # Dada jump height 3 (default 07)
+
+    # Potton (entity ID 01)
+    edit_nes_byte(GAME_PATH, 0x38B98, random.randint(0x00, 0x0E)) # Horizontal distance before Potton drops head (default 04)
+
+    # New Shotman (entity ID 02)
+    edit_nes_byte(GAME_PATH, 0x39DCC, random.randint(0x0E, 0x2E)) # Time until New Shotman first begins shooting (default 1E)
+    edit_nes_byte(GAME_PATH, 0x39E29, random.randint(0x0E, 0x2E)) # Time until New Shotman begins shooting again after the first time (default 1E)
+    edit_nes_byte(GAME_PATH, 0x39DDE, random.randint(0x30, 0x70)) # Distance for shooting arcing bullets (default 50)
+    edit_nes_byte(GAME_PATH, 0x39E34, random.randint(0x01, 0x05)) # Times that New Shotman shoots before resetting pattern (default 03)
+    edit_nes_byte(GAME_PATH, 0x39E38, random.randint(0x3A, 0x7A)) # Delay between bullets being shot during multi-shot volley (default 5A)
+    edit_nes_byte(GAME_PATH, 0x39E8C, random.randint(0x00, 0x02)) # Speed of horizontal shots (default 01)
+    edit_nes_byte(GAME_PATH, 0x39E87, random.randint(0x01, 0xFF)) # Minor speed adjustment for horizontal New Shotman shots (default 80)
+    edit_nes_byte(GAME_PATH, 0x39EC4, random.randint(0x02, 0x06)) # Height of arcing shots (default 04)
+    edit_nes_byte(GAME_PATH, 0x39EBF, random.randint(0x01, 0xFF)) # Minor speed adjustment for height of arcing New Shotman shots (default 00)
+
+    # Hammer Joe (entity ID 03)
+    edit_nes_byte(GAME_PATH, 0x38C18, random.randint(0x0E, 0x2E)) # Time before Hammer Joe throws hammer (default 1E)
+    edit_nes_byte(GAME_PATH, 0x38CC6, random.randint(0x01, 0x05)) # Thrown hammer speed (default 03)
+    edit_nes_byte(GAME_PATH, 0x38CC1, random.randint(0x01, 0xFF)) # Minor speed adjustment for thrown hammer speed (default 33)
+    edit_nes_byte(GAME_PATH, 0x38CDA, random.randint(0x01, 0x03)) # HP of thrown hammer (default 01)
+
+    # Bubukan (entity ID 04)
+
+    # Needle obstacle (entity IDs 22 and 23)
     edit_nes_byte(GAME_PATH, 0x3B352, random.randint(0x10, 0x2A)) # Length of time that needle obstacles are extended for (default 1E)
 
-    # Top Man
-    edit_nes_byte(GAME_PATH, 0x3B259, random.choice([0x01, 0x02])) # Vertical speed of tops at the end of the stage, any setting higher than 2 makes it almost impossible to cross (default 01)
+    # Top Man top platforms (entity ID 27)
+    edit_nes_byte(GAME_PATH, 0x3B259, random.choice([0x01, 0x02])) # Vertical speed, any setting higher than 2 makes it almost impossible to cross in Top Man's stage (default 01)
 
 
 def scramble_enemy_weakness_tables():
@@ -2046,6 +2158,8 @@ def randomize_doc_air_boss():
     edit_nes_byte(GAME_PATH, 0xA706, random.randint(0x06, 0x0A)) # Doc Air jump height 2 (default 08)
     edit_nes_byte(GAME_PATH, 0xA707, random.randint(0x4A, 0x8A)) # Doc Air jump horizontal velocity 1 (default 6A)
     edit_nes_byte(GAME_PATH, 0xA708, random.randint(0xBA, 0xFA)) # Doc Air jump horizontal velocity 2 (default DA)
+
+    # All of the following is related to tornados
     edit_nes_byte(GAME_PATH, 0xA70B, random.randint(0x40, 0x4F)) # Delay timer for tornados (default 44)
     edit_nes_byte(GAME_PATH, 0xA70C, random.randint(0x40, 0x4F)) # Delay timer for tornados (default 4A)
     edit_nes_byte(GAME_PATH, 0xA70D, random.randint(0x40, 0x4F)) # Delay timer for tornados (default 42)
@@ -2257,6 +2371,66 @@ def randomize_doc_wood_boss():
     edit_nes_byte(GAME_PATH, 0x84A5, random.randint(0x0A, 0x15)) # Controls rightwards sway of falling leaves (default 0F)
 
 
+def randomize_kamegoro_maker_boss():
+# Randomizes Kamegoro Maker's boss attributes.
+
+    edit_nes_byte(GAME_PATH, 0x2578D, random.randint(0x02, 0x04)) # HP of individual turtles (default 03)
+    edit_nes_byte(GAME_PATH, 0x257E2, random.randint(0x02, 0x05)) # Turtle speed 1 (default 00)
+    edit_nes_byte(GAME_PATH, 0x257E3, random.randint(0x02, 0x05)) # Turtle speed 2 (default 01)
+    edit_nes_byte(GAME_PATH, 0x257E4, random.randint(0x02, 0x05)) # Turtle speed 3 (default 01)
+    edit_nes_byte(GAME_PATH, 0x257E5, random.randint(0x02, 0x05)) # Turtle speed 4 (default 02)
+    edit_nes_byte(GAME_PATH, 0x257E6, random.randint(0x02, 0x05)) # Turtle speed 5 (default 03)
+    edit_nes_byte(GAME_PATH, 0x257E7, random.randint(0x02, 0x05)) # Turtle speed 6 (default 04)
+    edit_nes_byte(GAME_PATH, 0x257F3, random.randint(0x48, 0x98)) # Time before turtle removes shell (default 78)
+    edit_nes_byte(GAME_PATH, 0x25814, int(read_nes_byte(GAME_PATH, 0x257F3), 16)) # Time before turtle removes shell (default 78)
+    edit_nes_byte(GAME_PATH, 0x25A26, random.randint(0x01, 0x03)) # Health of turtle shell (default 01)
+    edit_nes_byte(GAME_PATH, 0x25AF6, random.randint(0x1C, 0x4C)) # Time from appearance to start for water vortex (default 3C)
+    edit_nes_byte(GAME_PATH, 0x25B36, random.randint(0x58, 0x88)) # Time between vortex telegraph and vortex emerging (default 78)
+    edit_nes_byte(GAME_PATH, 0x25C10, random.randint(0x01, 0x04)) # Vortex speed (default 02)
+    edit_nes_byte(GAME_PATH, 0x25C82, random.randint(0x01, 0x04)) # Speed at which Mega Man is moved by vortexes (default 02)
+
+
+def randomize_yellow_devil_mkii_boss():
+# Randomizes Yellow Devil MK-II's boss attributes.
+
+    edit_nes_byte(GAME_PATH, 0x240A1, random.randint(0x7F, 0xFF)) # Time after entering the room until Yellow Devil MK-II starts appearing from the left (default FF)
+    edit_nes_byte(GAME_PATH, 0x24105, random.randint(0x02, 0x06)) # Yellow Devil MK-II block speed (default 04)
+    edit_nes_byte(GAME_PATH, 0x24141, random.randint(0x01, 0x05)) # Number of times to shoot bullet on the left side (default 03)
+    edit_nes_byte(GAME_PATH, 0x2435D, random.randint(0x01, 0x05)) # Number of times to shoot bullet on the right side (default 03)
+    edit_nes_byte(GAME_PATH, 0x241BB, random.randint(0x02, 0x06)) # Bullet speed (default 04)
+    edit_nes_byte(GAME_PATH, 0x241D4, random.randint(0x0A, 0x1F)) # Delay between bullet shots (default 15)
+    edit_nes_byte(GAME_PATH, 0x241EA, random.randint(0x0F, 0x2C)) # Delay between last bullet and next block movement phase (default 1E)
+    edit_nes_byte(GAME_PATH, 0x2444F, random.randint(0x22, 0x4C)) # Delay until bullets being shot on right side (default 3C)
+    edit_nes_byte(GAME_PATH, 0x244FA, random.randint(0x03, 0x07)) # Bouncing block Y speed (default 04)
+    edit_nes_byte(GAME_PATH, 0x244F5, random.randint(0x01, 0xFF)) # Minor adjustment for bouncing block Y speed (default A3)
+    edit_nes_byte(GAME_PATH, 0x24504, random.randint(0x01, 0x02)) # Bouncing block X speed (default 01)
+    edit_nes_byte(GAME_PATH, 0x244FF, random.randint(0x01, 0xFF)) # Minor adjustment for bouncing block X speed (default BD)
+
+    # This randomizes the block positions
+    #for i in range(0x245AD, 0x245C5): # Y positions where pieces stop (right side)
+        #edit_nes_byte(GAME_PATH, i, random.choice([0x58, 0x68, 0x78, 0x88, 0x98]))
+    #for i in range(0x245C5, 0x245DD): # X positions where pieces stop (right side)
+        #edit_nes_byte(GAME_PATH, i, random.choice([0xA8, 0xB8, 0xC8, 0xD8, 0xE8]))
+    for i in range(0x245DD, 0x245F5): # Y positions where pieces stop (left side)
+        edit_nes_byte(GAME_PATH, i, random.choice([0x18, 0x28, 0x38, 0x48, 0x58]))
+    #for i in range(0x245F5, 0x2460D): # X positions where pieces stop (left side)
+        #edit_nes_byte(GAME_PATH, i, random.choice([0xA8, 0xB8, 0xC8, 0xD8, 0xE8]))
+    #for i in range(0x24611, 0x24628): # Affects block height... very hard to understand, seems to be related to drawing as it does not impact the actual height of block objects
+        #edit_nes_byte(GAME_PATH, i, random.choice([0x22, 0x24, 0x26, 0x28, 0x2C, 0x30]))
+    #for i in range(0x24629, 0x24640): # Affects block height... very hard to understand, seems to be related to drawing since this also does not impact the block object height
+        #edit_nes_byte(GAME_PATH, i, random.choice([0x22, 0x24, 0x26, 0x28, 0x2C, 0x30]))
+
+    '''
+    # Some data visualization for the above (original values)
+    98 58 88 98 68 78 88 58 68 88 78 68 78 98 58 78 68 58 98 78 88 88 68 58 # 0x245AD - 0x245C4: these Y values seem to always apply to the stopping points of individual block transition
+    E8 E8 E8 D8 E8 E8 D8 D8 D8 C8 D8 C8 C8 B8 C8 B8 B8 B8 A8 A8 B8 A8 A8 A8 # 0x245C5 - 0x245DC: these X values are for the stopping point for first transition of blocks from the left to the right?
+    18 18 18 28 18 18 28 28 28 38 28 38 38 48 38 48 48 48 58 58 48 58 58 58 # 0x245DD - 0x245F4: maybe this actually controls the block object height?
+    A8 A8 A8 B8 A8 A8 B8 B8 B8 C8 B8 C8 C8 D8 C8 D8 D8 D8 E8 E8 D8 E8 E8 E8
+    26 2C 26 28 28 2C 28 26 28 2C 26 2C 26 2C 2C 26 26 26 2C 24 26 28 26 00 # 0x24611 - 0x24628: related to drawn block locations?
+    26 2C 22 2C 28 28 28 26 24 30 22 2C 22 30 28 26 26 22 2C 30 26 28 26 00 # 0x24629 - 0x24640: related to drawn block locations?
+    '''
+
+
 def scramble_boss_behaviors():
 # Scrambles the AI for the bosses in the game.
 
@@ -2279,6 +2453,10 @@ def scramble_boss_behaviors():
     randomize_doc_flash_boss()
     randomize_doc_heat_boss()
     randomize_doc_wood_boss()
+
+    # Wily fortress bosses
+    randomize_kamegoro_maker_boss()
+    randomize_yellow_devil_mkii_boss()
     
 
 def assign_weaknesses(mode, *args):
@@ -2332,7 +2510,7 @@ def assign_weaknesses(mode, *args):
 def scramble_boss_weakness_tables():
 # Scrambles the weaknesses of the bosses in the game. Damage tables are listed by weapon, which is how this list is structured. See the attached notes for more details on the enemy damage tables.
     
-    # Run helper function to get a table for Robot Masters
+    # Run helper function to get a weakness table for Robot Masters
     robot_master_weaknesses = assign_weaknesses(1, [0x04, 0x04, 0x04, 0x05, 0x07, 0x07, 0x07, 0x07])
     doc_robot_weaknesses = assign_weaknesses(1, [0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x07, 0x07])
     
@@ -2404,6 +2582,13 @@ def fix_scanline():
 def fix_softlocks():
 # This removes the spots where the player can be softlocked by running out of energy for Rush Coil / Rush Jet.
 
+    # Doc Gemini fix for the room with Poles where you can be softlocked if all Poles are killed and no energy is left for utilities; this moves an Electric Gabyoall into that room to die from
+    replace_entities(0x12A76, 0x12E2F, 0x12E33, random.choice([0x03]))
+    edit_nes_byte(GAME_PATH, 0x12B2F, 0x0D)
+    edit_nes_byte(GAME_PATH, 0x12C2F, 0xA0)
+    edit_nes_byte(GAME_PATH, 0x12D2F, 0x92)
+    edit_nes_byte(GAME_PATH, 0x12E2F, 0x64)
+
     # Doc Gemini fix for midpoint; adds wheel
     edit_nes_byte(GAME_PATH, 0x12A7C, 0x27)
     edit_nes_byte(GAME_PATH, 0x12B34, 0x12)
@@ -2417,7 +2602,19 @@ def fix_softlocks():
     edit_nes_byte(GAME_PATH, 0x14D10, 0x86)
     edit_nes_byte(GAME_PATH, 0x14E10, 0x59)
 
-    # Wily fix for beginning; adds wheel
+    # Wily 3 fix for beginning; adds wheel
+
+
+def rebalance_difficulty():
+# Makes some modifications to smooth out the difficulty curve of the game, especially when assets are randomized.
+
+    # Nerf Doc Quick damage
+    edit_nes_byte(GAME_PATH, 0x140C2, 0x06) # Doc Quick contact damage (default 08)
+
+    # Nerf Doc Wood damage
+    edit_nes_byte(GAME_PATH, 0x1404C, 0x04) # Leaf Shield damage (default 08)
+    edit_nes_byte(GAME_PATH, 0x140B1, 0x06) # Doc Wood contact damage (default 08)
+    edit_nes_byte(GAME_PATH, 0x140B9, 0x04) # Leaf Shield damage (default 08)
 
 
 def activate_burst_chaser():
@@ -2428,6 +2625,7 @@ def activate_burst_chaser():
     edit_nes_byte(GAME_PATH, 0x3D77D, 0x4C) # Invicibility time after taking damage (default 3C)
     edit_nes_byte(GAME_PATH, 0x3D3D5, 0x04) # Mega Man's sliding speed (default 02)
     edit_nes_byte(GAME_PATH, 0x3D4CC, 0x02) # Ladder climbing speed (default 01)
+    edit_nes_byte(GAME_PATH, 0x3CFB8, 0x02) # Rush Jet vertical speed (default 01)
 
 
 if __name__ == "__main__":
@@ -2465,4 +2663,5 @@ if __name__ == "__main__":
     # Bonus stuff
     fix_scanline() # Disable if you want to preserve the annoying scanline issue on the stage select...?
     fix_softlocks() # Disable if you want to add the opportunity to be softlocked back into the game
+    rebalance_difficulty() # Disable for harsher damage values, which might make a randomized playthrough much more challenging
     activate_burst_chaser() # Disable if not playing Burst Chaser mode

@@ -1,0 +1,107 @@
+Weapon Settings for mm3 improve 3.0, not orig mm3
+
+-------------
+Global
+-------------
+7D169 (low byte) + 7D16E (high byte):
+This is a global setting in the main weapon shooting process.
+X speed of shots. This affects almost every weapon if you edit this.
+
+** Buster shots, gemini laser (before touching walls), Needle Cannon, Magnet Missle, Coil/Marine/Jet, Spark Shock, and Shadow Blade. Giving the weapons seperate speed requires custom ASM coding.
+
+-------------
+Gemini Laser
+-------------
+388E9 (low/slow speed) + 388F1 (high/fast speed):
+Speed of laser after hitting a wall for the first time. This is shared with both X and Y speed, they cant be edited seperately. So there's only 1 setting
+
+38954-38956:
+Timers on when the 3 pieces of lasers spawn on shoot. in # of frames. the farther these numbers are spread out, then the farther away each piece is from each other. I do not recommend touching these unless you want it to look weird and "off-sync".
+
+7D230:
+Timer how long laser stays on screen before leaving. Warning! any lower than default value will only make 1 laser spawn, because of the 3 laser pieces - Directly related to the 3 timers at 38954 above.
+------------
+Needle Cannon
+------------
+7D34B-7D34C:
+Y position "spread" of how far apart the needles are from each other during rapid fire. Alternating back and forth with these 2 values.
+
+------------
+Hard Knuckle
+------------
+38981: (high byte only)
+Maximum speed hard knuckle will travel, after doing the little "speed up" thing at the start.
+
+38989: (low byte only)
+X speed of how fast the "speed up to max speed" it'll travel. This is no longer relevant as soon as it reaches max speed. (about 10 frames or so by default)
+
+7D282 + 7D28D:
+Y speed of how fast it travels when your aiming with up/down.
+
+7D29A:
+Timer how long megaman stays frozen for after shooting. Don't set it too low, or else it'll mess up his animation. I wouldn't touch it at all.
+
+7D2A0:
+If you put "EAEA" here, it will get rid of the freezing megaman effect. But it will partily screw up his animations. So the timer above is probably the better option.
+------------
+Magnet Missle
+------------
+38867: (low byte only)
+Y speed of a speed up thing, when locking onto enemy. But im not sure how it works cause i don't really notice anything happen trying different values. Editing might screw up the accuracy of hitting enemies.
+
+------------
+Top Spin
+------------
+38281:
+If you put "EAEA" here, it will get rid of the knockback effect from hitting an enemy.
+
+------------
+Search Snake
+------------
+389EC (low byte) + 389F4 (high byte):
+X speed of snakes after touching ground from the little toss-up AI at the start. Affects all ground and wall-climbs.
+
+7D2CA (low byte) + 7D2CF (high byte):
+Y speed of snakes being tossed up
+
+7D2D4 (low byte) + 7D2D9 (high byte):
+X speed of snakes being tossed up
+
+7D2DE:
+Timer how long snakes travel until stopping movement - when first tossed up only.
+
+------------
+Rush Coil
+------------
+7CE74 (low byte) + 7CE79 (high byte):
+Y speed of megaman's jump power when landing on Rush Coil and being shot up.
+
+------------
+Spark Shock
+------------
+None
+
+------------
+Rush Marine
+------------
+7D8F8 (low byte) + 7D8FD (high byte):
+Y speed of moving down/up on Rush Marine.
+
+------------
+Shadow Blade
+------------
+38AEB:
+Timer for how long blade travels back to mm until auto-deleting itself. The higher this is, the longer it keeps moving even after passing mm.
+
+7D2F2 (low byte) + 7D2F7 (high byte):
+Y speed of blade when going up/down.
+
+7D2FC:
+Timer for how long blade travels forward. This is "before" the coming back AI from above. If you set it high enough, it can go off screen and never return, like metal blade almost.
+
+------------
+Rush Jet
+------------
+7CFB3 (low byte) + 7CFB8 (high byte):
+Y speed of moving down/up on Rush Jet.
+------------------------------------

@@ -1,0 +1,363 @@
+Megaman 3 Improvement enemy settings
+---------------------
+This is in order of enemy number order from MegaFLE level editor
+
+Only compatible with Megaman 3 Improvement english version, due to many enemies having edits throughout the history of this hack. Not original Megaman 3.
+---------------------
+** very important!!
+All existing enemies/bosses load a "starting" X speed from tables at the very start of ROM. However, they use a simple pointer to what speed it wants to pick from the table. Most of these are shared by MANY enemies.
+
+For example, editing the base speed of a metool might be shared by several other enemies. please keep this in mind.
+
+Tip: you can just set every single enemy to it's own individual pointer if you chose, to avoid enemies being shared. Cause only about 10 or so actually exist. I hope this makes sense.
+
+510-59F:
+enemy type pointer (use megafle to match the enemy type number to this table starting at 510) for example - "Enemy Type 1B hedgehog" refers to 52B
+This is the pointer for these 2 tables below:
+
+610-69F:
+X speed low
+
+710-79F:
+X speed high
+---------------------
+Part 1, enemy ID's 00-1F
+---------------------
+00: Jumping Spark
+3 jump settings, 2 are the same values, the 3rd is a higher one
+
+38B62-38B64:
+Low speed  - vertical jump heigth
+
+38B65-38B67:
+High speed - vertical jump heigth
+---------------------
+01: airborn head
+
+38B98: default: 04 pixels
+X position distance how far away megaman/enemy are from each other until he drops head. The higher, the farther away he'll drop his head object from. (same if it was Y position)
+For now on i will name this "Check X or Y position distance" 
+
+Head object settings:
+
+38BDA: default: 1 HP
+HP for head object
+---------------------
+02: pellet head shooter
+
+39DCC: default: 1E - 0.50 seconds
+Time until shooting bullets. (1st time only)
+
+39DDE: default: 50 pixels
+Check X position distance (arc bullets)
+
+39E29: default: 1E
+Time until shooting bullets. (any other time after 1st)
+
+39E34: default: 03 times
+Times to shoot bullet before restarting pattern
+
+39E38: default: 5A
+Time until shooting next bullet during the 3 shots above
+
+39E87: low speed | 39E8C: high speed
+X speed of normal horizontal bullets 
+Default: 01.80
+
+39EBF: low speed | 39EC4: high speed
+vertical jump height of arc bullets
+Default: 04.00
+
+4 main settings to determine the X speed of arc bullets
+39F16-39F19:
+Check X position distance (arc bullets)
+
+39F1A-39F1D: low speed
+39F1E-39F21: high speed
+---------------------
+03: hammer joe
+
+38C18: default: 1E
+Time until shooting hammer
+
+38CC1: low speed | 38CC6: high speed
+X speed of shooting hammers
+Default: 03.33
+
+38CDA: default: 1 HP
+HP for hammer
+---------------------
+04: e04
+
+39DDE: default: 40 pixels
+Check X position distance
+
+38D58: low speed | 38D5D: high speed
+Y speed of guy jumping in air
+Default: 07.4D
+
+38D8C: default: 1 HP
+HP for broomstick object
+
+38D9B: low speed | 38DA0: high speed
+Y speed of broomstick being tossed up
+Default: 03.44
+
+38DC2: low speed | 38DC7: high speed
+X speed of guy running on ground, after jumping and landing
+Default: 02.00
+
+38DCC: default: 10
+Time until starting run (one time only)
+---------------------
+05 and 15: e05 and e15 (spider climbing ladders)
+
+38DE6: low speed
+Y speed of spider climbing ladders.
+00.xx only (cant go higher than 00.FF (1 pixel/frame)
+
+38E22:
+Y distance to travel on ladder until reversing direction
+38E23:
+same thing, for enemy type e15 (another spider ladder climb variant)
+---------------------
+06: bullet cloud
+
+38E92: default: 05
+Affects how wide it flys up and down, the higher, the more distance it travels up and down
+
+38ED4: low speed | 38ED9: high speed
+X speed of bullet after shooting to reveal it
+
+38F5C-38F99
+A very huge table for X and Y speeds of the "waving up and down" - It's too much to list here
+---------------------
+08: mosquito
+396E0:
+Check X position distance (main check when invisible)
+
+39745:
+Time until rush across screen
+
+39762 + 3976E:
+Check X position distance (when to stop close to mm)
+Both must be same value
+
+3977D:
+Check Y position distance (when stop close to mm)
+---------------------
+09: metool
+
+397BA:
+Check X position distance
+
+397D7:
+Timer for how long metool runs before stopping
+
+397DC:
+Timer for how long metool stays "idle" before starting to run
+
+39885-39887: low speed | 39888-3988A: high speed
+X speed of the 3 bullets
+
+3988B-3988D: low speed | 3988E-39890: high speed
+Y speed of the 3 bullets
+Note: one is FF.50 meaning it moves up - the value is backwards, lower goes higher
+
+39891-3984: 4 RNG timer settings
+Timers until re-open shell after back to hiding
+---------------------
+0A: launcher cannon
+
+398DD:
+Check X position distance from megaman until doing stuff
+
+39925: low speed | 3992A: high speed
+Y speed of balls tossed in air
+
+4 total settings for a ball to have
+39999-3999C:
+Check X position distance from megaman - to determine the X speed table below
+
+3999D-399A0: low speed | 399A1-399A4: high speed
+X speed of balls
+
+399A5-399A6:
+Timer until next shoot (2 RNG settings)
+---------------------
+0B: cloud platform
+
+38FAB: low speed | 38FB0: high speed
+Y speed of clouds (1st spawn only)
+
+39083: low speed
+Y speed of clouds (all other spawns, can not be higher than 00.FF)
+39088: low speed
+X speed of clouds (all other spawns, can not be higher than 00.FF)
+---------------------
+0C and 0D: e0C and e0D (spider running on ground)
+
+39132: low speed | 39137: high speed
+Y speed of climbing ladders
+---------------------
+0F: magnet guy
+
+39AE4:
+Check X position distance
+
+39B0E: low speed | 39B13: high speed
+Y speed for megaman, unknown
+---------------------
+11: trash/rock thrower
+
+39B5F:
+Check X position distance
+
+39BAD:
+time until next rock dropping
+
+39C1C: default: 8 HP
+HP for giant rock
+
+39C2C: high speed
+Y speed of rock dropping
+
+39C55: high speed
+X speed of rock being thrown
+
+39FF7-39FFA: low speed | 39FFB-39FFE: high speed
+Y speed of 4 flying junk pieces
+
+39FFF-3A002: low speed | 3A003-3A006: high speed
+X speed of 4 flying junk pieces
+---------------------
+12: bulldozer metool
+
+39C7C:
+time until move (1st time only)
+
+39CF2:
+time until move (all other times)
+---------------------
+13: fly
+
+3452E + 39D65: number of frames to do up and down animiation before continuing (default: 08)
+
+39D7C: low speed | 39D81: high speed
+Y speed of jumping in air
+---------------------
+14: e14 invisible object to spawn spiders
+
+390C9: default: 1 HP
+HP for spider
+
+390DD: low speed | 390E2: high speed
+X speed of new spider on spawn
+Default: 01.80
+
+390E7: default: F0 (4.00 seconds)
+time until next spawn 
+---------------------
+16 and 3D: magnet force (left/right)
+
+39D98:
+Check Y position distance
+
+39DA1:
+Check X position distance
+
+39DBC: low speed | 39DC0: high speed
+X speed to draw mm to magnet
+---------------------
+18: space explorer
+
+3A4C3:
+Check X position distance
+
+3A58C-3A5CB:
+very huge table for the X and Y speeds when it does that "half circle" rotation. too much to list here...
+---------------------
+1A: submarine
+
+3A686: high speed
+Y speed when leaving the screen, after hitting a wall
+Cant be higher than 00.FF
+
+3A6BE:
+Check X position distance
+
+3A6E2: low speed | 3A6E7: high speed
+X speed to continue moving, after shooting up missle
+
+3A753: high speed
+Y speed for missle moving up
+---------------------
+1B: hedgehog
+
+3A307:
+time until needle shot (1st time only)
+
+3A376:
+time until start rolling
+
+3A394:
+time to keep staying in the rolling animation
+
+3A422:
+time until start rolling (another one but shorter)
+
+3A485-3A498:
+Large table for all the individual needles - X and Y speeds
+---------------------
+1C: penguin (handle) the big spawner thing
+
+3A92D: low speed | 3A932: high speed
+X speed for little penguins spawned
+---------------------
+1D: gorilla
+
+3AEDE: low speed | 3AEE3: high speed
+Y speed for jumping up to ceiling
+
+3AEE8:
+time until jumping up
+
+3AF35:
+Check X position distance when hanging on ceiling
+
+3AF58:
+this checks if his HP is currntly 4 of 8 (original mm3 HP), and if hits exactly 4, he'll start a new "jump to ceiling phase"
+
+3AF5F: low speed | 3AF64: high speed
+Y speed for jumping up to ceiling when HP is 4
+
+3AF8F: low speed | 3AF94: high speed
+Y speed power for jumping around
+---------------------
+1F: momma wasp
+
+3AD24:
+Check X position distance - when invisible
+
+3AD30:
+time until dropping beehive
+
+3AD7E:
+Check X position distance - how close or far away he'll "stop" after passing megaman's position
+
+3AD88: low speed | 3AD8D: high speed
+Y speed for floating up and down, before dropping beehive
+
+3AE29: HP
+HP for beehive, maybe...i think.
+
+3AE2E: low speed | 3AE33: high speed
+Y speed how fast the beehive drops to ground
+
+3AE9B: HP
+HP for flying bees
+
+39359-393D8:
+very long table - 80 bytes long - of X/Y speeds for the bees. 
+it is shared with some other enemies i don't know yet. So im not going to attempt to list anything. There's 16 speeds for a full 360 degree rotation.
+---------------------

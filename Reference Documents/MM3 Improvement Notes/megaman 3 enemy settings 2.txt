@@ -1,0 +1,156 @@
+Megaman 3 Improvement enemy settings
+------------------------
+
+Part 2, enemy ID's 20 to 3F
+
+------------------------
+20: bolt
+
+3AB8D: low speed | 3AB92: high speed
+Y speed for chasing megaman after bolt is fully formed
+
+3ABB6: low speed | 3ABBB: high speed
+X speed for the flying piece going across screen, before form phase
+
+3AC3B:
+Check X position distance - when invisible
+
+3AD14: HP
+HP for the bolt, after it fully formed into a new object
+------------------------
+21: floor trap
+
+3AFF2: high speed
+Y speed for flying up after you pass it. I don't really understand this one honestly. most likely not useful.
+
+3B008:
+time until next "catch mm" after it goes back to hiding
+
+3B00D:
+this has to do with flying up like how long it does i think, not sure
+------------------------
+22: needle (up) and 23: needle (down)
+
+3B323:
+Check X position distance - when invisible
+------------------------
+24: sparker
+
+3B374:
+Check X position distance - when invisible
+
+3B38D + 3B392 + 3B3B3:
+a timer or something i dont quite understand. it affects how it flys up and down though
+
+3B45C-3B483:
+X/Y speeds table for the 8 sparks. each pair of bytes is 8 bytes long in order of: X low, X high, Y low, Y high
+some of these have "negative" values in FF.xx range meaning they move up instead of down
+------------------------
+26: hopper
+
+3B21A: time until jumping (3C hex default = 1.00 second)
+3B24A-4B: low speed | 3B24C-4D: high speed
+Y speed jump power (2 RNG settings)
+------------------------
+2C: fish
+
+38F18:
+Check X position distance before charging into mm
+
+38F20: high speed
+X speed to charge at mm once it comes close enough
+
+38F5A-38FA9:
+X/Y speeds table with these "rotation" speeds for it's wavy pattern, wont list. too much
+
+shared with 38: parachute guy
+------------------------
+2D: sparkman platforms
+
+3BA00: high speed
+Y speed when the platform moves up
+
+3BA48: low speed | 3BA4D: high speed
+Y speed when the platform moves down
+I do not suggest touching this cause platforms are extremly hard to manage with mm
+------------------------
+36: robot eye
+
+none
+------------------------
+37: walking bomb
+
+moving speed:
+647: (slow half), 747: (fast half)
+
+3B52C: low speed | 3B531: high speed
+Y speed jump power when touching walls
+------------------------
+38: parachute guy
+
+3B5E7: high speed
+Y speed for falling down at start, before any animations
+
+3B5EF:
+Check X position distance - when invisible
+
+3B626:
+a timer or something related to the flying back and forth
+
+3B6A0:
+affects how far he'll go the left/right before turning around
+
+3B6DA: low speed | 3B6DF: high speed
+Y speed - more flying left/right related. editing this guy seems to be difficult to do...
+------------------------
+39: dark bulb (static)
+none
+
+3A: dark bulb
+
+3B5A5:
+Check X position distance, until stopping to turn off lights
+
+3B5B4:
+time until moving, after turning off lights
+
+3B5C0: low speed | 3B5C5: high speed
+X speed to move across screen, after turning off lights and the timer above is depeleted
+------------------------
+3B: penguin
+
+3AA22: low speed | 3AA27: high speed
+Y speed jump power (1-time only start of AI)
+
+3AA2C:
+time until egg shot (1-time only start of AI)
+
+3AA6D: low speed | 3AA72: high speed
+Y speed jump power (every other time, after the 1st)
+
+3AAA5:
+time until egg shot (every other time, after the 1st)
+
+3AAD8: HP
+HP for egg
+
+Bouncing speeds for eggs 3 different settings
+3AB5F-3AB61: Y speed low
+3AB62-3AB64: Y speed high
+3AB65-3AB67: X speed low
+3AB68-3AB6A: X speed high
+------------------------
+3C: flying metool
+
+399FD:
+Check X position distance
+
+39A10: low speed | 39A15: high speed
+Y speed for flying straight up and down
+
+39A22:
+Y position distance to stop flying up. if it passes this value he'll stop flying up (how far up/down away megaman is from the metool) ...i think
+
+39ABC-39ACA:
+X and Y speeds for the 3 sets of bullets
+------------------------

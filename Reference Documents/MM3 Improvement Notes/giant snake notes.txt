@@ -1,0 +1,12 @@
+;--------------------------------------
+giant snake notes:
+
+3BA96: Time until the next attack with the energy balls. default: 78 (2.00 seconds)
+3BACE: object ID to shoot - not recommended to edit
+
+3BAD3: Speed of balls (slow half)
+3BADA: Speed of balls (fast half)
+3BAF8: Time until next energy ball - caution: Higher or lower values may shoot less or more balls per cycle than expected.
+
+3BB61-64: Number of balls to shoot per cycle, random between 2 to 4 balls - 4 total RNG values
+;--------------------------------------
