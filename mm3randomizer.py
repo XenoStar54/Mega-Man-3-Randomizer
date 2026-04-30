@@ -2406,15 +2406,15 @@ def randomize_yellow_devil_mkii_boss():
     edit_nes_byte(GAME_PATH, 0x24504, random.randint(0x01, 0x02)) # Bouncing block X speed (default 01)
     edit_nes_byte(GAME_PATH, 0x244FF, random.randint(0x01, 0xFF)) # Minor adjustment for bouncing block X speed (default BD)
 
-    # This randomizes the block positions
-    #for i in range(0x245AD, 0x245C5): # Y positions where pieces stop (right side)
+    # Block variables (do not touch, these are complicated); still trying to locate a way to change the order the block are sent in but it seems very challenging to coordinate
+    #for i in range(0x245AD, 0x245C5): # X positions where pieces stop (coming from right side)?
         #edit_nes_byte(GAME_PATH, i, random.choice([0x58, 0x68, 0x78, 0x88, 0x98]))
-    #for i in range(0x245C5, 0x245DD): # X positions where pieces stop (right side)
-        #edit_nes_byte(GAME_PATH, i, random.choice([0xA8, 0xB8, 0xC8, 0xD8, 0xE8]))
-    for i in range(0x245DD, 0x245F5): # Y positions where pieces stop (left side)
-        edit_nes_byte(GAME_PATH, i, random.choice([0x18, 0x28, 0x38, 0x48, 0x58]))
-    #for i in range(0x245F5, 0x2460D): # X positions where pieces stop (left side)
-        #edit_nes_byte(GAME_PATH, i, random.choice([0xA8, 0xB8, 0xC8, 0xD8, 0xE8]))
+    #for i in range(0x245C5, 0x245DD): # Y positions where pieces stop (coming from right side)?
+        #edit_nes_byte(GAME_PATH, i, random.choice([0xA8]))
+    #for i in range(0x245DD, 0x245F5): # X positions where pieces stop (coming from left side)
+        #edit_nes_byte(GAME_PATH, i, random.choice([0x18, 0x28, 0x38, 0x48, 0x58]))
+    #for i in range(0x245F5, 0x2460D): # Y positions where pieces stop (coming from left side)?
+        #edit_nes_byte(GAME_PATH, i, random.choice([0xA8]))
     #for i in range(0x24611, 0x24628): # Affects block height... very hard to understand, seems to be related to drawing as it does not impact the actual height of block objects
         #edit_nes_byte(GAME_PATH, i, random.choice([0x22, 0x24, 0x26, 0x28, 0x2C, 0x30]))
     #for i in range(0x24629, 0x24640): # Affects block height... very hard to understand, seems to be related to drawing since this also does not impact the block object height
@@ -2429,6 +2429,15 @@ def randomize_yellow_devil_mkii_boss():
     26 2C 26 28 28 2C 28 26 28 2C 26 2C 26 2C 2C 26 26 26 2C 24 26 28 26 00 # 0x24611 - 0x24628: related to drawn block locations?
     26 2C 22 2C 28 28 28 26 24 30 22 2C 22 30 28 26 26 22 2C 30 26 28 26 00 # 0x24629 - 0x24640: related to drawn block locations?
     '''
+
+    # These values seem to control the drawn parts of the Yellow Devil, also not worth editing
+    #yellow_devil_block_order = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17]
+    #random.shuffle(yellow_devil_block_order)
+    #for i in range(0x24641, 0x24659):
+        #edit_nes_byte(GAME_PATH, i, yellow_devil_block_order[i - 0x24641])
+    #random.shuffle(yellow_devil_block_order)
+    #for i in range(0x24659, 0x24671):
+        #edit_nes_byte(GAME_PATH, i, yellow_devil_block_order[i - 0x24659])
 
 
 def scramble_boss_behaviors():
