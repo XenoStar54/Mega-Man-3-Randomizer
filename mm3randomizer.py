@@ -956,6 +956,17 @@ def randomize_wily_2_graphics():
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
 
+def randomize_wily_3_graphics():
+# Randomizes the graphics for the third Wily fortress stage.
+
+    for i in range(0x1CA92, 0x1CAA2):
+        if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
+            if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
+                edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
+            else:
+                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
+
 def scramble_stage_palettes():
 # This scrambles the color schemes for the stages in the game. Black and white are not replaced to maintain some level of graphical integrity, and black and white are excluded from the possible color options to prevent extreme eyesore.
 
@@ -981,6 +992,7 @@ def scramble_stage_palettes():
     # Wily Fortress
     randomize_wily_1_graphics()
     randomize_wily_2_graphics()
+    randomize_wily_3_graphics()
 
 
 def scramble_music():
@@ -1922,6 +1934,36 @@ def randomize_wily_2_entities():
     # What a lengthy stage, am I right... anyways leave Yellow Devil MK-II alone
 
 
+def randomize_wily_3_entities():
+# Randomizes the entities for the third Wily fortress stage.
+
+    # First screen with New Shotman
+    replace_entities(0x1CA70, 0x1CE10, 0x1CE11)
+
+    # Second screen with New Shotman and weapon energy... I'll leave these
+    replace_entities(0x1CA72, 0x1CE11, 0x1CE12, random.choice([0x06, 0x09, 0x19, 0x1B]))
+
+    # Third screen with Walking Bombs and Holograns; I'll leave the 1-up here but not the health
+    replace_entities(0x1CA74, 0x1CE17, 0x1CE26)
+    edit_nes_byte(GAME_PATH, 0x1CE1A, 0x55)
+    edit_nes_byte(GAME_PATH, 0x1CE23, 0x52)
+
+    # Fourth screen; this screen pisses me off so bad that I'm making the executive decision to actually move this enemy in the player's way
+    replace_entities(0x1CA76, 0x1CE26, 0x1CE27)
+    edit_nes_byte(GAME_PATH, 0x1CD26, 0xB0)
+
+    # Fifth screen with Bikkys
+    replace_entities(0x1CA78, 0x1CE27, 0x1CE29)
+
+    # Sixth screen; I think it would be hilarious to replace the moving platforms but I won't
+    
+    # Seventh screen; I think it would be hilarious to replace the moving platforms but I won't
+
+    # Eighth screen; don't bother taking items away from the player here
+
+    # Leave Holograph Mega Mans alone
+
+
 def scramble_stage_entities():
 # This scrambles all the stage entities.
 
@@ -1944,6 +1986,7 @@ def scramble_stage_entities():
     # Wily Fortress
     randomize_wily_1_entities()
     randomize_wily_2_entities()
+    randomize_wily_3_entities()
 
 
 def scramble_entity_properties():
@@ -1963,10 +2006,10 @@ def scramble_entity_properties():
     edit_nes_byte(GAME_PATH, 0x39DDE, random.randint(0x30, 0x70)) # Distance for shooting arcing bullets (default 50)
     edit_nes_byte(GAME_PATH, 0x39E34, random.randint(0x01, 0x05)) # Times that New Shotman shoots before resetting pattern (default 03)
     edit_nes_byte(GAME_PATH, 0x39E38, random.randint(0x3A, 0x7A)) # Delay between bullets being shot during multi-shot volley (default 5A)
-    edit_nes_byte(GAME_PATH, 0x39E8C, random.randint(0x00, 0x02)) # Speed of horizontal shots (default 01)
-    edit_nes_byte(GAME_PATH, 0x39E87, random.randint(0x01, 0xFF)) # Minor speed adjustment for horizontal New Shotman shots (default 80)
+    edit_nes_byte(GAME_PATH, 0x39E8C, random.randint(0x01, 0x03)) # Speed of horizontal shots (default 01)
+    #edit_nes_byte(GAME_PATH, 0x39E87, 0x80) # Minor speed adjustment for horizontal New Shotman shots (do not edit, causes issues) (default 80)
     edit_nes_byte(GAME_PATH, 0x39EC4, random.randint(0x02, 0x06)) # Height of arcing shots (default 04)
-    edit_nes_byte(GAME_PATH, 0x39EBF, random.randint(0x01, 0xFF)) # Minor speed adjustment for height of arcing New Shotman shots (default 00)
+    #edit_nes_byte(GAME_PATH, 0x39EBF, 0x00) # Minor speed adjustment for height of arcing New Shotman shots (do not edit, causes issues) (default 00)
 
     # Hammer Joe (entity ID 03)
     edit_nes_byte(GAME_PATH, 0x38C18, random.randint(0x0E, 0x2E)) # Time before Hammer Joe throws hammer (default 1E)
@@ -2394,7 +2437,7 @@ def randomize_yellow_devil_mkii_boss():
 # Randomizes Yellow Devil MK-II's boss attributes.
 
     edit_nes_byte(GAME_PATH, 0x240A1, random.randint(0x7F, 0xFF)) # Time after entering the room until Yellow Devil MK-II starts appearing from the left (default FF)
-    edit_nes_byte(GAME_PATH, 0x24105, random.randint(0x02, 0x06)) # Yellow Devil MK-II block speed (default 04)
+    edit_nes_byte(GAME_PATH, 0x24105, random.choice([0x02, 0x04])) # Yellow Devil MK-II block speed; seems to cause issues with Yellow Devil MK-II building itself if the speed value is not a simiar factor to the default (default 04)
     edit_nes_byte(GAME_PATH, 0x24141, random.randint(0x01, 0x05)) # Number of times to shoot bullet on the left side (default 03)
     edit_nes_byte(GAME_PATH, 0x2435D, random.randint(0x01, 0x05)) # Number of times to shoot bullet on the right side (default 03)
     edit_nes_byte(GAME_PATH, 0x241BB, random.randint(0x02, 0x06)) # Bullet speed (default 04)
@@ -2440,6 +2483,13 @@ def randomize_yellow_devil_mkii_boss():
         #edit_nes_byte(GAME_PATH, i, yellow_devil_block_order[i - 0x24659])
 
 
+def randomize_holograph_mega_mans_boss():
+# Randomizes Holograph Mega Mans' boss attributes.
+
+    # Note that movement speed of the non-imposter is in the sprite speed table; 0x543 (default 01)
+    pass
+
+
 def scramble_boss_behaviors():
 # Scrambles the AI for the bosses in the game.
 
@@ -2466,6 +2516,7 @@ def scramble_boss_behaviors():
     # Wily fortress bosses
     randomize_kamegoro_maker_boss()
     randomize_yellow_devil_mkii_boss()
+    randomize_holograph_mega_mans_boss()
     
 
 def assign_weaknesses(mode, *args):
@@ -2513,7 +2564,23 @@ def assign_weaknesses(mode, *args):
 
     # Otherwise do a different procedure for the fortress bosses
     else:
-        pass
+        # This table contains damage schemas for the fortress bosses; for now these tables are fairly similar to the originals but offer a little bit of randomness in terms of exact damage value
+        effectiveness = [
+        [0x05, 0x05, 0x02, 0x01, 0x01, 0x01, 0x01, 0x00], # Kamegoro Maker, give it a few different weakness options; exact damage values matter a bit less here since it's a on a per-turtle basis
+        [random.randint(0x04, 0x07), 0x03, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00], # Yellow Devil MK-II, change the primary weakness value around a little bit
+        [random.randint(0x04, 0x07), random.randint(0x04, 0x07), 0x03, 0x02, 0x01, 0x01, 0x00, 0x00], # Holograph Mega Mans, they normally have two severe weaknesses so preserve that here    
+        [random.randint(0x04, 0x07), random.randint(0x04, 0x07), 0x04, 0x02, 0x01, 0x00, 0x00, 0x00], # Wily Machine 3 phase 1; very weak to two things
+        [random.randint(0x04, 0x07), 0x04, 0x02, 0x02, 0x01, 0x01, 0x00, 0x00], # Wily Machine 3 phase 2; very weak to one thing and relatively weak to another
+        [random.randint(0x02, 0x04), 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], # Gamma phase 1; only vulnerable to two weapons
+        [0x02, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00] # Gamma phase 2; only vulnerable to two weapons
+        ]
+
+        # Shuffle those individual lists up
+        for i in effectiveness:
+            random.shuffle(i)
+
+        # Return generated effectiveness table
+        return effectiveness
 
 
 def scramble_boss_weakness_tables():
@@ -2522,6 +2589,7 @@ def scramble_boss_weakness_tables():
     # Run helper function to get a weakness table for Robot Masters
     robot_master_weaknesses = assign_weaknesses(1, [0x04, 0x04, 0x04, 0x05, 0x07, 0x07, 0x07, 0x07])
     doc_robot_weaknesses = assign_weaknesses(1, [0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x07, 0x07])
+    fortress_weaknesses = assign_weaknesses(2)
     
     # Two Robot Masters & Doc Robots take two damage from the Mega Buster. These tables randomly assign that property
     buster_weaknesses = [0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02]
@@ -2579,6 +2647,15 @@ def scramble_boss_weakness_tables():
             edit_nes_byte(GAME_PATH, i + 0xE4, robot_master_weaknesses[counter][6]) # VS Snake Man
             edit_nes_byte(GAME_PATH, i + 0xE6, robot_master_weaknesses[counter][7]) # VS Gemini Man
             edit_nes_byte(GAME_PATH, i + 0xE7, robot_master_weaknesses[counter][7]) # VS Gemini Man's clone (yes it has a separate damage table for some reason)
+
+            # Wily Fortress bosses; these are arranged on a per-boss basis rather than by weapon for the previous bosses so the formatting is slightly different
+            edit_nes_byte(GAME_PATH, i + 0x101, fortress_weaknesses[0][counter]) # VS Kamegoro Maker
+            edit_nes_byte(GAME_PATH, i + 0xF0, fortress_weaknesses[1][counter]) # VS Yellow Devil MK-II
+            edit_nes_byte(GAME_PATH, i + 0x105, fortress_weaknesses[2][counter]) # VS Holograph Mega Mans
+            edit_nes_byte(GAME_PATH, i + 0xF5, fortress_weaknesses[3][counter]) # VS Wily Machine 3 phase 1
+            edit_nes_byte(GAME_PATH, i + 0xF3, fortress_weaknesses[4][counter]) # VS Wily Machine 3 phase 2
+            edit_nes_byte(GAME_PATH, i + 0xF8, fortress_weaknesses[5][counter]) # VS Gamma phase 1
+            edit_nes_byte(GAME_PATH, i + 0xF9, fortress_weaknesses[6][counter]) # VS Gamma phase 2
             counter += 1 
 
 
@@ -2612,6 +2689,10 @@ def fix_softlocks():
     edit_nes_byte(GAME_PATH, 0x14E10, 0x59)
 
     # Wily 3 fix for beginning; adds wheel
+    edit_nes_byte(GAME_PATH, 0x1CA70, 0x28)
+    edit_nes_byte(GAME_PATH, 0x1CC10, 0x47)
+    edit_nes_byte(GAME_PATH, 0x1CD10, 0x8D)
+    edit_nes_byte(GAME_PATH, 0x1CE10, 0x59)
 
 
 def rebalance_difficulty():

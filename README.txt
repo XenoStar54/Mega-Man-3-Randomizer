@@ -6,7 +6,7 @@ Currently searching for memory locations for the following:
 - Top Spin knockback
 - Rush Jet horizontal speed
 - Boss stage select animations (for randomizing stage positions)
-- Top Man spin speed
+- Top Man spin speed when moving across room
 - Doc Flash walk speed
 - Code that controls the height of Yellow Devil MK-II segments to further randomize the fight
 - Piece of Proto Man's code that changes the music (to revert music back to randomized stage music as opposed to original stage music)

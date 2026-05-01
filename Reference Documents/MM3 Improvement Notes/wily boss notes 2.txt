@@ -18,12 +18,12 @@ wily 3 megaman clones:
 
 25DEE-F1: Time until firing bullets 4 bytes - Default: 0.50/1.00/0.50/1.00 seconds (1E/3C/1E/3C)
 25E0A: X position of imposter appearance
-25E19: X speed of fake clones walking (fast half only)
+25E19: X speed of fake clones walking (fast half only) (default 01)
 25E3E: Time until first appearance of imposter
 25E43: Time until first turn of imposter
 
-25E5C-6B: Y position where the fake appears 2×8Byte
-25E6C-7B: Initial movement direction of the fake 2×8Byte - only can be 01 or 02
+25E5C-6B: Y position where the fake appears 2 8Byte
+25E6C-7B: Initial movement direction of the fake 2 8Byte - only can be 01 or 02
 25EB0-B7: Y position where the real one appears 8Byte
 25EB8-BF: Initial movement direction of the real one 8Byte - only can be 01 or 02
 25EF6: Bullet X speed (slow half)
