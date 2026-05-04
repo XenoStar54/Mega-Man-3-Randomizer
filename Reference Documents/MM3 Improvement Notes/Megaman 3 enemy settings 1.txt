@@ -164,7 +164,7 @@ X speed of the 3 bullets
 Y speed of the 3 bullets
 Note: one is FF.50 meaning it moves up - the value is backwards, lower goes higher
 
-39891-3984: 4 RNG timer settings
+39891-39894: 4 RNG timer settings
 Timers until re-open shell after back to hiding
 ---------------------
 0A: launcher cannon

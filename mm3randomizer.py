@@ -435,6 +435,24 @@ def scramble_robot_master_names():
     for i in range(0x63F9, 0x63FF): # "Shadow Man"   
         edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SHADOW_NEW_NAME)[i - 0x63F9])
 
+    # Credits
+    for i in range(0x1C0DB, 0x1C0E1): # "Needle Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(NEEDLE_NEW_NAME)[i - 0x1C0DB])
+    for i in range(0x1C106, 0x1C10C): # "Magnet Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(MAGNET_NEW_NAME)[i - 0x1C106])
+    for i in range(0x1C12B, 0x1C131): # "Gemini Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(GEMINI_NEW_NAME)[i - 0x1C12B])
+    for i in range(0x1C156, 0x1C15A): # "Hard Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(HARD_NEW_NAME)[i - 0x1C156])
+    for i in range(0x1C17C, 0x1C17F): # "Top Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(TOP_NEW_NAME)[i - 0x1C17C])
+    for i in range(0x1C1A2, 0x1C1A7): # "Snake Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SNAKE_NEW_NAME)[i - 0x1C1A2])
+    for i in range(0x1C1CB, 0x1C1D0): # "Spark Man"
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SPARK_NEW_NAME)[i - 0x1C1CB])
+    for i in range(0x1C1F3, 0x1C1F9): # "Shadow Man"   
+        edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text(SHADOW_NEW_NAME)[i - 0x1C1F3])
+
     # Generate new names for weapons
     needle_weapon_name = random.choice(SIX_LETTER_WEAPONS)
     magnet_weapon_name = random.choice(SEVEN_LETTER_WEAPONS)
@@ -486,10 +504,10 @@ def scramble_robot_master_names():
     edit_nes_byte(GAME_PATH, 0x45F5, convert_string_to_mm3_text(GEMINI_NEW_NAME)[1]) # "E"
     edit_nes_byte(GAME_PATH, 0x45EA, convert_string_to_mm3_text(NEEDLE_NEW_NAME)[0]) # "N"
     edit_nes_byte(GAME_PATH, 0x45F6, convert_string_to_mm3_text(NEEDLE_NEW_NAME)[1]) # "E"
-    edit_nes_byte(GAME_PATH, 0x45EB, convert_string_to_mm3_text(MAGNET_NEW_NAME)[0]) # "M"
-    edit_nes_byte(GAME_PATH, 0x45F7, convert_string_to_mm3_text(MAGNET_NEW_NAME)[1]) # "A"
-    edit_nes_byte(GAME_PATH, 0x45EC, convert_string_to_mm3_text(HARD_NEW_NAME)[0]) # "H"
-    edit_nes_byte(GAME_PATH, 0x45F8, convert_string_to_mm3_text(HARD_NEW_NAME)[1]) # "A"
+    edit_nes_byte(GAME_PATH, 0x45EB, convert_string_to_mm3_text(HARD_NEW_NAME)[0]) # "H"
+    edit_nes_byte(GAME_PATH, 0x45F7, convert_string_to_mm3_text(HARD_NEW_NAME)[1]) # "A"
+    edit_nes_byte(GAME_PATH, 0x45EC, convert_string_to_mm3_text(MAGNET_NEW_NAME)[0]) # "M"
+    edit_nes_byte(GAME_PATH, 0x45F8, convert_string_to_mm3_text(MAGNET_NEW_NAME)[1]) # "A"
     edit_nes_byte(GAME_PATH, 0x45ED, convert_string_to_mm3_text(TOP_NEW_NAME)[0]) # "T"
     edit_nes_byte(GAME_PATH, 0x45F9, convert_string_to_mm3_text(TOP_NEW_NAME)[1]) # "O"
     edit_nes_byte(GAME_PATH, 0x45EE, convert_string_to_mm3_text(SNAKE_NEW_NAME)[0]) # "S"
@@ -1053,12 +1071,9 @@ def randomize_wily_5_graphics():
 def randomize_wily_6_graphics():
 # Randomizes the graphics for the sixth Wily fortress stage.
 
-    for i in range(0x22A92, 0x22AA2):
-        if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
-            if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
-                edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
-            else:
-                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+    # Yes, this stage literally only has two colors that are not black or white.
+    edit_nes_byte(GAME_PATH, 0x22A94, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x22A95, int(read_nes_byte(GAME_PATH, 0x22A94), 16) - 0x10)
 
 
 def scramble_stage_palettes():
@@ -1391,7 +1406,7 @@ def scramble_sprite_health():
 
     for i in range(0x410, 0x49F):
         if int(read_nes_byte(GAME_PATH, i), 16) not in [0x1C, 0xFF, 0x00]: # Do not scramble bosses or any entity with null/zero HP
-            edit_nes_byte(GAME_PATH, i, random.randint(math.ceil(int(read_nes_byte(GAME_PATH, i), 16) * 0.5), math.ceil(int(read_nes_byte(GAME_PATH, i), 16) * 1.5))) # Move HP values between half and one and a half times normal HP
+            edit_nes_byte(GAME_PATH, i, random.randint(math.ceil(int(read_nes_byte(GAME_PATH, i), 16) * 0.5), math.floor(int(read_nes_byte(GAME_PATH, i), 16) * 1.5))) # Move HP values between half and one and a half times normal HP
 
 
 def scramble_sprite_speed():
@@ -1399,7 +1414,7 @@ def scramble_sprite_speed():
 
     for i in range(0x510, 0x58F):
         if int(read_nes_byte(GAME_PATH, i), 16) not in [0x1C, 0xFF, 0x00]: # Do not scramble bosses or any entity with no movement value to avoid causing weird issues
-            edit_nes_byte(GAME_PATH, i, random.randint(0x01, 0x0A))
+            edit_nes_byte(GAME_PATH, i, random.randint(0x01, 0x08))
 
 
 def scramble_miniboss_behaviors():
@@ -1408,6 +1423,9 @@ def scramble_miniboss_behaviors():
     # Proto Man
     edit_nes_byte(GAME_PATH, 0x3A138, random.randint(0x03, 0x07)) # Jumping height (default 05)
     edit_nes_byte(GAME_PATH, 0x3A2D9, random.randint(0x02, 0x06)) # Bullet speed (default 04)
+
+    # Penpen Maker
+    edit_nes_byte(GAME_PATH, 0x3A932, random.randint(0x01, 0x04)) # Speed of Penpens spawned (default 02)
 
     # Tama
     edit_nes_byte(GAME_PATH, 0x3BB93, 0x20) # Tama color palette white (default 20)
@@ -1486,7 +1504,7 @@ def randomize_needle_man_entities():
     # Hari Haris on the first screen
     replace_entities(0xA70, 0xE10, 0xE14)
     
-    # Yambows, Metalls, and Cannons on second screen
+    # Yambows, Metall DXs, and Cannons on second screen
     replace_entities(0xA72, 0xE14, 0xE21)
 
     # Needles on third screen
@@ -1604,7 +1622,7 @@ def randomize_hard_man_entities():
     # Sixth screen with Pickelman Bulls, leave the E-Tank
     replace_entities(0x6A7A, 0x6E20, 0x6E23)
 
-    # Seventh screen with Metalls and health
+    # Seventh screen with Metall DXs and health
     replace_entities(0x6A7C, 0x6E24, 0x6E29)
 
     # Eighth screen with Have "Su" Bee and Wanaans
@@ -1644,7 +1662,7 @@ def randomize_top_man_entities():
     edit_nes_byte(GAME_PATH, 0x8E24, 0x55)
     edit_nes_byte(GAME_PATH, 0x8E25, 0x50)
 
-    # Sixth screen with Metalls
+    # Sixth screen with Metall DXs
     replace_entities(0x8A7A, 0x8E27, 0x8E29)
 
     # Seventh screen with Tama, we won't replace it
@@ -1656,7 +1674,7 @@ def randomize_top_man_entities():
     # Ninth screen with Tama, we won't replace this either
     # replace_entities(0x8A80, 0x8E2F, 0x8E34)
 
-    # Tenth screen with Metall and health pickup
+    # Tenth screen with Metall DX and health pickup
     replace_entities(0x8A82, 0x8E34, 0x8E35)
 
     # Eleventh screen with Komasaburo and top platforms (do not replace the platforms)
@@ -1820,7 +1838,7 @@ def randomize_doc_needle_entities():
     # Eleventh screen with Giant Metall (do not replace)
     # replace_entities(0x10A84, 0x10E43, 0x10E44)
 
-    # Twelfth screen with Metalls (heli variant) and Cannons
+    # Twelfth screen with Metall DXs (heli variant) and Cannons
     replace_entities(0x10A86, 0x10E44, 0x10E4B)
 
     # Thirteenth screen with Giant Metall (do not replace)
@@ -2147,7 +2165,7 @@ def scramble_entity_properties():
     edit_nes_byte(GAME_PATH, 0x39E34, random.randint(0x01, 0x05)) # Times that New Shotman shoots before resetting pattern (default 03)
     edit_nes_byte(GAME_PATH, 0x39E38, random.randint(0x3A, 0x7A)) # Delay between bullets being shot during multi-shot volley (default 5A)
     edit_nes_byte(GAME_PATH, 0x39E8C, random.randint(0x01, 0x03)) # Speed of horizontal shots (default 01)
-    #edit_nes_byte(GAME_PATH, 0x39E87, 0x80) # Minor speed adjustment for horizontal New Shotman shots (do not edit, causes issues) (default 80)
+    edit_nes_byte(GAME_PATH, 0x39E87, random.randint(0x60, 0xA0)) # Minor speed adjustment for horizontal New Shotman shots (default 80)
     edit_nes_byte(GAME_PATH, 0x39EC4, random.randint(0x02, 0x06)) # Height of arcing shots (default 04)
     #edit_nes_byte(GAME_PATH, 0x39EBF, 0x00) # Minor speed adjustment for height of arcing New Shotman shots (do not edit, causes issues) (default 00)
 
@@ -2158,12 +2176,184 @@ def scramble_entity_properties():
     edit_nes_byte(GAME_PATH, 0x38CDA, random.randint(0x01, 0x03)) # HP of thrown hammer (default 01)
 
     # Bubukan (entity ID 04)
+    edit_nes_byte(GAME_PATH, 0x39DDE, random.randint(0x20, 0x60)) # Distance before Bubukan launches itself up (default 40)
+    edit_nes_byte(GAME_PATH, 0x38D5D, random.randint(0x05, 0x09)) # Bubukan vertical launch speed (default 07)
+    edit_nes_byte(GAME_PATH, 0x38DA0, random.randint(0x01, 0x05)) # Vertical speed of pole thrown (default 03)
+    edit_nes_byte(GAME_PATH, 0x38DC7, random.randint(0x01, 0x03)) # X speed after landing and running (default 02)
+    edit_nes_byte(GAME_PATH, 0x38DCC, random.randint(0x08, 0x18)) # Time before Bubukan starts running after landing (default 10)
+
+    # Jamacy (non-crawling variant) (entity IDs 05 and 15)
+    edit_nes_byte(GAME_PATH, 0x38DE6, random.randint(0x50, 0xF0)) # Jamacy climb speed (decimal value) (default C0)
+
+    # Bomb Flier (entity ID 06)
+    edit_nes_byte(GAME_PATH, 0x38E92, random.randint(0x02, 0x08)) # Bomb Flier wave height (impacts how far up and down it travels) (default 05)
+    edit_nes_byte(GAME_PATH, 0x38ED9, random.randint(0x01, 0x04)) # Speed of Bomb Flier after being shot (default 02)
+
+    # Metall DX (grounded variant) (entity ID 09)
+    edit_nes_byte(GAME_PATH, 0x397BA, random.randint(0x2A, 0x58)) # X position range where Metall DX reveals itself (default 41)
+    edit_nes_byte(GAME_PATH, 0x397D7, random.randint(0x09, 0x1A)) # Timer for how long Metall DX runs before stopping (default 13)
+    edit_nes_byte(GAME_PATH, 0x397DC, random.randint(0x24, 0x4C)) # How long Metall DX is exposed before running (default 3C)
+    for i in range(0x39885, 0x39888): # Bullet decimal X speeds (default FB, 33, FB)
+        edit_nes_byte(GAME_PATH, i, random.randint(0x30, 0xFF))
+    for i in range(0x39888, 0x3988B): # Bullet X speeds (default 00, 01, 00)
+        edit_nes_byte(GAME_PATH, i, random.randint(0x00, 0x02))
+    for i in range(0x3988B, 0x3988E): # Bullet decimal Y speeds (default 50, 00, B0)
+        edit_nes_byte(GAME_PATH, i, random.randint(0x00, 0xFF))
+    for i in range(0x3988E, 0x39891): # Bullet Y speeds (default FF, 00, 00)
+        edit_nes_byte(GAME_PATH, i, random.choice([0x00, 0x01, 0xFE, 0xFF]))
+    for i in range(0x39891, 0x39895): # Metall DX hiding length after running RNG values (default 1E, 3C, 96, 3C)
+        edit_nes_byte(GAME_PATH, i, random.randint(0x10, 0xA0))
+
+    # Cannon (entity ID 0A)
+    edit_nes_byte(GAME_PATH, 0x398DD, random.randint(0x31, 0x71)) # X position range before Cannon shoots (default 51)
+    edit_nes_byte(GAME_PATH, 0x3992A, random.randint(0x02, 0x06)) # Cannon projectile Y speed (default 04)
+    edit_nes_byte(GAME_PATH, 0x399A5, random.randint(0x1C, 0x5C)) # RNG timer for Cannon opening again (default 3C)
+    edit_nes_byte(GAME_PATH, 0x399A6, random.randint(0x58, 0x98)) # RNG timer for Cannon opening again (default 78)
+
+    # Cloud platform (entity ID 0B)
+    edit_nes_byte(GAME_PATH, 0x38FAB, random.randint(0xAC, 0xEC)) # Cloud platform Y speed decimal value (default CC)
+    edit_nes_byte(GAME_PATH, 0x39083, int(read_nes_byte(GAME_PATH, 0x38FAB), 16)) # Cloud platform Y speed decimal value (default CC)
+    edit_nes_byte(GAME_PATH, 0x39088, random.randint(0x50, 0xB0)) # Cloud platform X speed decimal value (default 80)
+
+    # Jamacy (crawling variant) (entity IDs 0C and 0D)
+    edit_nes_byte(GAME_PATH, 0x39132, random.randint(0x50, 0xA0)) # Jamacy climb speed (decimal value) (default 80)
+
+    # Magfly (entity ID 0F)
+    edit_nes_byte(GAME_PATH, 0x39B0E, random.randint(0x35, 0xA5)) # Mega Man magnetization speed? (decimal value) (default 55)
+
+    # Junk Golem (entity ID 11)
+
+    # Pickelman Bull (entity ID 12)
+
+    # Bikky (entity ID 13)
+
+    # Magnet force (entity IDs 16 and 3D)
+
+    # Nitron (entity ID 18)
+    edit_nes_byte(GAME_PATH, 0x3A4C3, random.randint(0x20, 0x60)) # Range where Nitron swoops (default 40)
+    for i in range(0x3A58C, 0x3A5CC): # Massive table for Nitron swooping speeds
+        if int(read_nes_byte(GAME_PATH, i), 16) != 0x00:
+            if int(read_nes_byte(GAME_PATH, i), 16) < 0x04:
+                edit_nes_byte(GAME_PATH, i, random.randint(0x01, 0x03))
+            elif int(read_nes_byte(GAME_PATH, i), 16) > 0xFC:
+                edit_nes_byte(GAME_PATH, i, random.randint(0xFD, 0xFF))
+            else:
+                 edit_nes_byte(GAME_PATH, i, random.randint(0x04, 0xFC))
+
+    # Gyoraibo (entity ID 1A)
+
+    # Hari Hari (entity ID 1B)
+    #edit_nes_byte(GAME_PATH, 0x, random.randint()) #  (default )
+
+    # Returning Monking (entity ID 1D)
+    edit_nes_byte(GAME_PATH, 0x3AEE3, random.randint(0x07, 0x0B)) # Y speed for jumping to ceiling (default 09)
+    edit_nes_byte(GAME_PATH, 0x3AEE8, random.randint(0x0E, 0x2E)) # Time before jumping up to ceiling (default 1E)
+    edit_nes_byte(GAME_PATH, 0x3AF35, random.randint(0x18, 0x38)) # Horizontal range check for Mega Man when on ceiling (default 28)
+    edit_nes_byte(GAME_PATH, 0x3AF58, random.randint(0x02, 0x06)) # HP value at which Returning Monking will jump back up to the ceiling (default 04)
+    edit_nes_byte(GAME_PATH, 0x3AF64, random.randint(0x07, 0x0B)) # Y speed for jump to ceiling after second phase is triggered (default 09)
+    edit_nes_byte(GAME_PATH, 0x3AF94, random.randint(0x04, 0x08)) # Y speed when jumping and chasing player (default 06)
+
+    # Have "Su" Bee (entity ID 1F)
+    edit_nes_byte(GAME_PATH, 0x3AD24, random.randint(0x10, 0x40)) # Range before Have "Su" Bee activates (default 28)
+    edit_nes_byte(GAME_PATH, 0x3AD30, random.randint(0x10, 0x50)) # Delay before dropping beehive (default 30)
+    edit_nes_byte(GAME_PATH, 0x3AE29, random.randint(0x01, 0x03)) # Beehive HP (default 01)
+    edit_nes_byte(GAME_PATH, 0x3AE33, random.randint(0x02, 0x06)) # Y speed of beehive dropping (default 04)
+
+    # Bolton & Nutton (entity ID 20)
+    edit_nes_byte(GAME_PATH, 0x3AB8D, random.randint(0x36, 0xD6)) # Decimal vertical chasing speed (default 66)
+    #edit_nes_byte(GAME_PATH, 0x3ABBB, 0x04) # Speed of connecting bolt when spawning (do not edit) (default 04)
+    edit_nes_byte(GAME_PATH, 0x3A3CB, random.randint(0x24, 0x64)) # Range before Bolton & Nutton activates (default 44)
+
+    # Wanaan (entity ID 21)
+    edit_nes_byte(GAME_PATH, 0x3B008, random.randint(0x11, 0x31)) # Delay between snaps while standing on trap (default 21)
 
     # Needle obstacle (entity IDs 22 and 23)
     edit_nes_byte(GAME_PATH, 0x3B352, random.randint(0x10, 0x2A)) # Length of time that needle obstacles are extended for (default 1E)
 
+    # Elec'n (entity ID 24)
+    edit_nes_byte(GAME_PATH, 0x3B374, random.randint(0x41, 0x81)) # Range before Elec'n activates (default 61)
+    edit_nes_byte(GAME_PATH, 0x3B38D, 0x11) # Affects Elec'n flight (default 11)
+    edit_nes_byte(GAME_PATH, 0x3B392, random.randint(0x01, 0x05)) # Affects Elec'n flight (default 03)
+    edit_nes_byte(GAME_PATH, 0x3B3B3, int(read_nes_byte(GAME_PATH, 0x3B38D), 16)) # Affects Elec'n flight (default 11)
+    for i in range(0x3B460, 0x3B464): # Seems to be correlated to Elec'n movement (FF, 00, 00, FF)
+        edit_nes_byte(GAME_PATH, i, random.choice([0x00, 0x01, 0xFE, 0xFF]))
+    for i in range(0x3B464, 0x3B46C): # Spark X speeds (default 00, 6A, 00, 6A, 00, 6A, 00, 6A)
+        edit_nes_byte(GAME_PATH, i, random.choice([0x00, 0x6A]))
+    for i in range(0x3B46C, 0x3B474): # Spark decimal Y speeds? (default 00, 01, 02, 01, 00, 01, 02, 01)
+        edit_nes_byte(GAME_PATH, i, random.randint(0x00, 0x02))
+    for i in range(0x3B474, 0x3B47C): # Spark Y speeds? (default 00, 96, 00, 6A, 00, 6A, 00, 96)
+        edit_nes_byte(GAME_PATH, i, random.choice([0x00, 0x96, 0x6A]))
+    for i in range(0x3B47C, 0x3B484): # Related to spark speeds? (default FE, FE, 00, 01, 02, 01, 00, FE)
+        edit_nes_byte(GAME_PATH, i, random.choice([0x00, 0x01, 0x02, 0xFE, 0xFF]))
+    for i in range(0x3B484, 0x3B48C): # Related to spark speeds? (default 02, 02, 02, 02, 01, 01, 01, 01)
+        edit_nes_byte(GAME_PATH, i, random.randint(0x01, 0x02))
+
+    # Mechakkero (entity ID 26)
+    edit_nes_byte(GAME_PATH, 0x3B225, random.randint(0x2C, 0x4C)) # Delay before jumping (default 3C)
+    edit_nes_byte(GAME_PATH, 0x3B24C, random.randint(0x02, 0x06)) # Jump height 1 (default 04)
+    edit_nes_byte(GAME_PATH, 0x3B24D, random.randint(0x03, 0x07)) # Jump height 2 (default 05)
+
     # Top Man top platforms (entity ID 27)
     edit_nes_byte(GAME_PATH, 0x3B259, random.choice([0x01, 0x02])) # Vertical speed, any setting higher than 2 makes it almost impossible to cross in Top Man's stage (default 01)
+
+    # Penpen (swimming variant) (entity ID 2C)
+    edit_nes_byte(GAME_PATH, 0x38F18, random.randint(0x20, 0x40)) # Range where Penpen charges (default 30)
+    edit_nes_byte(GAME_PATH, 0x38F20, random.randint(0x01, 0x04)) # Charging speed (default 02)
+
+    # Pole (entity ID 32)
+    edit_nes_byte(GAME_PATH, 0x3A65E, random.randint(0x10, 0x70)) # Movement speed (default 40)
+
+    # Walking Bomb (entity ID 37)
+    edit_nes_byte(GAME_PATH, 0x3B531, random.randint(0x03, 0x07)) # Jump velocity when hitting wall (default 05)
+
+    # Parasyu (entity ID 38)
+    edit_nes_byte(GAME_PATH, 0x3B5E7, random.randint(0x01, 0x05)) # Falling speed before deploying parachute (default 03)
+    edit_nes_byte(GAME_PATH, 0x3B5EF, random.randint(0x44, 0x84)) # X position range before falling (default 64)
+    edit_nes_byte(GAME_PATH, 0x3B626, random.randint(0x08, 0x18)) # Timer related to swaying motion (default 10)
+    edit_nes_byte(GAME_PATH, 0x3B6A0, random.randint(0x03, 0x07)) # Influences length of sway (default 05)
+    edit_nes_byte(GAME_PATH, 0x3B6DA, random.randint(0x40, 0xC0)) # Influences Y speed while swaying (default 80)
+
+    # Bomber Pepe (entity ID 3B)
+    edit_nes_byte(GAME_PATH, 0x3AA27, random.randint(0x01, 0x05)) # Y speed for jump (default 03)
+    edit_nes_byte(GAME_PATH, 0x3AA72, int(read_nes_byte(GAME_PATH, 0x3AA27), 16)) # Y speed for jump (default 03)
+    edit_nes_byte(GAME_PATH, 0x3AA2C, random.randint(0x0E, 0x2E)) # Time before first egg shot (default 1E)
+    edit_nes_byte(GAME_PATH, 0x3AAA5, random.randint(0x24, 0x54)) # Time before subsequent egg shots (default 3C)
+    for i in range(0x3AB62, 0x3AB65): # Egg Y speeds (default 04, 03, 02)
+        edit_nes_byte(GAME_PATH, i, random.randint(0x01, 0x05))
+    for i in range(0x3AB68, 0x3AB6B): # Egg X speeds (default 01, 01, 00)
+        edit_nes_byte(GAME_PATH, i, random.randint(0x00, 0x02))
+
+    # Metall DX (flying variant) (entity ID 3C)
+    edit_nes_byte(GAME_PATH, 0x399FD, random.randint(0x41, 0x81)) # X position range where Metall DX reveals itself (default 61)
+    edit_nes_byte(GAME_PATH, 0x39A15, random.randint(0x01, 0x03)) # Flying Y speed (default 02)
+    for i in range(0x39ABC, 0x39ABF): # Bullet decimal X speeds (default DB, 00, DB)
+        edit_nes_byte(GAME_PATH, i, random.randint(0x00, 0xFF))
+    for i in range(0x39ABF, 0x39AC2): # Bullet X speeds (default 00, 00, 00)
+        edit_nes_byte(GAME_PATH, i, random.randint(0x00, 0x01))
+    for i in range(0x39AC2, 0x39AC5): # Bullet decimal Y speeds (default DB, 33, DB)
+        edit_nes_byte(GAME_PATH, i, random.randint(0x00, 0xFF))
+    for i in range(0x39AC5, 0x39AC8): # Bullet Y speeds (default 00, 01, 00)
+        edit_nes_byte(GAME_PATH, i, random.choice([0x00, 0x01, 0x02]))
+    for i in range(0x39AC8, 0x39ACB): # Unsure, but related to bullets (default 02, 01, 01)
+        edit_nes_byte(GAME_PATH, i, random.choice([0x01, 0x02, 0x03]))
+        
+    # Petit Snakey (entity IDs 60 and 61)
+    edit_nes_byte(GAME_PATH, 0x39605, random.randint(0x14, 0x34)) # Delay before first shot (default 24)
+    edit_nes_byte(GAME_PATH, 0x3964A, random.randint(0x48, 0x98)) # Delay between shots after first (default 78)
+    edit_nes_byte(GAME_PATH, 0x396A9, random.randint(0x01, 0x05)) # Bullet speed (default 03)
+
+    # Komasaburo (entity ID 62)
+    edit_nes_byte(GAME_PATH, 0x3B09D, random.randint(0x26, 0x46)) # Delay before first top shot (default 36)
+    edit_nes_byte(GAME_PATH, 0x3B0A2, random.randint(0x08, 0x18)) # Delay between subsequent top shots (default 10)
+    edit_nes_byte(GAME_PATH, 0x3B0E9, random.randint(0x08, 0x18)) # Delay between subsequent top shots (default 10)
+    edit_nes_byte(GAME_PATH, 0x3B174, random.randint(0x01, 0x03)) # Speed of tops (default 02)
+    edit_nes_byte(GAME_PATH, 0x3B11B, random.randint(0x28, 0x48)) # Influences how quick new tops are dispensed after they are shot (default 38)
+
+    # Junk block (Spark Man's stage) (entity ID 63)
+    edit_nes_byte(GAME_PATH, 0x3958C, random.randint(0x3B, 0x7B)) # Delay between trash block spawns (default 5B)
+
+    # Electric Gabyoall (entity IDs 64 and 65)
+    edit_nes_byte(GAME_PATH, 0x39503, random.randint(0x1C, 0x5C)) # Delay between electric barrier phases (default 3C)
 
 
 def scramble_enemy_weakness_tables():
@@ -2171,9 +2361,9 @@ def scramble_enemy_weakness_tables():
 
     for i in range(0x14210, 0x14A10):
         if i > 0x14610 and i < 0x14710: # This is specifically for Top Spin; in the base game it either kills a normal enemy in one hit or is completely ineffective, so we will preserve the idea here
-            edit_nes_byte(GAME_PATH, i, random.choice([0x00, 0x0A]))
+            edit_nes_byte(GAME_PATH, i, random.choice([0x00, 0x0F]))
         else:
-            edit_nes_byte(GAME_PATH, i, random.choice([0x00, 0x00, 0x01, 0x01, 0x02, 0x02, 0x06, 0x0A]))
+            edit_nes_byte(GAME_PATH, i, random.choice([0x00, 0x00, 0x01, 0x01, 0x02, 0x03, 0x06, 0x0F]))
 
 
 def randomize_needle_man_boss():
@@ -2652,8 +2842,39 @@ def randomize_holograph_mega_mans_boss():
 def randomize_wily_machine_3_boss():
 # Randomizes Wily Machine 3's boss attributes.
 
-    edit_nes_byte(GAME_PATH, 0x21E6, int(read_nes_byte(GAME_PATH, 0x20AAC), 16)) # Wily Machine 3 pin foot sprite light color
-    edit_nes_byte(GAME_PATH, 0x21E7, int(read_nes_byte(GAME_PATH, 0x20AAD), 16)) # Wily Machine 3 pin foot sprite dark color
+    edit_nes_byte(GAME_PATH, 0x21E3, random.choice(LIGHT_COLORS_NW)) # Wily Machine 3 healthbar and pin foot light color
+    edit_nes_byte(GAME_PATH, 0x21E1, random.choice(DARK_COLORS_NB)) # Wily Machine 3 healthbar and pin foot dark color
+    edit_nes_byte(GAME_PATH, 0x20AAC, random.choice(LIGHT_COLORS_NW)) # Wily Machine 3 pin foot leg sprite and lower body light color
+    edit_nes_byte(GAME_PATH, 0x20AAD, random.choice(DARK_COLORS_NB)) # Wily Machine 3 pin foot leg sprite and lower body dark color
+    edit_nes_byte(GAME_PATH, 0x21E6, int(read_nes_byte(GAME_PATH, 0x20AAC), 16)) # Wily Machine 3 pin foot leg sprite and lower body light color; ensures that sprite and tile colors match since the boss is mostly a background drawing
+    edit_nes_byte(GAME_PATH, 0x21E7, int(read_nes_byte(GAME_PATH, 0x20AAD), 16)) # Wily Machine 3 pin foot leg sprite and lower body dark color; ensures that sprite and tile colors match since the boss is mostly a background drawing
+    #edit_nes_byte(GAME_PATH, 0x249CB, 0x40) # Time until moving after Wily Machine 3 plants its feet in the ground (do not edit) (default 40)
+
+    # Phase 1 (cannon)
+    edit_nes_byte(GAME_PATH, 0x24824, random.randint(0x19, 0x46)) # Time until shooting initially (default 32)
+    edit_nes_byte(GAME_PATH, 0x24A38, random.randint(0x94, 0xC4)) # Delay between shots after first shot (default B4)
+    edit_nes_byte(GAME_PATH, 0x24A6B, random.randint(0x01, 0x03)) # Speed of energy shot (default 01)
+    # Y speeds for rotating cannon shot
+    for i in range(0x24DAE, 0x24DBE):
+        if int(read_nes_byte(GAME_PATH, i), 16) != 0x00:
+            if int(read_nes_byte(GAME_PATH, i), 16) < 0x04: # These lower values seem to be for downwards movement, to try and maintain the circular pattern we'll randomize the low values with each other
+                edit_nes_byte(GAME_PATH, i, random.choice([0x01, 0x02, 0x03]))
+            else: # These higher values seem to be for downwards movement, to try and maintain the circular pattern we'll randomize the high values with each other
+                edit_nes_byte(GAME_PATH, i, random.choice([0xFC, 0xFD, 0xFE]))
+    # X speeds for rotating cannon shot
+    for i in range(0x24DCE, 0x24DDE): 
+        if int(read_nes_byte(GAME_PATH, i), 16) != 0x00:
+            if int(read_nes_byte(GAME_PATH, i), 16) < 0x04: # Unsure how the horizontal speeds here work; sometimes there's desync between standing on the right vs left
+                edit_nes_byte(GAME_PATH, i, random.choice([0x01, 0x02, 0x03]))
+            else: # Unsure how the horizontal speeds here work; sometimes there's desync between standing on the right vs left
+                edit_nes_byte(GAME_PATH, i, random.choice([0xFC, 0xFD, 0xFE]))
+
+    # Phase 2 (turrets and crushing attack)
+    edit_nes_byte(GAME_PATH, 0x2484F, random.randint(0x12, 0x2D)) # Length of time that Wily stays low to the ground after crush attack (default 1E)
+    edit_nes_byte(GAME_PATH, 0x24AAC, random.randint(0x02, 0x06)) # Turret bullet Y speed (default 04)
+    edit_nes_byte(GAME_PATH, 0x24AF0, random.randint(0x20, 0x28)) # Related to homing capabilities of bullets (default 24)
+    for i in range(0x24DDE, 0x24DE4): # RNG timers for delays between turrent shots
+        edit_nes_byte(GAME_PATH, i, random.randint(0x1C, 0x5C))
 
 
 def randomize_gamma_boss():
@@ -2674,6 +2895,30 @@ def randomize_gamma_boss():
     # Fix for Gamma's head and lower area colors
     edit_nes_byte(GAME_PATH, 0x24E97, int(read_nes_byte(GAME_PATH, 0x24EA0), 16))
     edit_nes_byte(GAME_PATH, 0x24E98, int(read_nes_byte(GAME_PATH, 0x24E9E), 16))
+    edit_nes_byte(GAME_PATH, 0x24EA4, int(read_nes_byte(GAME_PATH, 0x22A94), 16))
+
+    # Phase 1 (New Shotman clone)
+    edit_nes_byte(GAME_PATH, 0x24EAE, random.randint(0x40, 0x68)) # Horizontal distance where Gamma begins lobbing shots (default 50)
+    edit_nes_byte(GAME_PATH, 0x24EB8, random.randint(0x14, 0x24)) # Time until Gamma shoots next lobbed bullet from head (default 1F)
+    #edit_nes_byte(GAME_PATH, 0x24EC8, 0x30) # Vertical distance where Gamma switches to horizontal shots (better not to change) (default 30)
+    edit_nes_byte(GAME_PATH, 0x24ED8, random.randint(0x14, 0x24)) # Time until Gamma shoots next horizontal bullet from head (default 1F)
+    edit_nes_byte(GAME_PATH, 0x24EE3, random.randint(0x01, 0x06)) # Number of horizontal bullets fired in one volley (default 03)
+    edit_nes_byte(GAME_PATH, 0x24EE7, random.randint(0x59, 0x89)) # Delay to start shooting again after one volley ends (default 79)
+    edit_nes_byte(GAME_PATH, 0x24EF7, random.randint(0x0B, 0x15)) # HP value where phase changes (default 0F)
+    edit_nes_byte(GAME_PATH, 0x24FB9, random.randint(0x01, 0x03)) # Horizontal bullet X speed (default 01)
+    edit_nes_byte(GAME_PATH, 0x24FED, random.randint(0x01, 0x06)) # Lobbed bullets Y speed (default 04)
+
+    # Phase 2 (extending arm)
+    edit_nes_byte(GAME_PATH, 0x24F5E, random.randint(0x9D, 0xC5)) # Delay between phase change and first bullet fired by second form (default B4)
+    edit_nes_byte(GAME_PATH, 0x24F63, random.randint(0xD8, 0xF8)) # Time until arm is extended for the first time (default F0)
+    edit_nes_byte(GAME_PATH, 0x25081, random.randint(0x02, 0x06)) # Energy shot X speed (default 04)
+    edit_nes_byte(GAME_PATH, 0x2509A, random.randint(0x9D, 0xC5)) # Delay between energy shots (default B5)
+    edit_nes_byte(GAME_PATH, 0x250BD, random.randint(0x88, 0xB8)) # Maximum position of arm extension (MUST match 250DD) (default A0)
+    edit_nes_byte(GAME_PATH, 0x250DD, int(read_nes_byte(GAME_PATH, 0x250BD), 16)) # Maximum position of arm extension (default A0)
+    edit_nes_byte(GAME_PATH, 0x250C5, random.randint(0x0A, 0x16)) # Arm acceleration X speed (default 10)
+    edit_nes_byte(GAME_PATH, 0x250D2, random.randint(0x02, 0x04)) # Arm maximum speed (default 03)
+    edit_nes_byte(GAME_PATH, 0x250E6, random.randint(0x01, 0x02)) # Arm retraction speed after moving left (default 01)
+    edit_nes_byte(GAME_PATH, 0x2510F, random.randint(0xD8, 0xFF)) # Delay between arm retracting and extending again (default F1)
 
 
 def scramble_boss_behaviors():
