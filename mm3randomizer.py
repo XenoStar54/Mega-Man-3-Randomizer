@@ -1,11 +1,13 @@
+from tkinter import *
+from tkinter import ttk
+from tkinter import filedialog
 import struct
 import random
 import math
 
 # Change this seed for a specific generated ROM.
-#random.seed(54)
-
-GAME_PATH = "MegaMan3.nes"
+SEED = None
+GAME_PATH = None
 
 # The NES palette has 64 different colors, but many of them are repeats. This list excludes the duplicate instances of black.
 VIABLE_COLORS = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D]
@@ -998,6 +1000,16 @@ def randomize_wily_1_graphics():
     edit_nes_byte(GAME_PATH, 0x18A9C, rock_base_color + 0x20)
     edit_nes_byte(GAME_PATH, 0x18A9B, rock_base_color + 0x30)
 
+    # Palette restriction for bricks
+    edit_nes_byte(GAME_PATH, 0x18A94, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x18A95, int(read_nes_byte(GAME_PATH, 0x18A94), 16) - 0x10)
+    edit_nes_byte(GAME_PATH, 0x18A97, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x18A98, int(read_nes_byte(GAME_PATH, 0x18A97), 16) - 0x10)
+    edit_nes_byte(GAME_PATH, 0x18A99, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x18A9F, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x18AA0, int(read_nes_byte(GAME_PATH, 0x18A9F), 16) - 0x10)
+    edit_nes_byte(GAME_PATH, 0x18AA1, random.randint(0x00, 0x0C))
+
 
 def randomize_wily_2_graphics():
 # Randomizes the graphics for the second Wily fortress stage.
@@ -1008,6 +1020,18 @@ def randomize_wily_2_graphics():
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
+    # Palette restrictions to make it easier on the eyes
+    edit_nes_byte(GAME_PATH, 0x1AA97, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x1AA98, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x1AA99, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x1AAA0, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x1AAA1, random.randint(0x00, 0x0C))
+
+    # Yellow Devil MK-II palette restrictions 
+    edit_nes_byte(GAME_PATH, 0x1AA9B, random.randint(0x20, 0x2C))
+    edit_nes_byte(GAME_PATH, 0x1AA9C, int(read_nes_byte(GAME_PATH, 0x1AA9B), 16) - 0x10)
+    edit_nes_byte(GAME_PATH, 0x1AA9D, int(read_nes_byte(GAME_PATH, 0x1AA9C), 16) - 0x10)
 
 
 def randomize_wily_3_graphics():
@@ -1020,6 +1044,19 @@ def randomize_wily_3_graphics():
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
+    # Palette restrictions to make it easier on the eyes
+    edit_nes_byte(GAME_PATH, 0x1CA93, random.randint(0x20, 0x2C))
+    edit_nes_byte(GAME_PATH, 0x1CA94, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x1CA95, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x1CA97, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x1CA98, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x1CA99, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x1CA9B, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x1CA9C, int(read_nes_byte(GAME_PATH, 0x1CA9B), 16) - 0x10)
+    edit_nes_byte(GAME_PATH, 0x1CA9D, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x1CAA0, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x1CAA1, random.randint(0x00, 0x0C))
+
 
 def randomize_wily_4_graphics():
 # Randomizes the graphics for the fourth Wily fortress stage.
@@ -1030,6 +1067,21 @@ def randomize_wily_4_graphics():
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
+    # Palette restrictions to prevent eyesores
+    edit_nes_byte(GAME_PATH, 0x1EA94, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x1EA95, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x1EA98, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x1EA99, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x1EA9B, random.randint(0x30, 0x3C))
+    edit_nes_byte(GAME_PATH, 0x1EA9C, int(read_nes_byte(GAME_PATH, 0x1EA9B), 16) - 0x10)
+    edit_nes_byte(GAME_PATH, 0x1EA9D, int(read_nes_byte(GAME_PATH, 0x1EA9C), 16) - 0x10)
+    edit_nes_byte(GAME_PATH, 0x1EA9F, random.randint(0x30, 0x3C))
+    edit_nes_byte(GAME_PATH, 0x1EAA0, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x1EAA1, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x1EAB3, random.randint(0x20, 0x2C))
+    edit_nes_byte(GAME_PATH, 0x1EAB4, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x1EAB5, random.randint(0x00, 0x0C))
 
     # Animated tiles
     dark_light_color_1 = random.randint(0x00, 0x0C)
@@ -1049,12 +1101,12 @@ def randomize_wily_4_graphics():
     edit_nes_byte(GAME_PATH, 0x1260F, dark_light_color_2)
 
     # Fix for screen transitions
-    edit_nes_byte(GAME_PATH, 0x1EA93, int(read_nes_byte(GAME_PATH, 0x1EAA7), 16))
-    edit_nes_byte(GAME_PATH, 0x1EA94, int(read_nes_byte(GAME_PATH, 0x1EAA8), 16))
-    edit_nes_byte(GAME_PATH, 0x1EA95, int(read_nes_byte(GAME_PATH, 0x1EAA9), 16))
-    edit_nes_byte(GAME_PATH, 0x1EA9B, int(read_nes_byte(GAME_PATH, 0x1EAAF), 16))
-    edit_nes_byte(GAME_PATH, 0x1EA9C, int(read_nes_byte(GAME_PATH, 0x1EAB0), 16))
-    edit_nes_byte(GAME_PATH, 0x1EA9D, int(read_nes_byte(GAME_PATH, 0x1EAB1), 16))
+    edit_nes_byte(GAME_PATH, 0x1EAA7, int(read_nes_byte(GAME_PATH, 0x1EA93), 16))
+    edit_nes_byte(GAME_PATH, 0x1EAA8, int(read_nes_byte(GAME_PATH, 0x1EA94), 16))
+    edit_nes_byte(GAME_PATH, 0x1EAA9, int(read_nes_byte(GAME_PATH, 0x1EA95), 16))
+    edit_nes_byte(GAME_PATH, 0x1EAAF, int(read_nes_byte(GAME_PATH, 0x1EA9B), 16))
+    edit_nes_byte(GAME_PATH, 0x1EAB0, int(read_nes_byte(GAME_PATH, 0x1EA9C), 16))
+    edit_nes_byte(GAME_PATH, 0x1EAB1, int(read_nes_byte(GAME_PATH, 0x1EA9D), 16))
 
 
 def randomize_wily_5_graphics():
@@ -1066,6 +1118,16 @@ def randomize_wily_5_graphics():
                 edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+
+    # Palette restrictions for ease of viewing
+    edit_nes_byte(GAME_PATH, 0x20A94, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x20AA8, int(read_nes_byte(GAME_PATH, 0x20A94), 16))
+    edit_nes_byte(GAME_PATH, 0x20A97, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x20A98, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x20A99, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x20A9F, random.randint(0x30, 0x3C))
+    edit_nes_byte(GAME_PATH, 0x20AA0, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x20AA1, random.randint(0x00, 0x0C))
 
 
 def randomize_wily_6_graphics():
@@ -2110,8 +2172,8 @@ def randomize_wily_4_entities():
     #0x1EA7A, 0x1EA7C, 0x1EA7E, 0x1EA80, 0x1EA82,
 
     # Here's where things get complicated with the individual teleporter rooms and Robot Master refights; shuffle them around as they were ordered in the stages (ordered as usual: NE, MA, GE, HA, TO, SN, SP, SH)
-    # Note: Needle Man's room has a lower floor, appears to mess up Magnet Man if he is placed here. Some code to prevent that from happening:
-    while RANDOMIZED_ROBOT_MASTERS[0][1] == 0x23:
+    # Note: Needle Man's room has a lower floor, appears to mess up Magnet Man if he is placed here. Magnet Man has also been found to glitch off screen in Spark Man's room. Some code to prevent that from happening:
+    while RANDOMIZED_ROBOT_MASTERS[0][1] == 0x23 or RANDOMIZED_ROBOT_MASTERS[6][1] == 0x23:
         random.shuffle(RANDOMIZED_ROBOT_MASTERS)
 
     # Now that that's been covered, shuffle the Robot Masters         
@@ -2222,12 +2284,28 @@ def scramble_entity_properties():
     edit_nes_byte(GAME_PATH, 0x39B0E, random.randint(0x35, 0xA5)) # Mega Man magnetization speed? (decimal value) (default 55)
 
     # Junk Golem (entity ID 11)
+    edit_nes_byte(GAME_PATH, 0x398DD, random.randint(0x56, 0x96)) # X position range before Junk Golem appears (default 76)
+    edit_nes_byte(GAME_PATH, 0x39BAD, random.randint(0x58, 0x98)) # Time before junk block drops (default 78)
+    #edit_nes_byte(GAME_PATH, 0x39C34, random.randint(0x02, 0x06)) # Y speed of dropping junk (I have a feeling this will cause issues if the rock does not properly make contact with golem) (default 04)
+    edit_nes_byte(GAME_PATH, 0x39C55, random.randint(0x02, 0x06)) # X speed of thrown junk (default 04)
+    for i in range(0x39FFB, 0x39FFF): # Junk pieces Y speeds (04, 03, 04, 03)
+        edit_nes_byte(GAME_PATH, i, random.randint(0x01, 0x07))
+    for i in range(0x39FFF, 0x3A003): # Junk pieces decimal X speeds (CC, 80, CC, 80)
+        edit_nes_byte(GAME_PATH, i, random.randint(0x20, 0xFF))
 
     # Pickelman Bull (entity ID 12)
+    edit_nes_byte(GAME_PATH, 0x39C7C, random.randint(0x0E, 0x2E)) # Time until first movement (default 1E)
+    edit_nes_byte(GAME_PATH, 0x39CF2, random.randint(0x0E, 0x2E)) # Time until subsequent movements (default 1E)
 
     # Bikky (entity ID 13)
+    edit_nes_byte(GAME_PATH, 0x3452E, random.randint(0x04, 0x0B)) # Frames of bouncing delay before jumping (default 08)
+    edit_nes_byte(GAME_PATH, 0x39D65, int(read_nes_byte(GAME_PATH, 0x3452E), 16)) # Frames of bouncing delay before jumping (default 08)
+    edit_nes_byte(GAME_PATH, 0x39D81, random.randint(0x02, 0x08)) # Jumping Y speed (default 05)
 
     # Magnet force (entity IDs 16 and 3D)
+    edit_nes_byte(GAME_PATH, 0x39DA1, random.randint(0x40, 0x90)) # Horizontal range for being affected by magnet force (default 68)
+    edit_nes_byte(GAME_PATH, 0x39DBC, random.randint(0x40, 0xC0)) # Magnet force decimal intensity (default 00)
+    edit_nes_byte(GAME_PATH, 0x39DC0, random.randint(0x00, 0x02)) # Magnet force intensity (default 01)
 
     # Nitron (entity ID 18)
     edit_nes_byte(GAME_PATH, 0x3A4C3, random.randint(0x20, 0x60)) # Range where Nitron swoops (default 40)
@@ -2241,9 +2319,24 @@ def scramble_entity_properties():
                  edit_nes_byte(GAME_PATH, i, random.randint(0x04, 0xFC))
 
     # Gyoraibo (entity ID 1A)
+    edit_nes_byte(GAME_PATH, 0x3A686, random.randint(0x40, 0xE0)) # Decimal Y speed after hitting wall (default 80)
+    edit_nes_byte(GAME_PATH, 0x3A6BE, random.randint(0x04, 0x0E)) # Range where Gyoraibo fires missile (default 08)
+    edit_nes_byte(GAME_PATH, 0x3A6E7, random.randint(0x02, 0x06)) # X speed after firing missile (default 04)
+    edit_nes_byte(GAME_PATH, 0x3A753, random.randint(0x01, 0x03)) # Speed of missile projectile (default 02)
 
     # Hari Hari (entity ID 1B)
-    #edit_nes_byte(GAME_PATH, 0x, random.randint()) #  (default )
+    edit_nes_byte(GAME_PATH, 0x3A307, random.randint(0x2C, 0x4C)) # Time until first needle shot (default 3C)
+    edit_nes_byte(GAME_PATH, 0x3A376, random.randint(0x08, 0x18)) # Delay before rolling (default 10)
+    edit_nes_byte(GAME_PATH, 0x3A394, random.randint(0x3A, 0x6A)) # Length of rolling (default 5A)
+    edit_nes_byte(GAME_PATH, 0x3A422, random.randint(0x08, 0x18)) # Delay between subsequent rolls (default 10)
+    for i in range(0x3A485, 0x3A48A): # Needle decimal X speed values
+        edit_nes_byte(GAME_PATH, i, random.randint(0x08, 0x2F))
+    for i in range(0x3A48A, 0x3A48F): # Needle X speed values
+        edit_nes_byte(GAME_PATH, i, random.randint(0x00, 0x04))
+    for i in range(0x3A48F, 0x3A494): # Needle decimal Y speed values
+        edit_nes_byte(GAME_PATH, i, random.randint(0xC0, 0xF0))
+    for i in range(0x3A494, 0x3A499): # Needle Y speed values
+        edit_nes_byte(GAME_PATH, i, random.randint(0xFC, 0xFF))
 
     # Returning Monking (entity ID 1D)
     edit_nes_byte(GAME_PATH, 0x3AEE3, random.randint(0x07, 0x0B)) # Y speed for jumping to ceiling (default 09)
@@ -2892,6 +2985,10 @@ def randomize_gamma_boss():
     edit_nes_byte(GAME_PATH, 0x24EA0, random.randint(0x20, 0x2C))
     edit_nes_byte(GAME_PATH, 0x24E9E, int(read_nes_byte(GAME_PATH, 0x24EA0), 16) - 0x10)
 
+    # Fix skin tone
+    edit_nes_byte(GAME_PATH, 0x24E9B, random.randint(0x31, 0x3C))
+    edit_nes_byte(GAME_PATH, 0x24E9C, int(read_nes_byte(GAME_PATH, 0x24E9B), 16) - 0x10)
+
     # Fix for Gamma's head and lower area colors
     edit_nes_byte(GAME_PATH, 0x24E97, int(read_nes_byte(GAME_PATH, 0x24EA0), 16))
     edit_nes_byte(GAME_PATH, 0x24E98, int(read_nes_byte(GAME_PATH, 0x24E9E), 16))
@@ -3103,11 +3200,12 @@ def fix_softlocks():
 # This removes the spots where the player can be softlocked by running out of energy for Rush Coil / Rush Jet.
 
     # Doc Gemini fix for the room with Poles where you can be softlocked if all Poles are killed and no energy is left for utilities; this moves an Electric Gabyoall into that room to die from
-    replace_entities(0x12A76, 0x12E2F, 0x12E33, random.choice([0x03]))
-    edit_nes_byte(GAME_PATH, 0x12B2F, 0x0D)
-    edit_nes_byte(GAME_PATH, 0x12C2F, 0xA0)
-    edit_nes_byte(GAME_PATH, 0x12D2F, 0x92)
-    edit_nes_byte(GAME_PATH, 0x12E2F, 0x64)
+    # This one honestly doesn't really work as the entity tends to despawn, honestly if you get stuck here I feel like you deserve it considering there are hundreds of Poles to farm on
+    #replace_entities(0x12A76, 0x12E2F, 0x12E33, random.choice([0x03]))
+    #edit_nes_byte(GAME_PATH, 0x12B2F, 0x0D)
+    #edit_nes_byte(GAME_PATH, 0x12C2F, 0xA0)
+    #edit_nes_byte(GAME_PATH, 0x12D2F, 0x92)
+    #edit_nes_byte(GAME_PATH, 0x12E2F, 0x64)
 
     # Doc Gemini fix for midpoint; adds wheel
     edit_nes_byte(GAME_PATH, 0x12A7C, 0x27)
@@ -3150,45 +3248,320 @@ def activate_burst_chaser():
     edit_nes_byte(GAME_PATH, 0x3D3D5, 0x04) # Mega Man's sliding speed (default 02)
     edit_nes_byte(GAME_PATH, 0x3D4CC, 0x02) # Ladder climbing speed (default 01)
     edit_nes_byte(GAME_PATH, 0x3CFB8, 0x02) # Rush Jet vertical speed (default 01)
-    edit_nes_byte(GAME_PATH, 0x3D8FD, 0x02) # Rush Marine vertical speed (default 01)
+    edit_nes_byte(GAME_PATH, 0x3D8EF, 0x02) # Rush Marine vertical speed (default 01)
+
+
+def run_randomizer(change_menu_palettes, change_sprite_palettes, change_sprite_health, change_sprite_speed, change_entity_behaviors, change_entity_placement, change_wep_locations, change_wep_behaviors, change_wep_palettes, change_wep_costs, change_enemy_weaknesses, change_rm_names, change_boss_weaknesses, change_music, fix_scanline_enabled, fix_softlocks_enabled, rebalance, burst_chaser, seed):
+# Mix it all up! These are the core randomizer features; mix and match as you please
+
+    # Apply seed if used
+    random.seed(seed)
+
+    #scramble_stage_order() # not currently functional
+
+    # Palette related
+    if change_menu_palettes:
+        scramble_title_screen_palette()   
+        scramble_stage_select_palettes()
+        scramble_stage_palettes()
+        scramble_light_lab_palette()
+        scramble_wily_fortress_palette()
+
+    # Entity palettes
+    if change_sprite_palettes:
+        scramble_sprite_palettes()
+
+    # Standalone health mod
+    if change_sprite_health:
+        scramble_sprite_health()
+
+    # Standalone speed mod
+    if change_sprite_speed:
+        scramble_sprite_speed()
+
+    # Entity related
+    if change_entity_behaviors:
+        scramble_entity_properties()
+        scramble_miniboss_behaviors()
+        scramble_boss_behaviors()
+
+    # Entity placement within stages
+    if change_entity_placement:
+        scramble_stage_entities()
+
+    # Special weapon locations
+    if change_wep_locations:
+        scramble_weapon_locations()
+
+    # Special weapon behaviors
+    if change_wep_behaviors:
+        scramble_weapon_behaviors()
+
+    # Special weapon palettes
+    if change_wep_palettes:
+        scramble_weapon_palettes()
+
+    # Special weapon costs
+    if change_wep_costs:
+        scramble_weapon_energy_costs()
+    
+    # Enemy weakness tables
+    if change_enemy_weaknesses:
+        scramble_enemy_weakness_tables()
+
+    # Standalone cosmetic change
+    if change_rm_names:
+        scramble_robot_master_names()
+
+    # Boss weakness tables
+    if change_boss_weaknesses:
+        scramble_boss_weakness_tables() # Make sure to scramble boss tables after enemy tables, otherwise the enemy scrambling will overwrite those memory values
+
+    # Music
+    if change_music:
+        scramble_music()
+
+    # Bonus stuff
+    if fix_scanline_enabled:
+        fix_scanline() # Disable if you want to preserve the annoying scanline issue on the stage select...?
+    if fix_softlocks_enabled:
+        fix_softlocks() # Disable if you want to add the opportunity to be softlocked back into the game
+    if rebalance:
+        rebalance_difficulty() # Disable for harsher damage values, which might make a randomized playthrough much more challenging
+    if burst_chaser:
+        activate_burst_chaser() # Disable if not playing Burst Chaser mode
+
+
+def pick_file():
+# Helper function for picking ROM.
+
+    # We need to define our global game path here for modifying all the memory values
+    global GAME_PATH
+    file_path = filedialog.askopenfilename(
+        title="Select Mega Man 3 ROM",
+        filetypes=[("NES ROMs", "*.nes"), ("All files", "*.*")]
+    )
+    if file_path:
+        print("Selected file:", file_path)
+        GAME_PATH = file_path
+
+
+class ToolTip:
+# ToolTip helper class for GUI.
+
+    def __init__(self, widget, text):
+        self.widget = widget
+        self.text = text
+        self.tipwindow = None
+
+    def show(self, event=None):
+        if self.tipwindow:
+            return
+        x = self.widget.winfo_rootx() + 20
+        y = self.widget.winfo_rooty() + 20
+        self.tipwindow = tw = Toplevel(self.widget)
+        tw.wm_overrideredirect(True)
+        tw.wm_geometry(f"+{x}+{y}")
+        Label(tw, text=self.text, background="#ffffe0", relief="solid", borderwidth=1).pack()
+
+    def hide(self, event=None):
+        if self.tipwindow:
+            self.tipwindow.destroy()
+            self.tipwindow = None
 
 
 if __name__ == "__main__":
-# Mix it all up! These are the core randomizer features; mix and match as you please
+# Spawns GUI window for user interaction.
     
-    # Title screen, stage select, and cutscene related
-    scramble_title_screen_palette()
-    scramble_stage_order() # not currently functional
-    scramble_stage_select_palettes()
-    scramble_light_lab_palette()
-    scramble_wily_fortress_palette()
-    scramble_robot_master_names()
+    # GUI component
+    root = Tk()
+    root.title("Mega Man 3 Randomizer")
+    root.geometry("800x700")
 
-    # Related to stages
-    scramble_stage_palettes()
-    scramble_music()
+    frm = ttk.Frame(root, padding=10)
+    frm.grid()
 
-    # Related to special weapons
-    scramble_weapon_locations()
-    scramble_weapon_palettes()
-    scramble_weapon_energy_costs()
-    scramble_weapon_behaviors()
+    ttk.Label(
+        frm,
+        text="""Welcome to the Mega Man 3 randomizer. Run this program and select your legally acquired copy of the Mega Man 3 (USA) ROM."""
+    ).grid(column=0, row=0, columnspan=2)
 
-    # Related to enemies, gimmicks, and entities
-    scramble_sprite_palettes()
-    scramble_sprite_health()
-    scramble_sprite_speed()
-    scramble_miniboss_behaviors()
-    scramble_stage_entities()
-    scramble_entity_properties()
-    scramble_enemy_weakness_tables()
+    # File picker button (span both columns)
+    ttk.Button(
+        frm,
+        text="Select ROM File",
+        command=pick_file
+    ).grid(column=0, row=1, columnspan=2, pady=10)
 
-    # Related to bosses
-    scramble_boss_behaviors()
-    scramble_boss_weakness_tables() # Make sure to scramble boss tables after enemy tables, otherwise the enemy scrambling will overwrite those memory values
+    ttk.Label(
+    frm,
+    text="Enter Seed (optional):"
+    ).grid(column=0, row=2, columnspan=1, padx=190, sticky=W)
 
-    # Bonus stuff
-    fix_scanline() # Disable if you want to preserve the annoying scanline issue on the stage select...?
-    fix_softlocks() # Disable if you want to add the opportunity to be softlocked back into the game
-    rebalance_difficulty() # Disable for harsher damage values, which might make a randomized playthrough much more challenging
-    activate_burst_chaser() # Disable if not playing Burst Chaser mode
+    # Seed input field, sets seed if one is given
+    seed_entry = ttk.Entry(frm, width=20)
+    seed_entry.grid(column=0, row=2, padx=330, columnspan=1, pady=5, sticky=W)
+    seed_value = seed_entry.get()  # get text from input field
+
+    # BooleanVars in required order
+    vars_list = [
+        BooleanVar(), BooleanVar(), BooleanVar(), BooleanVar(),
+        BooleanVar(), BooleanVar(), BooleanVar(), BooleanVar(),
+        BooleanVar(), BooleanVar(), BooleanVar(), BooleanVar(),
+        BooleanVar(), BooleanVar(), BooleanVar(), BooleanVar(),
+        BooleanVar(), BooleanVar(), StringVar(value=seed_value)
+    ]
+
+    labels = [
+        "Change Menu Palettes", "Change Sprite Palettes", "Change Sprite Health",
+        "Change Sprite Speed", "Change Entity Behaviors", "Change Entity Placement",
+        "Change Weapon Locations", "Change Weapon Behaviors", "Change Weapon Palettes",
+        "Change Weapon Costs", "Change Enemy Weaknesses", "Change RM Names",
+        "Change Boss Weaknesses", "Change Music", "Fix Scanline",
+        "Fix Softlocks", "Rebalance Difficulty", "Burst Chaser Mode"
+    ]
+
+    # Create checkboxes
+    checkboxes = []
+    for i, (text, var) in enumerate(zip(labels, vars_list), start=4):
+        cb = ttk.Checkbutton(frm, text=text, variable=var)
+        cb.grid(column=0, row=i, sticky=W)
+        checkboxes.append(cb)
+
+    # Add tooltips
+    tooltip = ToolTip(
+        checkboxes[0],
+        "Changes the palettes of the menus (title screen, stage select, cutscenes, etc)."
+    )
+    checkboxes[0].bind("<Enter>", tooltip.show)
+    checkboxes[0].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[1],
+        "Changes the palettes of the objects in the game (bosses, enemies, etc)."
+    )
+    checkboxes[1].bind("<Enter>", tooltip.show)
+    checkboxes[1].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[2],
+        "Changes the health values of enemies in the game."
+    )
+    checkboxes[2].bind("<Enter>", tooltip.show)
+    checkboxes[2].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[3],
+        "Changes the speed of enemies in the game. This is mostly handled differently from the bosses, so enable that setting for boss modifications."
+    )
+    checkboxes[3].bind("<Enter>", tooltip.show)
+    checkboxes[3].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[4],
+        "Changes the behaviors of entities and stage obstacles. Things can get pretty wacky."
+    )
+    checkboxes[4].bind("<Enter>", tooltip.show)
+    checkboxes[4].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[5],
+        "Randomizes the entities of every stage. Bring on the mayhem..."
+    )
+    checkboxes[5].bind("<Enter>", tooltip.show)
+    checkboxes[5].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[6],
+        "Shuffles the weapons around to different stages. Who knows what you'll get?"
+    )
+    checkboxes[6].bind("<Enter>", tooltip.show)
+    checkboxes[6].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[7],
+        "Alters the behavior of the game's weapons. Speeds and movement patterns get a bit funky."
+    )
+    checkboxes[7].bind("<Enter>", tooltip.show)
+    checkboxes[7].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[8],
+        "Randomizes the colors of the weapons to new palettes."
+    )
+    checkboxes[8].bind("<Enter>", tooltip.show)
+    checkboxes[8].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[9],
+        "Alters the energy consumption of each weapon."
+    )
+    checkboxes[9].bind("<Enter>", tooltip.show)
+    checkboxes[9].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[10],
+        "Changes the amount of damage that each enemy receives from each special weapon."
+    )
+    checkboxes[10].bind("<Enter>", tooltip.show)
+    checkboxes[10].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[11],
+        "Gives each Robot Master a new random name (original characters, do not steal)."
+    )
+    checkboxes[11].bind("<Enter>", tooltip.show)
+    checkboxes[11].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[12],
+        "Alters the weaknesses of the bosses of the game."
+    )
+    checkboxes[12].bind("<Enter>", tooltip.show)
+    checkboxes[12].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[13],
+        "Shuffles the music tracks of the game's stages around. Certain songs, like the boss theme and stage select theme, are unmodified."
+    )
+    checkboxes[13].bind("<Enter>", tooltip.show)
+    checkboxes[13].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[14],
+        "Fixes the bug with the scanline on the stage select menu."
+    )
+    checkboxes[14].bind("<Enter>", tooltip.show)
+    checkboxes[14].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[15],
+        "Adds safeguards to prevent softlocks in most relevant places in the game."
+    )
+    checkboxes[15].bind("<Enter>", tooltip.show)
+    checkboxes[15].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[16],
+        "Modifies a couple of damage values, which are otherwise untouched for this randomizer. Looking at you, Doc Wood and Doc Quick."
+    )
+    checkboxes[16].bind("<Enter>", tooltip.show)
+    checkboxes[16].bind("<Leave>", tooltip.hide)
+
+    tooltip = ToolTip(
+        checkboxes[17],
+        "Speeds up Mega Man and his projectiles. Blitz through the game at the speed of sound."
+    )
+    checkboxes[17].bind("<Enter>", tooltip.show)
+    checkboxes[17].bind("<Leave>", tooltip.hide)
+
+    # Buttons
+    ttk.Button(
+        frm,
+        text="Randomize",
+        command=lambda: run_randomizer(*(v.get() for v in vars_list))
+    ).grid(column=0, row=len(vars_list)+4, columnspan=2, pady=10)
+
+    ttk.Button(frm, text="Quit", command=root.destroy).grid(column=0, row=len(vars_list)+5, columnspan=2, pady=10)
+
+    root.mainloop()

@@ -1,4 +1,4 @@
-This is a randomizer program for Mega Man 3 (USA). Check the python source code for highly detailed information on what this script modifies. To use, run the script with a Mega Man 3 (USA) ROM named "MegaMan3" in the same folder as the script.
+This is a randomizer program for Mega Man 3 (USA). Check the python source code for highly detailed information on what this script modifies. To use, run the script with and select a legally acquired Mega Man 3 (USA) ROM.
 
 Currently searching for memory locations for the following:
 - Doc Robot body hitbox size
