@@ -1765,7 +1765,7 @@ def randomize_top_man_entities():
     replace_entities(0x8A82, 0x8E34, 0x8E35)
 
     # Eleventh screen with Komasaburo and top platforms (do not replace the platforms)
-    replace_entities(0x8A84, 0x8E36, 0x8E37, random.choice([0x16, 0x31]))
+    replace_entities(0x8A84, 0x8E36, 0x8E37, random.choice([0x31]))
 
     # Randomize the boss himself
     edit_nes_byte(GAME_PATH, 0x8E3D, RANDOMIZED_ROBOT_MASTERS[4][0])
