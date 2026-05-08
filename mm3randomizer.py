@@ -24,76 +24,80 @@ PROTO_COLOR = random.randint(0x11, 0x1C)
 # This is how the lettering system (A-Z) works for the stage select, and possibly other things.
 LETTERS = [0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23]
 # This is for the Robot Master name generation piece
-THREE_LETTER_NOUNS = [
+THREE_LETTER_WORDS = [
     "box", "cup", "pen", "jar", "lid", "can", "pan", "pot", "mug", "rug",
     "mat", "bed", "cot", "tab", "bin", "bag", "key", "cap", "hat", "tie",
     "wig", "zip", "rod", "net", "peg", "pin", "tap", "tub", "fan", "pad",
     "map", "bar", "toy", "bat", "cue", "die", "ink", "jet", "kit", "log",
-    "ram", "rim", "urn", "toe", "wax", "web", "zip", "arc", "axe", "orb"
+    "ram", "rim", "urn", "toe", "wax", "web", "zip", "arc", "axe", "orb",
+    "lit", "met", "gay", "old", "mic", "dog", "cat", "nut", "lip", "tea"
 ]
-FOUR_LETTER_NOUNS = [
+FOUR_LETTER_WORDS = [
     "book", "desk", "lamp", "door", "wall", "roof", "sofa", "seat", "rack", "sack",
     "lock", "safe", "case", "tree", "cart", "tote", "bowl", "dish", "slap", "vase",
     "tank", "tube", "pipe", "wire", "cord", "xeno", "chip", "disk", "gear", "tool",
     "drum", "bell", "horn", "lens", "mask", "coat", "shoe", "boot", "sock", "belt",
-    "coin", "bill", "card", "note", "file", "page", "pack", "clip", "hook", "tray"
+    "coin", "bill", "card", "note", "file", "page", "pack", "clip", "hook", "tray",
+    "epic", "dull", "bulb", "lead", "date", "buff", "disc", "drip", "comb", "doll"
 ] 
-FIVE_LETTER_NOUNS = [
+FIVE_LETTER_WORDS = [
     "table", "chair", "couch", "shelf", "clock", "watch", "phone", "cable", "mouse", "spice",
     "glass", "plate", "spoon", "knife", "noise", "light", "bread", "frame", "brush", "libra",
     "towel", "sheet", "grass", "shirt", "water", "brick", "cloth", "agate", "heart", "steel",
-    "purse", "crate", "boxer", "panel", "light", "cream", "voice", "drain", "paper", "valve",
-    "wheel", "motor", "fancy", "cable", "lever", "chain", "screw", "ingot", "hinge", "plate"
+    "purse", "crate", "boxer", "panel", "drive", "cream", "voice", "drain", "paper", "valve",
+    "wheel", "motor", "fancy", "lever", "chain", "screw", "ingot", "hinge", "scuba", "based", 
+    "sharp", "trans", "cling", "clone", "power", "devil", "sauce", "radio", "scale", "pride"
 ]
-SIX_LETTER_NOUNS = [
+SIX_LETTER_WORDS = [
     "energy", "planet", "forest", "desert", "island", "valley", "stream", "meadow", "animal", "insect",
     "flower", "branch", "jungle", "garden", "castle", "palace", "temple", "church", "school", "office",
     "market", "bakery", "bridge", "tunnel", "taurus", "engine", "rocket", "record", "system", "device",
     "gadget", "camera", "sensor", "screen", "bottle", "bucket", "basket", "drawer", "closet", "window",
-    "mirror", "statue", "figure", "symbol", "pencil", "guitar", "ladder", "napkin", "quartz", "tablet"
+    "mirror", "statue", "figure", "symbol", "pencil", "guitar", "ladder", "napkin", "quartz", "tablet",
+    "garnet", "cringe", "fossil", "spirit", "candle", "doodle", "makeup", "beauty", "vanity", "lotion"
 ] 
 
 # This name list is used to generate a new, globally accessible name for each Robot Master
 list_new_names = [] # This just ensures that no name is generated twice
-NEEDLE_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+NEEDLE_NEW_NAME = random.choice(SIX_LETTER_WORDS)
 list_new_names.append(NEEDLE_NEW_NAME)
-MAGNET_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+MAGNET_NEW_NAME = random.choice(SIX_LETTER_WORDS)
 while MAGNET_NEW_NAME in list_new_names: # If the chosen name is already in the list of names, reroll
-    MAGNET_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+    MAGNET_NEW_NAME = random.choice(SIX_LETTER_WORDS)
 list_new_names.append(MAGNET_NEW_NAME)
-GEMINI_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+GEMINI_NEW_NAME = random.choice(SIX_LETTER_WORDS)
 while GEMINI_NEW_NAME in list_new_names: # If the chosen name is already in the list of names, reroll
-    GEMINI_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+    GEMINI_NEW_NAME = random.choice(SIX_LETTER_WORDS)
 list_new_names.append(GEMINI_NEW_NAME)
-HARD_NEW_NAME = random.choice(FOUR_LETTER_NOUNS)
+HARD_NEW_NAME = random.choice(FOUR_LETTER_WORDS)
 list_new_names.append(HARD_NEW_NAME)
-TOP_NEW_NAME = random.choice(THREE_LETTER_NOUNS)
+TOP_NEW_NAME = random.choice(THREE_LETTER_WORDS)
 list_new_names.append(TOP_NEW_NAME)
-SNAKE_NEW_NAME = random.choice(FIVE_LETTER_NOUNS)
+SNAKE_NEW_NAME = random.choice(FIVE_LETTER_WORDS)
 while SNAKE_NEW_NAME in list_new_names: # If the chosen name is already in the list of names, reroll
-    SNAKE_NEW_NAME = random.choice(FIVE_LETTER_NOUNS)
+    SNAKE_NEW_NAME = random.choice(FIVE_LETTER_WORDS)
 list_new_names.append(SNAKE_NEW_NAME)
-SPARK_NEW_NAME = random.choice(FIVE_LETTER_NOUNS)
+SPARK_NEW_NAME = random.choice(FIVE_LETTER_WORDS)
 while SPARK_NEW_NAME in list_new_names: # If the chosen name is already in the list of names, reroll
-    SPARK_NEW_NAME = random.choice(FIVE_LETTER_NOUNS)
+    SPARK_NEW_NAME = random.choice(FIVE_LETTER_WORDS)
 list_new_names.append(SPARK_NEW_NAME)
-SHADOW_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+SHADOW_NEW_NAME = random.choice(SIX_LETTER_WORDS)
 while SHADOW_NEW_NAME in list_new_names: # If the chosen name is already in the list of names, reroll
-    SHADOW_NEW_NAME = random.choice(SIX_LETTER_NOUNS)
+    SHADOW_NEW_NAME = random.choice(SIX_LETTER_WORDS)
 list_new_names.append(SHADOW_NEW_NAME)
 
 # These lists provide new words for randomizing the weapon names.
 FOUR_LETTER_WEAPONS = [
-    "spin", "slap", "ball", "beam", "bomb", "shot", "ring", "kick", "hold", "bolt", "mine", "hole", "dash", "club", "clap"
+    "spin", "slap", "ball", "beam", "bomb", "shot", "ring", "kick", "hold", "bolt", "mine", "hole", "dash", "club", "clap", "slam", "hold"
 ]
 FIVE_LETTER_WEAPONS = [
-    "blade", "laser", "shock", "blast", "slash", "smack", "storm", "spear", "flash", "crush", "flush", "blast", "sword", "punch"
+    "blade", "laser", "shock", "blast", "slash", "smack", "storm", "spear", "flash", "crush", "flush", "blast", "sword", "punch", "stick"
 ]
 SIX_LETTER_WEAPONS = [
-    "cannon", "attack", "cutter", "shield", "strike", "string", "burner", "digger", "mortar", "rocket", "bullet", "katana"
+    "cannon", "attack", "cutter", "shield", "strike", "string", "burner", "digger", "mortar", "rocket", "bullet", "katana", "bubble"
 ]
 SEVEN_LETTER_WEAPONS = [
-    "missile", "knuckle", "stopper", "slasher", "shooter", "barrier", "crusher", "blaster", "striker", "grenade", "bazooka"
+    "missile", "knuckle", "stopper", "slasher", "shooter", "barrier", "crusher", "blaster", "striker", "grenade", "bazooka", "trident", "balloon"
 ]
 
 # Enumerate which graphics sets actually have usable assets (i.e. not bosses)
@@ -178,9 +182,9 @@ ENEMY_GRAPHICS = [
     [0x5D, [0x06, 0x09, 0x19, 0x1B]], # Hard Knuckle destructible wall
     # [0x5E] # Kamegoro Maker (don't use this in normal enemy randomization)
     # [0x5F] # Kamegoro Maker currents (do not use)
-    [0x60, [0x12, 0x15, 0x2E]], # Petit Snakey
-    [0x61, [0x12, 0x15, 0x2E]], # Petit Snakey (upside down variant)
-    [0x62, [0x16, 0x31]], # Komasaburo 
+    [0x60, [0x15]], # Petit Snakey
+    [0x61, [0x15]], # Petit Snakey (upside down variant)
+    [0x62, [0x31]], # Komasaburo 
     [0x63, [0x32, 0x37]], # Spark Man junk block
     [0x64, [0x02, 0x03, 0x13, 0x1A, 0x22, 0x2D]], # Electric Gabyoall
     [0x65, [0x02, 0x03, 0x13, 0x1A, 0x22, 0x2D]], # Electric Gabyoall (wider variant)
@@ -211,6 +215,8 @@ RANDOMIZED_ROBOT_MASTERS = [
     [0x4E, 0x29]  # Shadow Man
     ]
 random.shuffle(RANDOMIZED_ROBOT_MASTERS)
+while(RANDOMIZED_ROBOT_MASTERS[0][0] == 0x48): # Magnet Man's AI completely bugs out if he is placed in Needle Man's arena, for some bizarre reason. This code prevents him from being assigned there.
+    random.shuffle(RANDOMIZED_ROBOT_MASTERS)
 
 # This globally accessible list randomizes the locations of the Doc Robots. The list items are the boss entity ID and graphics set.
 RANDOMIZED_DOC_ROBOTS = [
@@ -1460,6 +1466,7 @@ def scramble_sprite_palettes():
     edit_nes_byte(GAME_PATH, 0x20B3, PROTO_COLOR) # Proto Man red
     # Specifically for Break Man fight
     edit_nes_byte(GAME_PATH, 0x31E55, PROTO_COLOR) # Proto Man red
+    #0x3C8AF: Mega Man's skin color (also changes color of certain enemies like Dada)
 
 
 def scramble_sprite_health():
@@ -1487,6 +1494,20 @@ def scramble_miniboss_behaviors():
 
     # Penpen Maker
     edit_nes_byte(GAME_PATH, 0x3A932, random.randint(0x01, 0x04)) # Speed of Penpens spawned (default 02)
+    #edit_nes_byte(GAME_PATH, 0x3A937, 0x93) # Sprite ID for Penpens (default 93)
+    #edit_nes_byte(GAME_PATH, 0x3A93C, 0x93) # Object ID for Penpens (default 46)
+    #edit_nes_byte(GAME_PATH, 0x3A946, 0x93) # HP of dispensed Penpens (default 01)
+    penpen_maker_dark_color = random.randint(0x10, 0x1C) # Set a color palette for Penpen Maker
+    penpen_maker_shading_color = random.randint(0x10, 0x1C) # Set a color palette for Penpen Maker
+    while penpen_maker_dark_color == penpen_maker_shading_color: # Ensure these two colors are different
+        penpen_maker_shading_color = random.randint(0x10, 0x1C)
+    edit_nes_byte(GAME_PATH, 0x3A8CE, penpen_maker_shading_color) # Penpen Maker grey
+    edit_nes_byte(GAME_PATH, 0x3A8CF, penpen_maker_dark_color) # Penpen Maker orange
+    edit_nes_byte(GAME_PATH, 0x3A8D1, penpen_maker_shading_color) # Death animation related
+    edit_nes_byte(GAME_PATH, 0x3A8D2, penpen_maker_shading_color - 0x10) # Death animation related
+    edit_nes_byte(GAME_PATH, 0x3A8D3, penpen_maker_dark_color) # Death animation related
+    edit_nes_byte(GAME_PATH, 0x3A8D5, penpen_maker_shading_color - 0x10) # Death animation related
+    edit_nes_byte(GAME_PATH, 0x3A8D7, penpen_maker_dark_color - 0x10) # Death animation related
 
     # Tama
     edit_nes_byte(GAME_PATH, 0x3BB93, 0x20) # Tama color palette white (default 20)
@@ -1495,6 +1516,11 @@ def scramble_miniboss_behaviors():
     edit_nes_byte(GAME_PATH, 0x219B, tama_color) # Tama sprite dark color
     edit_nes_byte(GAME_PATH, 0x3BB9B, tama_color + 0x20) # Tama bg color palette light color (default 37)
     edit_nes_byte(GAME_PATH, 0x3BBA3, tama_color) # Tama bg color palette dark color (default 17)
+    edit_nes_byte(GAME_PATH, 0x3A8DE, tama_color + 0x20) # Death animation related
+    edit_nes_byte(GAME_PATH, 0x3A8DF, tama_color) # Death animation related
+    edit_nes_byte(GAME_PATH, 0x3A8E2, tama_color + 0x10) # Death animation related
+    edit_nes_byte(GAME_PATH, 0x3A8E3, tama_color - 0x10) # Death animation related
+    edit_nes_byte(GAME_PATH, 0x3A8E6, tama_color) # Death animation related
     edit_nes_byte(GAME_PATH, 0x3BD82, random.randint(0x01, 0x05)) # Jumping height of yarn balls (default 03)
     edit_nes_byte(GAME_PATH, 0x3BC3D, random.randint(0x01, 0x03)) # Number of yarn balls spit out (default 02)
     edit_nes_byte(GAME_PATH, 0x3BC4F, random.randint(0x1C, 0x5C)) # Delay time for yarn balls after first (default 3C)
@@ -1603,14 +1629,14 @@ def randomize_magnet_man_entities():
     # Peterchys and magnet force objects on fifth screen
     replace_entities(0x2A78, 0x2E1C, 0x2E23)
 
-    # Health pickups on sixth screen
-    replace_entities(0x2A7A, 0x2E23, 0x2E27)
+    # Health pickups on sixth screen; replace only the left one with something cheeky
+    replace_entities(0x2A7A, 0x2E23, 0x2E24)
 
     # Seventh screen with Yoku blocks, can only randomize to 0x09 and 0x19 to not mess up Yoku block sprites
     replace_entities(0x2A7C, 0x2E27, 0x2E2D, random.choice([0x09, 0x19]))
 
     # Eighth screen with just pickups
-    replace_entities(0x2A7E, 0x2E2D, 0x2E31)
+    replace_entities(0x2A7E, 0x2E2F, 0x2E31)
 
     # Ninth screen with New Shotman
     replace_entities(0x2A80, 0x2E31, 0x2E32)
@@ -1633,7 +1659,7 @@ def randomize_gemini_man_entities():
     # replace_entities(0x4A72, 0x4E25, 0x4E27)
 
     # Third screen with pickups; replace with a graphics set that is compatible with Poles
-    replace_entities(0x4A74, 0x4E27, 0x4E2A, random.choice([0x03, 0x33, 0x38]))
+    #replace_entities(0x4A74, 0x4E27, 0x4E2A, random.choice([0x03, 0x33, 0x38]))
 
     # Fourth screen with Poles but no other entities?
     # replace_entities(0x4A76, 0x4E2A, 0x4E2A)
@@ -1707,7 +1733,7 @@ def randomize_top_man_entities():
 # Randomizes the entities for Top Man's stage.
 
     # First screen with Bolton & Nuttons and Mechakkeros
-    replace_entities(0x8A70, 0x8E10, 0x8E1C)
+    replace_entities(0x8A70, 0x8E10, 0x8E1B)
 
     # Second screen with Komasaburo
     replace_entities(0x8A72, 0x8E1C, 0x8E1D)
@@ -2352,6 +2378,7 @@ def scramble_entity_properties():
     edit_nes_byte(GAME_PATH, 0x3AE33, random.randint(0x02, 0x06)) # Y speed of beehive dropping (default 04)
 
     # Bolton & Nutton (entity ID 20)
+    edit_nes_byte(GAME_PATH, 0x530, random.randint(0x01, 0x03)) # Horizontal chasing speed (default 01)
     edit_nes_byte(GAME_PATH, 0x3AB8D, random.randint(0x36, 0xD6)) # Decimal vertical chasing speed (default 66)
     #edit_nes_byte(GAME_PATH, 0x3ABBB, 0x04) # Speed of connecting bolt when spawning (do not edit) (default 04)
     edit_nes_byte(GAME_PATH, 0x3A3CB, random.randint(0x24, 0x64)) # Range before Bolton & Nutton activates (default 44)
