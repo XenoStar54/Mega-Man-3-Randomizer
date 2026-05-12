@@ -1,15 +1,17 @@
-from tkinter import *
-from tkinter import ttk
-from tkinter import filedialog
+import sys
+import os
 import struct
 import random
 import math
-import os
+from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
+                             QLabel, QPushButton, QLineEdit, QCheckBox, QFileDialog, QScrollArea, QFrame, QDialog)
+from PySide6.QtCore import Qt
 
 GAME_PATH = None
 FOLDER_PATH = None
 SEED = None
-CHANCE_ITEMS_SPAWN = 3 # Percentage chance for stage entities to be replaced with items. 3% by default
+CHANCE_ITEMS_SPAWN = 3  # Percentage chance for stage entities to be replaced with items. 3% by default
+ROM_DATA = None  # Global buffer for faster patching
 
 # The NES palette has 64 different colors, but many of them are repeats. This list excludes the duplicate instances of black.
 VIABLE_COLORS = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D]
@@ -274,21 +276,15 @@ random.shuffle(WEAPON_POSITIONS)
 
 
 def edit_nes_byte(file_path, offset, new_value):
-# A helper function that edits the value of the byte at the specified address in the ROM.
-
-    with open(file_path, "rb+") as f:
-        f.seek(offset)
-        # Write one byte
-        f.write(struct.pack('B', new_value))
+# A helper function that edits the value of the byte in the global memory buffer.
+    global ROM_DATA
+    ROM_DATA[offset] = new_value
 
 
 def read_nes_byte(file_path, offset):
-# A helper function that returns the value of the byte at the specified address in the ROM.
-
-    with open(file_path, "rb+") as f:
-        f.seek(offset)
-        value = f.read(1)
-        return value.hex()
+# A helper function that returns the value of the byte from the global memory buffer.
+    global ROM_DATA
+    return hex(ROM_DATA[offset])[2:].zfill(2)
 
 
 def scramble_title_screen_palette():
@@ -3378,12 +3374,12 @@ def activate_sperm_man():
     edit_nes_byte(GAME_PATH, 0x2177, 0x20)
 
 
-def run_randomizer(change_menu_palettes, change_sprite_palettes, change_sprite_health, change_sprite_speed, change_entity_behaviors, change_entity_placement, change_wep_locations, change_wep_behaviors, change_wep_palettes, change_wep_costs, change_enemy_weaknesses, change_rm_names, change_boss_weaknesses, change_music, fix_scanline_enabled, fix_softlocks_enabled, rebalance, burst_chaser, sperm_man):
+def run_randomizer(ui_ref, change_menu_palettes, change_sprite_palettes, change_sprite_health, change_sprite_speed, change_entity_behaviors, change_entity_placement, change_wep_locations, change_wep_behaviors, change_wep_palettes, change_wep_costs, change_enemy_weaknesses, change_rm_names, change_boss_weaknesses, change_music, fix_scanline_enabled, fix_softlocks_enabled, rebalance, burst_chaser, sperm_man):
 # Mix it all up! These are the core randomizer features; mix and match as you please
 
     # Apply seed if used
-    global SEED
-    seed_value = seed_entry.get()
+    global SEED, ROM_DATA
+    seed_value = ui_ref.seed_entry.text()
     if seed_value:
         SEED = seed_value
         print("Seed set to:", SEED)
@@ -3391,10 +3387,19 @@ def run_randomizer(change_menu_palettes, change_sprite_palettes, change_sprite_h
     else:
         SEED = random.randint(0, 999999999) # Generate a random seed if the user doesn't specify one; this is also printed out so that they can use it to replay the same seed if they want
 
+    if not GAME_PATH:
+        print("No ROM selected.")
+        return
+
+    # Load ROM into memory for faster patching
+    with open(GAME_PATH, "rb") as f:
+        ROM_DATA = bytearray(f.read())
+
     # Change the item spawn percentage if relevant
     global CHANCE_ITEMS_SPAWN
-    if percent_bar.get():
-        item_spawn_percent = int(percent_bar.get())
+    p_text = ui_ref.percent_bar.text()
+    if p_text:
+        item_spawn_percent = int(p_text)
         if item_spawn_percent != 3 and item_spawn_percent < 101 and item_spawn_percent > -1:
             CHANCE_ITEMS_SPAWN = item_spawn_percent
 
@@ -3474,288 +3479,165 @@ def run_randomizer(change_menu_palettes, change_sprite_palettes, change_sprite_h
     if sperm_man: # I think it was the Power Guy stream that compelled me to add this I'm not gonna lie lmao
         activate_sperm_man()
 
-    # After everything is done, rename file to seed
-    try:
-        new_name = os.path.join(
-            FOLDER_PATH,
-            f"MegaMan3_SEED_{SEED}.nes")
-        os.rename(GAME_PATH, new_name)
-        print("File renamed successfully!")
-    except FileNotFoundError:
-        print("The source file was not found.")
-    except FileExistsError:
-        print("A file with the new name already exists.")
+    # Write memory buffer to a new patched ROM file, leaving the selected ROM unchanged
+    output_name = f"MegaMan3_SEED_{SEED}.nes"
+    output_path = os.path.join(FOLDER_PATH, output_name)
+    if os.path.exists(output_path):
+        base, ext = os.path.splitext(output_path)
+        counter = 1
+        while os.path.exists(f"{base}_{counter}{ext}"):
+            counter += 1
+        output_path = f"{base}_{counter}{ext}"
+
+    with open(output_path, "wb") as f:
+        f.write(ROM_DATA)
+
+    print(f"Patched ROM written to: {output_path}")
+    return output_path
 
 
-def pick_file():
-# Helper function for picking ROM.
+class RandomizerWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Mega Man 3 Randomizer")
+        self.resize(700, 700)
 
-    # We need to define our global game path here for modifying all the memory values
-    global GAME_PATH
-    global FOLDER_PATH
-    file_path = filedialog.askopenfilename(
-        title="Select Mega Man 3 ROM",
-        filetypes=[("NES ROMs", "*.nes"), ("All files", "*.*")]
-    )
-    if file_path:
-        print("Selected file:", file_path)
-        GAME_PATH = file_path
-        FOLDER_PATH = os.path.dirname(file_path)
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
+        self.main_layout = QVBoxLayout(self.central_widget)
 
+        # Welcome Text
+        welcome_lbl = QLabel("Welcome to the Mega Man 3 randomizer. Run this program and select your legally acquired copy of the Mega Man 3 (USA) ROM.")
+        welcome_lbl.setWordWrap(True)
+        self.main_layout.addWidget(welcome_lbl)
 
-class ToolTip:
-# ToolTip helper class for GUI.
+        # File Picker
+        self.pick_btn = QPushButton("Select ROM File")
+        self.pick_btn.clicked.connect(self.pick_file)
+        self.main_layout.addWidget(self.pick_btn)
 
-    def __init__(self, widget, text):
-        self.widget = widget
-        self.text = text
-        self.tipwindow = None
+        # Seed Input
+        seed_layout = QHBoxLayout()
+        seed_layout.addWidget(QLabel("Enter Seed (optional):"))
+        self.seed_entry = QLineEdit()
+        self.seed_entry.setToolTip("The seed used for creating the randomized file. This helps if you want to play a specific randomized ROM.")
+        seed_layout.addWidget(self.seed_entry)
+        self.main_layout.addLayout(seed_layout)
 
-    def show(self, event=None):
-        if self.tipwindow:
-            return
-        x = self.widget.winfo_rootx() + 20
-        y = self.widget.winfo_rooty() + 20
-        self.tipwindow = tw = Toplevel(self.widget)
-        tw.wm_overrideredirect(True)
-        tw.wm_geometry(f"+{x}+{y}")
-        Label(tw, text=self.text, background="#ffffe0", relief="solid", borderwidth=1).pack()
+        # Scrollable area for Checkboxes
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll_content = QWidget()
+        self.checkbox_layout = QVBoxLayout(scroll_content)
 
-    def hide(self, event=None):
-        if self.tipwindow:
-            self.tipwindow.destroy()
-            self.tipwindow = None
+        self.labels = [
+            "Change Menu Palettes", "Change Sprite Palettes", "Change Sprite Health",
+            "Change Sprite Speed", "Change Entity Behaviors", "Change Entity Placement",
+            "Change Weapon Locations", "Change Weapon Behaviors", "Change Weapon Palettes",
+            "Change Weapon Costs", "Change Enemy Weaknesses", "Change RM Names",
+            "Change Boss Weaknesses", "Change Music", "Fix Scanline",
+            "Fix Softlocks", "Rebalance Difficulty", "Burst Chaser Mode", "Sperm Man Mode"
+        ]
+        self.tips = [
+            "Changes the palettes of the menus (title screen, stage select, cutscenes, etc).",
+            "Changes the palettes of the objects in the game (bosses, enemies, etc).",
+            "Changes the health values of enemies in the game.",
+            "Changes the speed of enemies in the game.",
+            "Changes the behaviors of entities and stage obstacles. Things can get pretty wacky.",
+            "Randomizes the entities of every stage. Bring on the mayhem...",
+            "Shuffles the weapons around to different stages. Who knows what you'll get?",
+            "Alters the behavior of the game's weapons.",
+            "Randomizes the colors of the weapons to new palettes.",
+            "Alters the energy consumption of each weapon.",
+            "Changes the amount of damage that each enemy receives from each special weapon.",
+            "Gives each Robot Master a new random name.",
+            "Alters the weaknesses of the bosses of the game.",
+            "Shuffles the music tracks of the game's stages around.",
+            "Fixes the bug with the scanline on the stage select menu.",
+            "Adds safeguards to prevent softlocks in most relevant places in the game.",
+            "Modifies a couple of damage values.",
+            "Speeds up Mega Man and his projectiles.",
+            "Why did I add this lmao"
+        ]
 
+        self.checkboxes = []
+        for i, text in enumerate(self.labels):
+            cb = QCheckBox(text)
+            cb.setChecked(True if i < 17 else False)
+            cb.setToolTip(self.tips[i])
+            self.checkbox_layout.addWidget(cb)
+            self.checkboxes.append(cb)
+
+        scroll.setWidget(scroll_content)
+        self.main_layout.addWidget(scroll)
+
+        # Item Spawn Chance
+        spawn_layout = QHBoxLayout()
+        spawn_layout.addWidget(QLabel("Item Spawn Chance (optional):"))
+        self.percent_bar = QLineEdit()
+        self.percent_bar.setText("3")
+        self.percent_bar.setToolTip("The percentage chance for randomized entities to be replaced with helpful pickups. Default is 3%.")
+        spawn_layout.addWidget(self.percent_bar)
+        self.main_layout.addLayout(spawn_layout)
+
+        # Action Buttons
+        self.rand_btn = QPushButton("Randomize")
+        self.rand_btn.clicked.connect(self.start_randomization)
+        self.main_layout.addWidget(self.rand_btn)
+
+        self.quit_btn = QPushButton("Quit")
+        self.quit_btn.clicked.connect(self.close)
+        self.main_layout.addWidget(self.quit_btn)
+
+    def pick_file(self):
+        global GAME_PATH, FOLDER_PATH
+        file_path, _ = QFileDialog.getOpenFileName(self, "Select Mega Man 3 ROM", "", "NES ROMs (*.nes);;All files (*.*)")
+        if file_path:
+            print("Selected file:", file_path)
+            GAME_PATH = file_path
+            FOLDER_PATH = os.path.dirname(file_path)
+
+    def start_randomization(self):
+        args = [cb.isChecked() for cb in self.checkboxes]
+        output_path = run_randomizer(self, *args)
+        if output_path:
+            self.show_output_dialog(output_path)
+
+    def show_output_dialog(self, output_path):
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Patched ROM Created")
+
+        layout = QVBoxLayout(dialog)
+        label = QLabel(f"Patched ROM created:\n{output_path}")
+        label.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        layout.addWidget(label)
+
+        button_layout = QHBoxLayout()
+        open_button = QPushButton("Open Directory")
+        close_button = QPushButton("Close")
+        button_layout.addWidget(open_button)
+        button_layout.addWidget(close_button)
+        layout.addLayout(button_layout)
+
+        def open_directory():
+            folder = os.path.dirname(output_path)
+            try:
+                if sys.platform == "win32":
+                    os.startfile(folder)
+                elif sys.platform == "darwin":
+                    os.system(f"open \"{folder}\"")
+                else:
+                    os.system(f"xdg-open \"{folder}\"")
+            except Exception as e:
+                print("Failed to open directory:", e)
+
+        open_button.clicked.connect(open_directory)
+        close_button.clicked.connect(dialog.accept)
+
+        dialog.exec()
 
 if __name__ == "__main__":
-# Spawns GUI window for user interaction.
-    
-    # GUI component
-    root = Tk()
-    root.title("Mega Man 3 Randomizer")
-    root.geometry("700x625")
-
-    frm = ttk.Frame(root, padding=10)
-    frm.grid()
-
-    ttk.Label(
-        frm,
-        text="""Welcome to the Mega Man 3 randomizer. Run this program and select your legally acquired copy of the Mega Man 3 (USA) ROM."""
-    ).grid(column=0, row=0, columnspan=2)
-
-    # File picker button (span both columns)
-    ttk.Button(
-        frm,
-        text="Select ROM File",
-        command=pick_file
-    ).grid(column=0, row=1, columnspan=2, pady=10)
-
-    ttk.Label(
-    frm,
-    text="Enter Seed (optional):"
-    ).grid(column=0, row=2, columnspan=1, padx=10, sticky=E)
-
-    # Seed input field, sets seed if one is given
-    seed_entry = ttk.Entry(frm, width=20)
-    seed_entry.grid(column=1, row=2, padx=10, columnspan=1, pady=5, sticky=W)
-    tooltip = ToolTip(
-        seed_entry,
-        "The seed used for creating the randomized file. This helps if you want to play a specific randomized ROM."
-    )
-    seed_entry.bind("<Enter>", tooltip.show)
-    seed_entry.bind("<Leave>", tooltip.hide)
-
-    # BooleanVars in required order
-    vars_list = [
-        BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True),
-        BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True),
-        BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True),
-        BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True),
-        BooleanVar(value=True), BooleanVar(value=False), BooleanVar(value=False)
-    ]
-
-    labels = [
-        "Change Menu Palettes", "Change Sprite Palettes", "Change Sprite Health",
-        "Change Sprite Speed", "Change Entity Behaviors", "Change Entity Placement",
-        "Change Weapon Locations", "Change Weapon Behaviors", "Change Weapon Palettes",
-        "Change Weapon Costs", "Change Enemy Weaknesses", "Change RM Names",
-        "Change Boss Weaknesses", "Change Music", "Fix Scanline",
-        "Fix Softlocks", "Rebalance Difficulty", "Burst Chaser Mode", "Sperm Man Mode"
-    ]
-
-    # Create checkboxes
-    checkboxes = []
-    for i, (text, var) in enumerate(zip(labels, vars_list), start=4):
-        cb = ttk.Checkbutton(frm, text=text, variable=var)
-        cb.grid(column=0, row=i, sticky=W)
-        checkboxes.append(cb)
-
-    # Add tooltips
-    tooltip = ToolTip(
-        checkboxes[0],
-        "Changes the palettes of the menus (title screen, stage select, cutscenes, etc)."
-    )
-    checkboxes[0].bind("<Enter>", tooltip.show)
-    checkboxes[0].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[1],
-        "Changes the palettes of the objects in the game (bosses, enemies, etc)."
-    )
-    checkboxes[1].bind("<Enter>", tooltip.show)
-    checkboxes[1].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[2],
-        "Changes the health values of enemies in the game."
-    )
-    checkboxes[2].bind("<Enter>", tooltip.show)
-    checkboxes[2].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[3],
-        "Changes the speed of enemies in the game. This is mostly handled differently from the bosses, so enable that setting for boss modifications."
-    )
-    checkboxes[3].bind("<Enter>", tooltip.show)
-    checkboxes[3].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[4],
-        "Changes the behaviors of entities and stage obstacles. Things can get pretty wacky."
-    )
-    checkboxes[4].bind("<Enter>", tooltip.show)
-    checkboxes[4].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[5],
-        "Randomizes the entities of every stage. Bring on the mayhem..."
-    )
-    checkboxes[5].bind("<Enter>", tooltip.show)
-    checkboxes[5].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[6],
-        "Shuffles the weapons around to different stages. Who knows what you'll get?"
-    )
-    checkboxes[6].bind("<Enter>", tooltip.show)
-    checkboxes[6].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[7],
-        "Alters the behavior of the game's weapons. Speeds and movement patterns get a bit funky."
-    )
-    checkboxes[7].bind("<Enter>", tooltip.show)
-    checkboxes[7].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[8],
-        "Randomizes the colors of the weapons to new palettes."
-    )
-    checkboxes[8].bind("<Enter>", tooltip.show)
-    checkboxes[8].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[9],
-        "Alters the energy consumption of each weapon."
-    )
-    checkboxes[9].bind("<Enter>", tooltip.show)
-    checkboxes[9].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[10],
-        "Changes the amount of damage that each enemy receives from each special weapon."
-    )
-    checkboxes[10].bind("<Enter>", tooltip.show)
-    checkboxes[10].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[11],
-        "Gives each Robot Master a new random name (original characters, do not steal)."
-    )
-    checkboxes[11].bind("<Enter>", tooltip.show)
-    checkboxes[11].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[12],
-        "Alters the weaknesses of the bosses of the game."
-    )
-    checkboxes[12].bind("<Enter>", tooltip.show)
-    checkboxes[12].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[13],
-        "Shuffles the music tracks of the game's stages around. Certain songs, like the boss theme and stage select theme, are unmodified."
-    )
-    checkboxes[13].bind("<Enter>", tooltip.show)
-    checkboxes[13].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[14],
-        "Fixes the bug with the scanline on the stage select menu."
-    )
-    checkboxes[14].bind("<Enter>", tooltip.show)
-    checkboxes[14].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[15],
-        "Adds safeguards to prevent softlocks in most relevant places in the game."
-    )
-    checkboxes[15].bind("<Enter>", tooltip.show)
-    checkboxes[15].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[16],
-        "Modifies a couple of damage values, which are otherwise untouched for this randomizer. Looking at you, Doc Wood and Doc Quick."
-    )
-    checkboxes[16].bind("<Enter>", tooltip.show)
-    checkboxes[16].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[17],
-        "Speeds up Mega Man and his projectiles. Blitz through the game at the speed of sound."
-    )
-    checkboxes[17].bind("<Enter>", tooltip.show)
-    checkboxes[17].bind("<Leave>", tooltip.hide)
-
-    tooltip = ToolTip(
-        checkboxes[18],
-        "Why did I add this lmao"
-    )
-    checkboxes[18].bind("<Enter>", tooltip.show)
-    checkboxes[18].bind("<Leave>", tooltip.hide)
-
-    # Text field for altering item spawn chance
-    ttk.Label(
-        frm,
-        text="Item Spawn Chance (optional):",
-    ).grid(column=0, row=len(vars_list)+4, columnspan=1, padx=10, sticky=E, pady=10)
-
-    percent_bar = ttk.Entry(
-        frm,
-        textvariable=3,
-        width=20,
-    )
-    percent_bar.grid(
-        column=1,
-        row=len(vars_list)+4,
-        columnspan=1,
-        padx=10,
-        sticky=W
-    )
-    tooltip = ToolTip(
-        percent_bar,
-        "The percentage chance for randomized entities to be replaced with helpful pickups. This is 3% by default."
-    )
-    percent_bar.bind("<Enter>", tooltip.show)
-    percent_bar.bind("<Leave>", tooltip.hide)
-
-    # Buttons
-    ttk.Button(
-        frm,
-        text="Randomize",
-        command=lambda: run_randomizer(*(v.get() for v in vars_list))
-    ).grid(column=0, row=len(vars_list)+5, columnspan=2, pady=5)
-
-    ttk.Button(frm, text="Quit", command=root.destroy).grid(column=0, row=len(vars_list)+6, columnspan=2, pady=5)
-
-    root.mainloop()
+    app = QApplication(sys.argv)
+    window = RandomizerWindow()
+    window.show()
+    sys.exit(app.exec())
