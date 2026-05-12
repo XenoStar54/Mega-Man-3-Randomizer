@@ -4,9 +4,12 @@ from tkinter import filedialog
 import struct
 import random
 import math
+import os
 
 GAME_PATH = None
+FOLDER_PATH = None
 SEED = None
+CHANCE_ITEMS_SPAWN = 3 # Percentage chance for stage entities to be replaced with items. 3% by default
 
 # The NES palette has 64 different colors, but many of them are repeats. This list excludes the duplicate instances of black.
 VIABLE_COLORS = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D]
@@ -101,24 +104,24 @@ SEVEN_LETTER_WEAPONS = [
 ]
 
 # Enumerate which graphics sets actually have usable assets (i.e. not bosses)
-VIABLE_GFX_SETS = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x13, 0x14, 0x15, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x38, 0x39]
+VIABLE_GFX_SETS = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x13, 0x15, 0x17, 0x18, 0x19, 0x1B, 0x1D, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x38, 0x39]
 
 # This globally accessible list determines which enemies belong to which graphics set for enemy randomization.
 ENEMY_GRAPHICS = [
-    [0x00, [0x01, 0x09, 0x15, 0x1B, 0x1F, 0x38]], # Dada (available in set 0x01, 0x09, 0x15, 0x1B, 0x1F, 0x38)
-    [0x01, [0x01, 0x09, 0x15, 0x1B, 0x1F, 0x38]], # Potton
+    [0x00, [0x01, 0x09, 0x15, 0x1B, 0x1F]], # Dada (available in set 0x01, 0x09, 0x15, 0x1B, 0x1F, 0x38)
+    [0x01, [0x01, 0x09, 0x15, 0x1B, 0x1F]], # Potton
     [0x02, [0x06, 0x1B]], # New Shotman
     [0x03, [0x17]], # Hammer Joe
     [0x04, [0x01, 0x0A, 0x0C]], # Bubukan
-    [0x05, [0x06, 0x17, 0x1C, 0x20]], # Jamacy (climbing variant)
+    [0x05, [0x06, 0x17, 0x20]], # Jamacy (climbing variant)
     [0x06, [0x06, 0x1B]], # Bomb Flier
     # [0x07] Mega Man's teleport animation (do not use)
-    [0x08, [0x00, 0x0A, 0x0C, 0x19, 0x30, 0x31, 0x32, 0x33]], # Yambow
+    [0x08, [0x00, 0x0A, 0x0C, 0x19, 0x30]], # Yambow
     [0x09, [0x00, 0x18, 0x21, 0x22]], # Metall DX (grounded)
     [0x0A, [0x00, 0x18, 0x21, 0x22]], # Cannon
     # [0x0B] Snake Man cloud platform (probably shouldn't use)
-    [0x0C, [0x06, 0x17, 0x1C, 0x20]], # Jamacy (crawling variant)
-    [0x0D, [0x06, 0x17, 0x1C, 0x20]], # Jamacy (crawling and climbing variant?)
+    [0x0C, [0x06, 0x20]], # Jamacy (crawling variant)
+    [0x0D, [0x06, 0x17, 0x20]], # Jamacy (crawling and climbing variant?)
     [0x0E, [0x03, 0x33, 0x38]], # Gyoraibo (Doc Gemini variant?)
     [0x0F, [0x09, 0x19]], # Magfly
     # [0x10] No clue what this is (do not use)
@@ -126,10 +129,10 @@ ENEMY_GRAPHICS = [
     [0x12, [0x02, 0x2D, 0x30]], # Pickelman Bull
     [0x13, [0x0B]], # Bikky
     # [0x14] Jamacy Generator (do not use)
-    [0x15, [0x06, 0x17, 0x1C, 0x20]], # Jamacy (Alternate climbing variant? State for climbing variant?)
+    [0x15, [0x06, 0x20]], # Jamacy (Alternate climbing variant? State for climbing variant?)
     [0x16, [0x09, 0x19]], # Magnet force (left)
     # [0x17] No clue what this is (do not use)
-    [0x18, [0x04, 0x14, 0x1A, 0x1C, 0x1D, 0x20, 0x2F, 0x39]], # Nitron
+    [0x18, [0x04, 0x1D, 0x20, 0x39]], # Nitron
     # [0x19] No clue what this is (do not use)
     [0x1A, [0x03, 0x33, 0x38]], # Gyoraibo (Normal Gemini variant?)
     [0x1B, [0x2E]], # Hari Hari
@@ -137,11 +140,11 @@ ENEMY_GRAPHICS = [
     [0x1D, [0x05, 0x1F]], # Returning Monking
     # [0x1E], # Weird invincible moving Returning Monking? Apparently unused (probably shouldn't use)
     [0x1F, [0x2F]], # Have "Su" Bee
-    [0x20, [0x02, 0x03, 0x13, 0x1A, 0x22, 0x2D]], # Bolton & Nutton
-    [0x21, [0x04, 0x14, 0x1A, 0x1C, 0x1D, 0x20, 0x2F, 0x39]], # Wanaan
+    [0x20, [0x02, 0x03, 0x13, 0x22]], # Bolton & Nutton
+    [0x21, [0x04, 0x1D, 0x20, 0x39]], # Wanaan
     [0x22, [0x01, 0x0A, 0x0C]], # Needle Man needle obstacle (upwards variant)
     [0x23, [0x01, 0x0A, 0x0C]], # Needle Man needle obstacle (downwards variant)
-    [0x24, [0x04, 0x14, 0x1A, 0x1C, 0x1D, 0x20, 0x2F, 0x39]], # Elec'n
+    [0x24, [0x04, 0x1D, 0x20, 0x39]], # Elec'n
     # [0x25] Magnet force animation (left) (probably shouldn't use)
     [0x26, [0x02, 0x2D, 0x30]], # Mechakkero
     # [0x27] Top Man top platform (probably shouldn't use)
@@ -155,10 +158,10 @@ ENEMY_GRAPHICS = [
     # [0x34 - 0x35] No clue what this is (do not use)
     [0x36, [0x08, 0x09]], # Peterchy
     [0x37, [0x08]], # Walking Bomb
-    [0x38, [0x00, 0x0A, 0x0C, 0x19, 0x30, 0x31, 0x32]], # Parasyu
+    [0x38, [0x00, 0x0A, 0x0C, 0x19, 0x30, 0x32]], # Parasyu
     [0x39, [0x08]], # Hologran (static)
     [0x3A, [0x08]], # Hologran (moving)
-    [0x3B, [0x04, 0x18, 0x1D]], # Bomber Pepe
+    [0x3B, [0x04, 0x1D]], # Bomber Pepe
     [0x3C, [0x00, 0x18, 0x21, 0x22]], # Metall DX (heli)
     [0x3D, [0x09, 0x19]], # Magnet force (right)
     # [0x3E] # Proto Man fight (don't use this in normal enemy randomization)
@@ -172,7 +175,7 @@ ENEMY_GRAPHICS = [
     # [0x53, [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]], # Small weapon energy capsule
     # [0x54, [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]], # E Tank
     # [0x55, [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]], # 1-UP / extra life
-    [0x56, [0x02, 0x03, 0x06, 0x09, 0x0B, 0x17, 0x19, 0x1B, 0x2D, 0x30, 0x33, 0x38]], # Surprise Box / ? Can
+    [0x56, [0x02, 0x03, 0x09, 0x1B, 0x30, 0x38]], # Surprise Box / ? Can
     # [0x57] # Giant Metall (don't use this in normal enemy randomization)
     # [0x58] # Doc Spark conveyor wheel (left) (probably shouldn't use)
     # [0x59] # Doc Spark conveyor wheel (right) (probably shouldn't use)
@@ -186,8 +189,8 @@ ENEMY_GRAPHICS = [
     [0x61, [0x15]], # Petit Snakey (upside down variant)
     [0x62, [0x31]], # Komasaburo 
     [0x63, [0x32, 0x37]], # Spark Man junk block
-    [0x64, [0x02, 0x03, 0x13, 0x1A, 0x22, 0x2D]], # Electric Gabyoall
-    [0x65, [0x02, 0x03, 0x13, 0x1A, 0x22, 0x2D]], # Electric Gabyoall (wider variant)
+    [0x64, [0x02, 0x03, 0x13, 0x1A, 0x22]], # Electric Gabyoall
+    [0x65, [0x02, 0x03, 0x13, 0x1A, 0x22]], # Electric Gabyoall (wider variant)
     # [0x66 - 0x67] Big Snakey body and init sprites (do not use)
     # [0x68 - 0x6F] The eight Doc Robots (FL, BU, QU, WO, CR, AI, ME, HE) (don't use in normal enemy randomization)
     # [0x70 - 0x71] Big Snakey eye and mouth sprites (do not use)
@@ -200,8 +203,22 @@ ENEMY_GRAPHICS = [
     # [0x82 - 0x89] Wily Machine 3 sprites (don't use in normal enemy randomization)
     # [0x8A] Teleporter (do not use)
 ]
-CHANCE_ITEMS_SPAWN = 3 # Percentage chance for stage entities to be replaced with items. 3% by default
 ITEM_LIST = [0x50, 0x51, 0x52, 0x53, 0x54, 0x55] # List of items (enumerated above)
+
+# This globally accessible list defines the default base HP of enemies, which ensures that the health of enemies does not become too extreme if the same file is used for randomization multiple times.
+DEFAULT_ENEMY_HEALTH = [
+    0x01, 0x01, 0x03, 0x08, 0x04, 0x01, 0x03, 0x03, 0x03, 0x01, 0x03, 
+    0xFF, 0x01, 0x01, 0x02, 0x01, 0x02, 0x06, 0x03, 0x06, 0xFF, 0x01, 
+    0xFF, 0x06, 0x01, 0x01, 0x02, 0x06, 0x0A, 0x08, 0x01, 0x03, 0x01, 
+    0xFF, 0xFF, 0xFF, 0x01, 0xFF, 0x01, 0xFF, 0x01, 0x01, 0x01, 0x01, 
+    0x01, 0xFF, 0x01, 0x06, 0x01, 0xFF, 0xFF, 0x1C, 0xFF, 0xFF, 0x03, 
+    0x01, 0x03, 0x03, 0x03, 0x06, 0x01, 0xFF, 0x1C, 0xFF, 0x03, 0x03, 
+    0x03, 0x03, 0x03, 0x03, 0x03, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 
+    0x1C, 0x1C, 0xFF, 0xFF, 0xFF, 0x1C, 0x1C, 0xFF, 0xFF, 0xFF, 0x0A, 
+    0xFF, 0xFF, 0xFF, 0x00, 0x08, 0x08, 0x01, 0x00, 0x02, 0x02, 0x06, 
+    0x08, 0x01, 0x01, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
+    0xFF, 0xFF, 0x00, 0x0A, 0x00, 0x0A
+    ]
 
 # This globally accessible list is used for randomizing what bosses appear in what stage. The list items are the boss entity ID and graphics set. It seems that the bank 0 and 1 values are actually automatically handled with the graphics set value.
 RANDOMIZED_ROBOT_MASTERS = [
@@ -547,6 +564,15 @@ def randomize_needle_man_graphics():
     edit_nes_byte(GAME_PATH, 0xA9C, needle_background)
     edit_nes_byte(GAME_PATH, 0xA9D, needle_background - 0x10)
 
+    # Background Giant Metall shading fix
+    edit_nes_byte(GAME_PATH, 0xA9F, random.choice(LIGHT_COLORS_NW))
+    edit_nes_byte(GAME_PATH, 0xAA0, int(read_nes_byte(GAME_PATH, 0xA9F), 16) - 0x10)
+
+    # Boss room color restriction for visibility
+    edit_nes_byte(GAME_PATH, 0xAB5, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0xAB4, int(read_nes_byte(GAME_PATH, 0xAB5), 16) + 0x10)
+    edit_nes_byte(GAME_PATH, 0xAB3, int(read_nes_byte(GAME_PATH, 0xAB5), 16) + 0x20)
+
     # Some fixes for bizarre color shenanigans with ladders and backgrounds
     edit_nes_byte(GAME_PATH, 0xAA1, int(read_nes_byte(GAME_PATH, 0xA99), 16))
     edit_nes_byte(GAME_PATH, 0xAA8, int(read_nes_byte(GAME_PATH, 0xA94), 16))
@@ -574,7 +600,12 @@ def randomize_magnet_man_graphics():
     magnet_background = random.randint(0x00, 0x0C)
     edit_nes_byte(GAME_PATH, 0x2A97, magnet_background + 0x10)
     edit_nes_byte(GAME_PATH, 0x2A98, magnet_background)
+    edit_nes_byte(GAME_PATH, 0x2A99, magnet_background)
     edit_nes_byte(GAME_PATH, 0x2AB4, int(read_nes_byte(GAME_PATH, 0x2A98), 16))
+
+    # Fix for column colors
+    edit_nes_byte(GAME_PATH, 0x2AB0, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x2AB1, int(read_nes_byte(GAME_PATH, 0x2AB0), 16) - 0x10)
 
     # Prevent the screen from weirdly changing palette after first screen
     for i in range(0x2AA6, 0x2AAE):
@@ -582,6 +613,10 @@ def randomize_magnet_man_graphics():
 
     # Fix background colors after that palette shift
     edit_nes_byte(GAME_PATH, 0x2AAF, int(read_nes_byte(GAME_PATH, 0x2AAB), 16))
+
+    # Yoku block colors
+    edit_nes_byte(GAME_PATH, 0x210E, 0x30)
+    edit_nes_byte(GAME_PATH, 0x208F, int(read_nes_byte(GAME_PATH, 0x2A94), 16) + 0x10)
 
 
 def randomize_gemini_man_graphics():
@@ -676,15 +711,22 @@ def randomize_hard_man_graphics():
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
     
     # The rocks look really terrible with totally random color schemes, so apply a gradient
-    rock_base_color = random.randint(0x01, 0x0C)
+    rock_base_color = random.randint(0x00, 0x0C)
     edit_nes_byte(GAME_PATH, 0x6A95, rock_base_color)
     edit_nes_byte(GAME_PATH, 0x6A94, rock_base_color + 0x20)
     edit_nes_byte(GAME_PATH, 0x6A93, rock_base_color + 0x30)
 
-    # Darken cave background colors
-    edit_nes_byte(GAME_PATH, 0x6A97, random.randint(0x01, 0x0C))
-    edit_nes_byte(GAME_PATH, 0x6A98, random.randint(0x01, 0x0C))
-    edit_nes_byte(GAME_PATH, 0x6A99, random.randint(0x01, 0x0C))
+    # Darken cave background colors; ensure colors do not repeat
+    cave_color_1 = random.randint(0x00, 0x0C)
+    cave_color_2 = random.randint(0x00, 0x0C)
+    while cave_color_2 == cave_color_1:
+        cave_color_2 = random.randint(0x00, 0x0C)
+    cave_color_3 = random.randint(0x00, 0x0C)
+    while cave_color_3 == cave_color_1 or cave_color_3 == cave_color_2:
+        cave_color_3 = random.randint(0x00, 0x0C)
+    edit_nes_byte(GAME_PATH, 0x6A97, cave_color_1)
+    edit_nes_byte(GAME_PATH, 0x6A98, cave_color_2)
+    edit_nes_byte(GAME_PATH, 0x6A99, cave_color_3)
 
 
 def randomize_top_man_graphics():
@@ -752,8 +794,13 @@ def randomize_snake_man_graphics():
     # Snake Man's stage benefits a lot from a gradient color scheme much like some other graphical assets
     snake_middle_color = random.randint(0x11, 0x1C)
     edit_nes_byte(GAME_PATH, 0xAA93, snake_middle_color + 0x10)
-    edit_nes_byte(GAME_PATH, 0xAA94, snake_middle_color )
+    edit_nes_byte(GAME_PATH, 0xAA94, snake_middle_color)
     edit_nes_byte(GAME_PATH, 0xAA95, snake_middle_color - 0x10)
+
+    # Fix the columns from looking awful
+    edit_nes_byte(GAME_PATH, 0xAA97, random.randint(0x20, 0x2C))
+    edit_nes_byte(GAME_PATH, 0xAA98, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0xAA99, random.randint(0x00, 0x0C))
 
     # Animated tile values (sky and clouds)
     edit_nes_byte(GAME_PATH, 0x125A0, random.choice(LIGHT_COLORS_NW))
@@ -811,10 +858,17 @@ def randomize_shadow_man_graphics():
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
-    # Darken the background to be less of an eyesore
-    edit_nes_byte(GAME_PATH, 0xEA9A, random.randint(0x00, 0x0C))
-    edit_nes_byte(GAME_PATH, 0xEA9B, random.randint(0x00, 0x0C))
-    edit_nes_byte(GAME_PATH, 0xEA9C, random.randint(0x00, 0x0C))
+    # Darken background colors; ensure colors do not repeat
+    shadow_color_1 = random.randint(0x00, 0x0C)
+    shadow_color_2 = random.randint(0x00, 0x0C)
+    while shadow_color_2 == shadow_color_1:
+        shadow_color_2 = random.randint(0x00, 0x0C)
+    shadow_color_3 = random.randint(0x00, 0x0C)
+    while shadow_color_3 == shadow_color_1 or shadow_color_3 == shadow_color_2:
+        shadow_color_3 = random.randint(0x00, 0x0C)
+    edit_nes_byte(GAME_PATH, 0xEA9B, shadow_color_1)
+    edit_nes_byte(GAME_PATH, 0xEA9C, shadow_color_2)
+    edit_nes_byte(GAME_PATH, 0xEA9D, shadow_color_3)
 
     # Animated tiles
     # Shadow Man's lava/sewer water works with a gradient across NES color palette rows (26, 16, 06). I think preserving this structure is best for graphical integrity.
@@ -957,10 +1011,17 @@ def randomize_doc_shadow_graphics():
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
-    # Darken the background to be less of an eyesore
-    edit_nes_byte(GAME_PATH, 0x16A9A, random.randint(0x00, 0x0C))
-    edit_nes_byte(GAME_PATH, 0x16A9B, random.randint(0x00, 0x0C))
-    edit_nes_byte(GAME_PATH, 0x16A9C, random.randint(0x00, 0x0C))
+    # Darken background colors; ensure colors do not repeat
+    shadow_color_1 = random.randint(0x00, 0x0C)
+    shadow_color_2 = random.randint(0x00, 0x0C)
+    while shadow_color_2 == shadow_color_1:
+        shadow_color_2 = random.randint(0x00, 0x0C)
+    shadow_color_3 = random.randint(0x00, 0x0C)
+    while shadow_color_3 == shadow_color_1 or shadow_color_3 == shadow_color_2:
+        shadow_color_3 = random.randint(0x00, 0x0C)
+    edit_nes_byte(GAME_PATH, 0x16A9B, shadow_color_1)
+    edit_nes_byte(GAME_PATH, 0x16A9C, shadow_color_2)
+    edit_nes_byte(GAME_PATH, 0x16A9D, shadow_color_3)
 
     # Put animated water values into base tileset to prevent weird color changes on transition
     edit_nes_byte(GAME_PATH, 0x16A97, int(read_nes_byte(GAME_PATH, 0x125E9), 16))
@@ -1316,33 +1377,33 @@ def scramble_weapon_palettes():
     # Weapon menu
     edit_nes_byte(GAME_PATH, 0x4637, rush_secondary) # This controls the color of Magnet Missile, Top Spin, Hard Knuckle, and the Rush utilities
     #edit_nes_byte(GAME_PATH, 0x463B, rush_secondary) # This controls the color of Needle Cannon, the extra life icon skin color, Spark Shock, Shadow Blade, and Rush's skin color. Do not change
-    edit_nes_byte(GAME_PATH, 0x4643, ORDERED_WEAPONS[5][1]) # This controls the color of Search Snake and the dark highlight on Gemini Laser
+    
 
 
 def scramble_weapon_energy_costs():
 # Scrambles the energy cost for each weapon.
 
     # This first set of values is how many bars are used per shot for the weapons that use more than one bar of energy per shot. Weapons that use less are set to 0x01 and handled in the next set of values.
-    edit_nes_byte(GAME_PATH, 0x3DF2C, random.randint(0x01, 0x03)) # Gemini Laser (default 2)
+    edit_nes_byte(GAME_PATH, 0x3DF2C, random.choice([0x01, 0x01, 0x02, 0x02, 0x03])) # Gemini Laser (default 2)
     edit_nes_byte(GAME_PATH, 0x3DF2D, 0x01) # Needle Cannon (default 1)
-    edit_nes_byte(GAME_PATH, 0x3DF2E, random.randint(0x01, 0x03)) # Hard Knuckle (default 2)
-    edit_nes_byte(GAME_PATH, 0x3DF2F, random.randint(0x01, 0x03)) # Magnet Missile (default 2)
+    edit_nes_byte(GAME_PATH, 0x3DF2E, random.choice([0x01, 0x01, 0x02, 0x02, 0x03])) # Hard Knuckle (default 2)
+    edit_nes_byte(GAME_PATH, 0x3DF2F, random.choice([0x01, 0x01, 0x02, 0x02, 0x03])) # Magnet Missile (default 2)
     edit_nes_byte(GAME_PATH, 0x3DF30, 0x00) # Top Spin (default 0, do not change)
     edit_nes_byte(GAME_PATH, 0x3DF31, 0x01) # Search Snake (default 1)
     edit_nes_byte(GAME_PATH, 0x3DF32, random.randint(0x02, 0x04)) # Rush Coil (default 3)
-    edit_nes_byte(GAME_PATH, 0x3DF33, random.choice([0x01, 0x01, 0x02])) # Spark Shock (default 1)
+    edit_nes_byte(GAME_PATH, 0x3DF33, random.choice([0x01, 0x01, 0x01, 0x02])) # Spark Shock (default 1)
     edit_nes_byte(GAME_PATH, 0x3DF34, 0x01) # Rush Marine (default 1)
     edit_nes_byte(GAME_PATH, 0x3DF35, 0x01) # Shadow Blade (default 1)
     edit_nes_byte(GAME_PATH, 0x3DF36, 0x01) # Rush Jet (default 1)
 
     # This second set of values represents the number of times a weapon needs to be fired before a bar is used. This is primarily for weapons that use less than one bar of energy per shot normally.
-    edit_nes_byte(GAME_PATH, 0x3DF39, random.randint(0x02, 0x06)) # Needle Cannon (default 4)
-    edit_nes_byte(GAME_PATH, 0x3DF3D, random.randint(0x01, 0x03)) # Search Snake (default 2)
+    edit_nes_byte(GAME_PATH, 0x3DF39, random.randint(0x02, 0x08)) # Needle Cannon (default 4)
+    edit_nes_byte(GAME_PATH, 0x3DF3D, random.choice([0x01, 0x02, 0x02, 0x03, 0x03, 0x04])) # Search Snake (default 2)
     if(int(read_nes_byte(GAME_PATH, 0x3DF33), 16) == 0x01): # only see if Spark Shock is eligible to cost 1/2 bars if the value in the above table is not set to 0x02 or higher
-        edit_nes_byte(GAME_PATH, 0x3DF3F, random.randint(0x01, 0x02)) # Spark Shock (default 1)
+        edit_nes_byte(GAME_PATH, 0x3DF3F, random.choice([0x01, 0x01, 0x02, 0x02, 0x02])) # Spark Shock (default 1)
     else:
         edit_nes_byte(GAME_PATH, 0x3DF3F, 0x01) # This is a failsafe when the randomizer is used multiple times in a row on the same ROM, restore this value back to 0x01 when the condition is not met
-    edit_nes_byte(GAME_PATH, 0x3DF41, random.randint(0x01, 0x03)) # Shadow Blade (default 2)
+    edit_nes_byte(GAME_PATH, 0x3DF41, random.choice([0x01, 0x02, 0x02, 0x03, 0x03, 0x04])) # Shadow Blade (default 2)
 
 
 def scramble_weapon_behaviors():
@@ -1355,15 +1416,15 @@ def scramble_weapon_behaviors():
     edit_nes_byte(GAME_PATH, 0x3D350, 0x01) # Hard Knuckle (default 1)
     edit_nes_byte(GAME_PATH, 0x3D351, random.choice([0x01, 0x02, 0x03])) # Magnet Missile (default 2)
     edit_nes_byte(GAME_PATH, 0x3D352, random.choice([0x00])) # Top Spin (default 0, do not recommend changing)
-    edit_nes_byte(GAME_PATH, 0x3D353, random.choice([0x02, 0x03])) # Search Snake (default 3)
-    edit_nes_byte(GAME_PATH, 0x3D354, random.choice([0x02, 0x03])) # Rush Coil (default 3)
-    edit_nes_byte(GAME_PATH, 0x3D355, random.choice([0x01, 0x02])) # Spark Shock (default 2)
-    edit_nes_byte(GAME_PATH, 0x3D356, random.choice([0x02, 0x03])) # Rush Marine (default 3)
-    edit_nes_byte(GAME_PATH, 0x3D357, random.choice([0x01, 0x02, 0x03])) # Shadow Blade (default 1)
-    edit_nes_byte(GAME_PATH, 0x3D358, random.choice([0x02, 0x03])) # Rush Jet (default 3)
+    edit_nes_byte(GAME_PATH, 0x3D353, random.choice([0x02, 0x03, 0x03])) # Search Snake (default 3)
+    edit_nes_byte(GAME_PATH, 0x3D354, random.choice([0x02, 0x03, 0x03])) # Rush Coil (default 3)
+    edit_nes_byte(GAME_PATH, 0x3D355, random.choice([0x01, 0x02, 0x02])) # Spark Shock (default 2)
+    edit_nes_byte(GAME_PATH, 0x3D356, random.choice([0x02, 0x03, 0x03])) # Rush Marine (default 3)
+    edit_nes_byte(GAME_PATH, 0x3D357, random.choice([0x01, 0x02, 0x02, 0x03])) # Shadow Blade (default 1)
+    edit_nes_byte(GAME_PATH, 0x3D358, random.choice([0x02, 0x03, 0x03])) # Rush Jet (default 3)
 
     # Default projectile speed (affects all straight shooting weapons: Mega Buster, Needle Cannon, Magnet Missile, Gemini Laser, Spark Shock, Shadow Blade). Also appears to mess with Hard Knuckle for some reason.
-    edit_nes_byte(GAME_PATH, 0x3D166, random.choice([0x02, 0x03, 0x04, 0x05, 0x06, 0x07]))
+    edit_nes_byte(GAME_PATH, 0x3D166, random.choice([0x02, 0x03, 0x04, 0x04, 0x05, 0x05, 0x06, 0x07]))
 
     # Some notes on projectiles
     # (GE) 0x388FB (49) This fucks up Gemini Laser's wall collision, mostly documenting in the search for Needle Cannon's subroutine
@@ -1404,11 +1465,11 @@ def scramble_weapon_behaviors():
     # (HA) 0x3D263 Controls Hard Knuckle spawning somehow
 
     # Gemini Laser variables
-    edit_nes_byte(GAME_PATH, 0x388F1, random.choice([0x01, 0x02, 0x03, 0x04, 0x05, 0x06])) # Speed of Gemini Laser after bouncing on a wall (default 03)
+    edit_nes_byte(GAME_PATH, 0x388F1, random.choice([0x01, 0x02, 0x03, 0x04, 0x04, 0x05, 0x06, 0x07])) # Speed of Gemini Laser after bouncing on a wall (default 03)
     edit_nes_byte(GAME_PATH, 0x3D230, random.choice([0xAE, 0xAF, 0xB0, 0xB4, 0xB4, 0xC4, 0xD4, 0xE4])) # Length of time before Gemini Laser expires, but also messes with the behavior of the weapon; lower than B4 creates a small instant laser, higher causes the laser to hang in the air before moving (default B4) 
 
     # Needle Cannon variables
-    edit_nes_byte(GAME_PATH, 0x3CD81, random.choice([0xC0, 0xE0, 0xF0])) # Timer for Needle Cannon; lowering this value and raising 0x3CD8A decreases cooldown, raising this and lowering 0x3CD8A increases cooldown (default E0)
+    edit_nes_byte(GAME_PATH, 0x3CD81, random.choice([0xC0, 0xC0, 0xE0, 0xE0, 0xF0])) # Timer for Needle Cannon; lowering this value and raising 0x3CD8A decreases cooldown, raising this and lowering 0x3CD8A increases cooldown (default E0)
     edit_nes_byte(GAME_PATH, 0x3CD8A, 0x100 - int(read_nes_byte(GAME_PATH, 0x3CD81), 16)) # See above, this value should be a factor of 0x100 to work properly (default 20)
     edit_nes_byte(GAME_PATH, 0x3D34B, random.randint(0xF0, 0xFF)) # Y value for first shot height (default FE)
     edit_nes_byte(GAME_PATH, 0x3D34C, random.randint(0x00, 0x0F)) # Y value for second shot height (default 02)
@@ -1449,11 +1510,12 @@ def scramble_sprite_palettes():
 # This scrambles the color schemes for the enemies and bosses in the game. Black and white are not replaced to maintain some level of graphical integrity. Light colors are replaced with other light colors and dark colors are replaced with other dark colors.
 
     for i in range(0x2040, 0x220F):
-        if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
-            if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
-                edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
-            else:
-                edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
+        if i != 0x208F and i != 0x210F: # Specific check for Yoku block palettes (actually I can't understand how Yoku block palettes work and I'm not going to bother) (Magnet Man & Wily 1)
+            if int(read_nes_byte(GAME_PATH, i), 16) not in [0x0F, 0x20, 0x30]:
+                if(int(read_nes_byte(GAME_PATH, i), 16) in LIGHT_COLORS):
+                    edit_nes_byte(GAME_PATH, i, random.choice(LIGHT_COLORS_NW))
+                else:
+                    edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
     # Specific check for Hard Man's sprite since he's composed of two dark colors and looks awful with totally random colors lmao
     edit_nes_byte(GAME_PATH, 0x2166, 0x10)
@@ -1472,9 +1534,9 @@ def scramble_sprite_palettes():
 def scramble_sprite_health():
 # Scrambles the health values for the enemies of the game. Bosses are not affected.
 
-    for i in range(0x410, 0x49F):
+    for i in range(0x410, 0x484):
         if int(read_nes_byte(GAME_PATH, i), 16) not in [0x1C, 0xFF, 0x00]: # Do not scramble bosses or any entity with null/zero HP
-            edit_nes_byte(GAME_PATH, i, random.randint(math.ceil(int(read_nes_byte(GAME_PATH, i), 16) * 0.5), math.floor(int(read_nes_byte(GAME_PATH, i), 16) * 1.5))) # Move HP values between half and one and a half times normal HP
+            edit_nes_byte(GAME_PATH, i, random.randint(math.ceil(DEFAULT_ENEMY_HEALTH[i - 0x410] * 0.5), math.floor(DEFAULT_ENEMY_HEALTH[i - 0x410] * 1.5))) # Move HP values between half and one and a half times normal HP
 
 
 def scramble_sprite_speed():
@@ -1635,8 +1697,8 @@ def randomize_magnet_man_entities():
     # Seventh screen with Yoku blocks, can only randomize to 0x09 and 0x19 to not mess up Yoku block sprites
     replace_entities(0x2A7C, 0x2E27, 0x2E2D, random.choice([0x09, 0x19]))
 
-    # Eighth screen with just pickups
-    replace_entities(0x2A7E, 0x2E2F, 0x2E31)
+    # Eighth screen with just pickups, honestly replacing these with enemies causes too many problems lmao
+    #replace_entities(0x2A7E, 0x2E2D, 0x2E2F)
 
     # Ninth screen with New Shotman
     replace_entities(0x2A80, 0x2E31, 0x2E32)
@@ -1653,7 +1715,7 @@ def randomize_gemini_man_entities():
 # Randomizes the entities for Gemini Man's stage.
 
     # First screen Bomber Pepes and Nitrons; choose a graphics set that is compatible with the star background
-    replace_entities(0x4A70, 0x4E10, 0x4E25, random.choice([0x04, 0x14, 0x1A, 0x1C, 0x1D, 0x20, 0x2F, 0x39]))
+    replace_entities(0x4A70, 0x4E10, 0x4E25, random.choice([0x04, 0x1D, 0x20, 0x2F, 0x39]))
 
     # Second screen with Proto Man (don't replace this)
     # replace_entities(0x4A72, 0x4E25, 0x4E27)
@@ -1740,6 +1802,7 @@ def randomize_top_man_entities():
 
     # Third screen with pickups... we don't need this many pickups hehe
     replace_entities(0x8A74, 0x8E1D, 0x8E21)
+    edit_nes_byte(GAME_PATH, 0x8E1E, 0x52)
 
     # Fourth screen with just a Bolton & Nutton
     replace_entities(0x8A76, 0x8E21, 0x8E22)
@@ -1945,7 +2008,7 @@ def randomize_doc_gemini_entities():
 # Randomizes the entities for the Doc Gemini Man stage.
 
     # First screen with Jamacys and Nitrons; choose a graphics set that is compatible with star background
-    replace_entities(0x12A70, 0x12E10, 0x12E2A, random.choice([0x04, 0x14, 0x1A, 0x1C, 0x1D, 0x20, 0x2F, 0x39]))
+    replace_entities(0x12A70, 0x12E10, 0x12E2A, random.choice([0x04, 0x1D, 0x20, 0x2F, 0x39]))
 
     # Second screen is the empty crater where the barrier once was
 
@@ -2102,7 +2165,7 @@ def randomize_wily_1_entities():
     replace_entities(0x18A70, 0x18E10, 0x18E14)
 
     # Second screen with Penpens
-    replace_entities(0x18A72, 0x18E14, 0x18E1E)
+    replace_entities(0x18A72, 0x18E14, 0x18E1E, random.choice([0x03, 0x33, 0x38]))
 
     # Third screen with 1-up... this one can stay
     #replace_entities(0x18A74, 0x18E14, 0x18E1E)
@@ -2413,7 +2476,7 @@ def scramble_entity_properties():
     edit_nes_byte(GAME_PATH, 0x3B24D, random.randint(0x03, 0x07)) # Jump height 2 (default 05)
 
     # Top Man top platforms (entity ID 27)
-    edit_nes_byte(GAME_PATH, 0x3B259, random.choice([0x01, 0x02])) # Vertical speed, any setting higher than 2 makes it almost impossible to cross in Top Man's stage (default 01)
+    edit_nes_byte(GAME_PATH, 0x3B259, random.choice([0x01, 0x01, 0x02])) # Vertical speed, any setting higher than 2 makes it almost impossible to cross in Top Man's stage (default 01)
 
     # Penpen (swimming variant) (entity ID 2C)
     edit_nes_byte(GAME_PATH, 0x38F18, random.randint(0x20, 0x40)) # Range where Penpen charges (default 30)
@@ -3277,7 +3340,45 @@ def activate_burst_chaser():
     edit_nes_byte(GAME_PATH, 0x3D8EF, 0x02) # Rush Marine vertical speed (default 01)
 
 
-def run_randomizer(change_menu_palettes, change_sprite_palettes, change_sprite_health, change_sprite_speed, change_entity_behaviors, change_entity_placement, change_wep_locations, change_wep_behaviors, change_wep_palettes, change_wep_costs, change_enemy_weaknesses, change_rm_names, change_boss_weaknesses, change_music, fix_scanline_enabled, fix_softlocks_enabled, rebalance, burst_chaser, seed):
+def activate_sperm_man():
+# Every good program needs a feature added in for shits and giggles
+
+    edit_nes_byte(GAME_PATH, 0x31C4A, 0x20) # Snake Man's portrait on stage select
+    for i in range(0x6223, 0x6228): # Idk where this is used
+            edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text("SPERM")[i - 0x6223])
+    for i in range(0x6395, 0x639A): # Stage select
+            edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text("SPERM")[i - 0x6395])
+    for i in range(0x1C1A2, 0x1C1A7): # Credits
+            edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text("SPERM")[i - 0x1C1A2])
+    for i in range(0x648A, 0x6490): # "Search" (weapon name)
+            edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text("SWIMMY")[i - 0x648A])
+    for i in range(0x6491, 0x6496): # "Snake" (weapon name)
+            edit_nes_byte(GAME_PATH, i, convert_string_to_mm3_text("SPERM")[i - 0x6491])
+
+    edit_nes_byte(GAME_PATH, 0x45EE, 0x1C) # Weapon initial "S"
+    edit_nes_byte(GAME_PATH, 0x45FA, 0x19) # Weapon initial "P"
+
+    # Snake Man stage graphics
+    snake_middle_color = 0x10 
+    edit_nes_byte(GAME_PATH, 0xAA93, snake_middle_color + 0x10)
+    edit_nes_byte(GAME_PATH, 0xAA94, snake_middle_color)
+    edit_nes_byte(GAME_PATH, 0xAA95, snake_middle_color - 0x10)
+
+    # Swimmy Sperm color palette
+    edit_nes_byte(GAME_PATH, 0x466A, 0x20)
+    edit_nes_byte(GAME_PATH, 0x466B, 0x10)
+    edit_nes_byte(GAME_PATH, 0x4643, 0x20) # This controls the color of Swimmy Sperm in weapon menu
+
+    # Fix Big Snakey palette
+    edit_nes_byte(GAME_PATH, 0x21A5, int(read_nes_byte(GAME_PATH, 0xAA92), 16)) # Big Snakey mouth color 1
+    edit_nes_byte(GAME_PATH, 0x21A6, int(read_nes_byte(GAME_PATH, 0xAA93), 16)) # Big Snakey body color
+    edit_nes_byte(GAME_PATH, 0x21A7, int(read_nes_byte(GAME_PATH, 0xAA94), 16)) # Big Snakey mouth color 2
+
+    # Snake Man himself
+    edit_nes_byte(GAME_PATH, 0x2177, 0x20)
+
+
+def run_randomizer(change_menu_palettes, change_sprite_palettes, change_sprite_health, change_sprite_speed, change_entity_behaviors, change_entity_placement, change_wep_locations, change_wep_behaviors, change_wep_palettes, change_wep_costs, change_enemy_weaknesses, change_rm_names, change_boss_weaknesses, change_music, fix_scanline_enabled, fix_softlocks_enabled, rebalance, burst_chaser, sperm_man):
 # Mix it all up! These are the core randomizer features; mix and match as you please
 
     # Apply seed if used
@@ -3287,6 +3388,15 @@ def run_randomizer(change_menu_palettes, change_sprite_palettes, change_sprite_h
         SEED = seed_value
         print("Seed set to:", SEED)
         random.seed(SEED) # Set the seed for all randomization functions that use it; this is set globally so that all functions use the same seed value for consistency
+    else:
+        SEED = random.randint(0, 999999999) # Generate a random seed if the user doesn't specify one; this is also printed out so that they can use it to replay the same seed if they want
+
+    # Change the item spawn percentage if relevant
+    global CHANCE_ITEMS_SPAWN
+    if percent_bar.get():
+        item_spawn_percent = int(percent_bar.get())
+        if item_spawn_percent != 3 and item_spawn_percent < 101 and item_spawn_percent > -1:
+            CHANCE_ITEMS_SPAWN = item_spawn_percent
 
     #scramble_stage_order() # not currently functional
 
@@ -3361,6 +3471,20 @@ def run_randomizer(change_menu_palettes, change_sprite_palettes, change_sprite_h
         rebalance_difficulty() # Disable for harsher damage values, which might make a randomized playthrough much more challenging
     if burst_chaser:
         activate_burst_chaser() # Disable if not playing Burst Chaser mode
+    if sperm_man: # I think it was the Power Guy stream that compelled me to add this I'm not gonna lie lmao
+        activate_sperm_man()
+
+    # After everything is done, rename file to seed
+    try:
+        new_name = os.path.join(
+            FOLDER_PATH,
+            f"MegaMan3_SEED_{SEED}.nes")
+        os.rename(GAME_PATH, new_name)
+        print("File renamed successfully!")
+    except FileNotFoundError:
+        print("The source file was not found.")
+    except FileExistsError:
+        print("A file with the new name already exists.")
 
 
 def pick_file():
@@ -3368,6 +3492,7 @@ def pick_file():
 
     # We need to define our global game path here for modifying all the memory values
     global GAME_PATH
+    global FOLDER_PATH
     file_path = filedialog.askopenfilename(
         title="Select Mega Man 3 ROM",
         filetypes=[("NES ROMs", "*.nes"), ("All files", "*.*")]
@@ -3375,6 +3500,7 @@ def pick_file():
     if file_path:
         print("Selected file:", file_path)
         GAME_PATH = file_path
+        FOLDER_PATH = os.path.dirname(file_path)
 
 
 class ToolTip:
@@ -3407,7 +3533,7 @@ if __name__ == "__main__":
     # GUI component
     root = Tk()
     root.title("Mega Man 3 Randomizer")
-    root.geometry("800x700")
+    root.geometry("700x625")
 
     frm = ttk.Frame(root, padding=10)
     frm.grid()
@@ -3427,19 +3553,25 @@ if __name__ == "__main__":
     ttk.Label(
     frm,
     text="Enter Seed (optional):"
-    ).grid(column=0, row=2, columnspan=1, padx=190, sticky=W)
+    ).grid(column=0, row=2, columnspan=1, padx=10, sticky=E)
 
     # Seed input field, sets seed if one is given
     seed_entry = ttk.Entry(frm, width=20)
-    seed_entry.grid(column=0, row=2, padx=330, columnspan=1, pady=5, sticky=W)
+    seed_entry.grid(column=1, row=2, padx=10, columnspan=1, pady=5, sticky=W)
+    tooltip = ToolTip(
+        seed_entry,
+        "The seed used for creating the randomized file. This helps if you want to play a specific randomized ROM."
+    )
+    seed_entry.bind("<Enter>", tooltip.show)
+    seed_entry.bind("<Leave>", tooltip.hide)
 
     # BooleanVars in required order
     vars_list = [
-        BooleanVar(), BooleanVar(), BooleanVar(), BooleanVar(),
-        BooleanVar(), BooleanVar(), BooleanVar(), BooleanVar(),
-        BooleanVar(), BooleanVar(), BooleanVar(), BooleanVar(),
-        BooleanVar(), BooleanVar(), BooleanVar(), BooleanVar(),
-        BooleanVar(), BooleanVar(), StringVar()
+        BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True),
+        BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True),
+        BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True),
+        BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True), BooleanVar(value=True),
+        BooleanVar(value=True), BooleanVar(value=False), BooleanVar(value=False)
     ]
 
     labels = [
@@ -3448,7 +3580,7 @@ if __name__ == "__main__":
         "Change Weapon Locations", "Change Weapon Behaviors", "Change Weapon Palettes",
         "Change Weapon Costs", "Change Enemy Weaknesses", "Change RM Names",
         "Change Boss Weaknesses", "Change Music", "Fix Scanline",
-        "Fix Softlocks", "Rebalance Difficulty", "Burst Chaser Mode"
+        "Fix Softlocks", "Rebalance Difficulty", "Burst Chaser Mode", "Sperm Man Mode"
     ]
 
     # Create checkboxes
@@ -3585,13 +3717,45 @@ if __name__ == "__main__":
     checkboxes[17].bind("<Enter>", tooltip.show)
     checkboxes[17].bind("<Leave>", tooltip.hide)
 
+    tooltip = ToolTip(
+        checkboxes[18],
+        "Why did I add this lmao"
+    )
+    checkboxes[18].bind("<Enter>", tooltip.show)
+    checkboxes[18].bind("<Leave>", tooltip.hide)
+
+    # Text field for altering item spawn chance
+    ttk.Label(
+        frm,
+        text="Item Spawn Chance (optional):",
+    ).grid(column=0, row=len(vars_list)+4, columnspan=1, padx=10, sticky=E, pady=10)
+
+    percent_bar = ttk.Entry(
+        frm,
+        textvariable=3,
+        width=20,
+    )
+    percent_bar.grid(
+        column=1,
+        row=len(vars_list)+4,
+        columnspan=1,
+        padx=10,
+        sticky=W
+    )
+    tooltip = ToolTip(
+        percent_bar,
+        "The percentage chance for randomized entities to be replaced with helpful pickups. This is 3% by default."
+    )
+    percent_bar.bind("<Enter>", tooltip.show)
+    percent_bar.bind("<Leave>", tooltip.hide)
+
     # Buttons
     ttk.Button(
         frm,
         text="Randomize",
         command=lambda: run_randomizer(*(v.get() for v in vars_list))
-    ).grid(column=0, row=len(vars_list)+4, columnspan=2, pady=10)
+    ).grid(column=0, row=len(vars_list)+5, columnspan=2, pady=5)
 
-    ttk.Button(frm, text="Quit", command=root.destroy).grid(column=0, row=len(vars_list)+5, columnspan=2, pady=10)
+    ttk.Button(frm, text="Quit", command=root.destroy).grid(column=0, row=len(vars_list)+6, columnspan=2, pady=5)
 
     root.mainloop()
