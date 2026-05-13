@@ -1373,7 +1373,7 @@ def scramble_weapon_palettes():
     # Weapon menu
     edit_nes_byte(GAME_PATH, 0x4637, rush_secondary) # This controls the color of Magnet Missile, Top Spin, Hard Knuckle, and the Rush utilities
     #edit_nes_byte(GAME_PATH, 0x463B, rush_secondary) # This controls the color of Needle Cannon, the extra life icon skin color, Spark Shock, Shadow Blade, and Rush's skin color. Do not change
-    
+    edit_nes_byte(GAME_PATH, 0x4643, ORDERED_WEAPONS[5][1]) # This controls the color of Search Snake and the highlight of Gemini Laser in weapon menu
 
 
 def scramble_weapon_energy_costs():
