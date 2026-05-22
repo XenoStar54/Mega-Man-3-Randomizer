@@ -2824,7 +2824,7 @@ def randomize_doc_air_boss():
 def randomize_doc_bubble_boss():
 # Randomizes Doc Bubble's boss attributes.
 
-    edit_nes_byte(GAME_PATH, 0xA216, random.randint(0x30, 0x50)) # How high Doc Bubble goes up before descending (default 50)
+    edit_nes_byte(GAME_PATH, 0xA216, random.randint(0x30, 0x48)) # How high Doc Bubble goes up before descending (default 50)
     edit_nes_byte(GAME_PATH, 0xA21F, random.randint(0x01, 0x02)) # Doc Bubble landing speed (default 01)
     # edit_nes_byte(GAME_PATH, 0xA236, 0x00) # Number of bubbles shot (default 00)
     edit_nes_byte(GAME_PATH, 0xA2DE, random.randint(0x01, 0x05)) # Number of bubbles shot (default 03)
@@ -3324,6 +3324,71 @@ def rebalance_difficulty():
     edit_nes_byte(GAME_PATH, 0x140B9, 0x04) # Leaf Shield damage (default 08)
 
 
+def mega_man_2_mode():
+# Places Doc Robots in the Robot Master stages and moves the MM3 Robot Masters to the Doc Robot stages.
+
+    # Place Doc Robots in Robot Master stages
+    edit_nes_byte(GAME_PATH, 0xD2E, 0xD0)
+    edit_nes_byte(GAME_PATH, 0xE2E, RANDOMIZED_DOC_ROBOTS[0][0])
+    edit_nes_byte(GAME_PATH, 0xA7E, RANDOMIZED_DOC_ROBOTS[0][1])
+    edit_nes_byte(GAME_PATH, 0x2D33, 0xB0)
+    edit_nes_byte(GAME_PATH, 0x2E33, RANDOMIZED_DOC_ROBOTS[1][0])
+    edit_nes_byte(GAME_PATH, 0x2A86, RANDOMIZED_DOC_ROBOTS[1][1])
+    edit_nes_byte(GAME_PATH, 0x4D4C, 0xB0)
+    edit_nes_byte(GAME_PATH, 0x4E4C, RANDOMIZED_DOC_ROBOTS[2][0])
+    edit_nes_byte(GAME_PATH, 0x4A84, RANDOMIZED_DOC_ROBOTS[2][1])
+    edit_nes_byte(GAME_PATH, 0x6D37, 0xB0)
+    edit_nes_byte(GAME_PATH, 0x6E37, RANDOMIZED_DOC_ROBOTS[3][0])
+    edit_nes_byte(GAME_PATH, 0x6A88, RANDOMIZED_DOC_ROBOTS[3][1])
+    edit_nes_byte(GAME_PATH, 0x8D3D, 0xB0)
+    edit_nes_byte(GAME_PATH, 0x8E3D, RANDOMIZED_DOC_ROBOTS[4][0])
+    edit_nes_byte(GAME_PATH, 0x8A88, RANDOMIZED_DOC_ROBOTS[4][1])
+    edit_nes_byte(GAME_PATH, 0xAD5A, 0xB0)
+    edit_nes_byte(GAME_PATH, 0xAE5A, RANDOMIZED_DOC_ROBOTS[5][0])
+    edit_nes_byte(GAME_PATH, 0xAA8A, RANDOMIZED_DOC_ROBOTS[5][1])
+    edit_nes_byte(GAME_PATH, 0xCD38, 0xB0)
+    edit_nes_byte(GAME_PATH, 0xCE38, RANDOMIZED_DOC_ROBOTS[6][0])
+    edit_nes_byte(GAME_PATH, 0xCA88, RANDOMIZED_DOC_ROBOTS[6][1])
+    edit_nes_byte(GAME_PATH, 0xED3D, 0xB0)
+    edit_nes_byte(GAME_PATH, 0xEE3D, RANDOMIZED_DOC_ROBOTS[7][0])
+    edit_nes_byte(GAME_PATH, 0xEA80, RANDOMIZED_DOC_ROBOTS[7][1])
+
+    # Place MM3 Robot Masters in Doc Robot stages
+    edit_nes_byte(GAME_PATH, 0x10D24, 0x00)
+    edit_nes_byte(GAME_PATH, 0x10E24, RANDOMIZED_ROBOT_MASTERS[0][0])
+    edit_nes_byte(GAME_PATH, 0x10A7C, RANDOMIZED_ROBOT_MASTERS[0][1])
+    edit_nes_byte(GAME_PATH, 0x10D4E, 0x00)
+    edit_nes_byte(GAME_PATH, 0x10E4E, RANDOMIZED_ROBOT_MASTERS[1][0])
+    edit_nes_byte(GAME_PATH, 0x10A8E, RANDOMIZED_ROBOT_MASTERS[1][1])
+    edit_nes_byte(GAME_PATH, 0x12D33, 0x00)
+    edit_nes_byte(GAME_PATH, 0x12E33, RANDOMIZED_ROBOT_MASTERS[2][0])
+    edit_nes_byte(GAME_PATH, 0x12A7A, RANDOMIZED_ROBOT_MASTERS[2][1])
+    edit_nes_byte(GAME_PATH, 0x12D4D, 0x00)
+    edit_nes_byte(GAME_PATH, 0x12E4D, RANDOMIZED_ROBOT_MASTERS[3][0])
+    edit_nes_byte(GAME_PATH, 0x12A8A, RANDOMIZED_ROBOT_MASTERS[3][1])
+    edit_nes_byte(GAME_PATH, 0x14D23, 0x00)
+    edit_nes_byte(GAME_PATH, 0x14E23, RANDOMIZED_ROBOT_MASTERS[4][0])
+    edit_nes_byte(GAME_PATH, 0x14A7C, RANDOMIZED_ROBOT_MASTERS[4][1])
+    edit_nes_byte(GAME_PATH, 0x14D34, 0x00)
+    edit_nes_byte(GAME_PATH, 0x14E34, RANDOMIZED_ROBOT_MASTERS[5][0])
+    edit_nes_byte(GAME_PATH, 0x14A8C, RANDOMIZED_ROBOT_MASTERS[5][1])
+    edit_nes_byte(GAME_PATH, 0x16D30, 0x00)
+    edit_nes_byte(GAME_PATH, 0x16E30, RANDOMIZED_ROBOT_MASTERS[6][0])
+    edit_nes_byte(GAME_PATH, 0x16A80, RANDOMIZED_ROBOT_MASTERS[6][1])
+    edit_nes_byte(GAME_PATH, 0x16D45, 0x00)
+    edit_nes_byte(GAME_PATH, 0x16E45, RANDOMIZED_ROBOT_MASTERS[7][0])
+    edit_nes_byte(GAME_PATH, 0x16A8A, RANDOMIZED_ROBOT_MASTERS[7][1])
+
+    # Put Doc Robots in Wily 4 teleporter room
+    edit_nes_byte(GAME_PATH, 0x1ED2B, 0xC0)
+    for i in range(0x1ED2C, 0x1ED33):
+        edit_nes_byte(GAME_PATH, i, 0xB0)      
+    for i in range(0x1EE2B, 0x1EE33):
+        edit_nes_byte(GAME_PATH, i, RANDOMIZED_DOC_ROBOTS[i - 0x1EE2B][0])
+    for i in range(0x3DEC1, 0x3DEC9):
+        edit_nes_byte(GAME_PATH, i, RANDOMIZED_DOC_ROBOTS[i - 0x3DEC1][1])
+
+
 def activate_burst_chaser():
 # Speeds up the game a bit by increasing Mega Man's speed, bullet speed, and a few other variables.
 
@@ -3374,7 +3439,7 @@ def activate_sperm_man():
     edit_nes_byte(GAME_PATH, 0x2177, 0x20)
 
 
-def run_randomizer(ui_ref, change_menu_palettes, change_sprite_palettes, change_sprite_health, change_sprite_speed, change_entity_behaviors, change_entity_placement, change_wep_locations, change_wep_behaviors, change_wep_palettes, change_wep_costs, change_enemy_weaknesses, change_rm_names, change_boss_weaknesses, change_music, fix_scanline_enabled, fix_softlocks_enabled, rebalance, burst_chaser, sperm_man):
+def run_randomizer(ui_ref, change_menu_palettes, change_sprite_palettes, change_sprite_health, change_sprite_speed, change_entity_behaviors, change_entity_placement, change_wep_locations, change_wep_behaviors, change_wep_palettes, change_wep_costs, change_enemy_weaknesses, change_rm_names, change_boss_weaknesses, change_music, fix_scanline_enabled, fix_softlocks_enabled, rebalance, mega_man_2, burst_chaser, sperm_man):
 # Mix it all up! These are the core randomizer features; mix and match as you please
 
     # Apply seed if used
@@ -3474,10 +3539,12 @@ def run_randomizer(ui_ref, change_menu_palettes, change_sprite_palettes, change_
         fix_softlocks() # Disable if you want to add the opportunity to be softlocked back into the game
     if rebalance:
         rebalance_difficulty() # Disable for harsher damage values, which might make a randomized playthrough much more challenging
+    if mega_man_2:
+        mega_man_2_mode() # Swaps Doc Robots and Robot Masters
     if burst_chaser:
         activate_burst_chaser() # Disable if not playing Burst Chaser mode
-    if sperm_man: # I think it was the Power Guy stream that compelled me to add this I'm not gonna lie lmao
-        activate_sperm_man()
+    if sperm_man: 
+        activate_sperm_man() # I think it was the Power Guy stream that compelled me to add this I'm not gonna lie lmao
 
     # Write memory buffer to a new patched ROM file, leaving the selected ROM unchanged
     output_name = f"MegaMan3_SEED_{SEED}.nes"
@@ -3536,7 +3603,7 @@ class RandomizerWindow(QMainWindow):
             "Change Weapon Locations", "Change Weapon Behaviors", "Change Weapon Palettes",
             "Change Weapon Costs", "Change Enemy Weaknesses", "Change RM Names",
             "Change Boss Weaknesses", "Change Music", "Fix Scanline",
-            "Fix Softlocks", "Rebalance Difficulty", "Burst Chaser Mode", "Sperm Man Mode"
+            "Fix Softlocks", "Rebalance Difficulty", "Mega Man 2 Mode", "Burst Chaser Mode", "Sperm Man Mode"
         ]
         self.tips = [
             "Changes the palettes of the menus (title screen, stage select, cutscenes, etc).",
@@ -3555,8 +3622,9 @@ class RandomizerWindow(QMainWindow):
             "Shuffles the music tracks of the game's stages around.",
             "Fixes the bug with the scanline on the stage select menu.",
             "Adds safeguards to prevent softlocks in most relevant places in the game.",
-            "Modifies a couple of damage values.",
-            "Speeds up Mega Man and his projectiles.",
+            "Modifies a couple of damage values (looking at you, Doc Wood and Doc Quick).",
+            "Swaps the Robot Masters and Doc Robots. It's just like Mega Man 2 all over again!",
+            "Speeds up Mega Man and his projectiles for a speedier gameplay experience.",
             "Why did I add this lmao"
         ]
 
