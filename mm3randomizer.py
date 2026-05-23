@@ -2824,7 +2824,7 @@ def randomize_doc_air_boss():
 def randomize_doc_bubble_boss():
 # Randomizes Doc Bubble's boss attributes.
 
-    edit_nes_byte(GAME_PATH, 0xA216, random.randint(0x80, 0x88)) # How high Doc Bubble goes up before descending (default 50)
+    edit_nes_byte(GAME_PATH, 0xA216, random.randint(0x50, 0x70)) # How high Doc Bubble goes up before descending (measured in distance from top) (default 50)
     edit_nes_byte(GAME_PATH, 0xA21F, random.randint(0x01, 0x02)) # Doc Bubble landing speed (default 01)
     # edit_nes_byte(GAME_PATH, 0xA236, 0x00) # Number of bubbles shot (default 00)
     edit_nes_byte(GAME_PATH, 0xA2DE, random.randint(0x01, 0x05)) # Number of bubbles shot (default 03)
