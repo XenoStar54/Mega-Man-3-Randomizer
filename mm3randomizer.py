@@ -223,6 +223,16 @@ DEFAULT_ENEMY_HEALTH = [
     ]
 
 # This globally accessible list is used for randomizing what bosses appear in what stage. The list items are the boss entity ID and graphics set. It seems that the bank 0 and 1 values are actually automatically handled with the graphics set value.
+NORMAL_ORDER_ROBOT_MASTERS = [
+    [0x47, 0x25], # Needle Man  
+    [0x48, 0x23], # Magnet Man
+    [0x49, 0x27], # Gemini Man
+    [0x4A, 0x24], # Hard Man
+    [0x4B, 0x2A], # Top Man
+    [0x4C, 0x26], # Snake Man
+    [0x4D, 0x28], # Spark Man
+    [0x4E, 0x29]  # Shadow Man
+    ]
 RANDOMIZED_ROBOT_MASTERS = [
     [0x47, 0x25], # Needle Man  
     [0x48, 0x23], # Magnet Man
@@ -1651,6 +1661,7 @@ def randomize_needle_man_entities():
     
     # Yambows, Metall DXs, and Cannons on second screen
     replace_entities(0xA72, 0xE14, 0xE21)
+    edit_nes_byte(GAME_PATH, 0xE15, 0x52) # Place weapon energy back
 
     # Needles on third screen
     replace_entities(0xA74, 0xE21, 0xE29)
@@ -1687,8 +1698,8 @@ def randomize_magnet_man_entities():
     # Peterchys and magnet force objects on fifth screen
     replace_entities(0x2A78, 0x2E1C, 0x2E23)
 
-    # Health pickups on sixth screen; replace only the left one with something cheeky
-    replace_entities(0x2A7A, 0x2E23, 0x2E24)
+    # Health pickups on sixth screen; don't replace
+    #replace_entities(0x2A7A, 0x2E23, 0x2E24)
 
     # Seventh screen with Yoku blocks, can only randomize to 0x09 and 0x19 to not mess up Yoku block sprites
     replace_entities(0x2A7C, 0x2E27, 0x2E2D, random.choice([0x09, 0x19]))
@@ -1723,7 +1734,7 @@ def randomize_gemini_man_entities():
     # replace_entities(0x4A76, 0x4E2A, 0x4E2A)
 
     # Fifth screen with Yambows, Penpen Makers; put the Penpen Makers back
-    replace_entities(0x4A78, 0x4E2A, 0x4E32, random.choice([0x03, 0x33, 0x38]))
+    replace_entities(0x4A78, 0x4E2B, 0x4E32, random.choice([0x03, 0x33, 0x38]))
     edit_nes_byte(GAME_PATH, 0x4E2D, 0x1C)
     edit_nes_byte(GAME_PATH, 0x4E30, 0x1C)
 
@@ -1731,9 +1742,11 @@ def randomize_gemini_man_entities():
     # replace_entities(0x4A7A, 0x4E32, 0x4E32)
 
     # Seventh screen with Yambows and Gyoraibos; restrict the available enemies to only those graphics sets that have the correct water splash animation
-    replace_entities(0x4A7C, 0x4E33, 0x4E48, random.choice([0x03, 0x33, 0x38]))
+    replace_entities(0x4A7C, 0x4E34, 0x4E48, random.choice([0x03, 0x33, 0x38]))
     edit_nes_byte(GAME_PATH, 0x4E37, 0x54) # I'll leave the E-Tanks be
-    edit_nes_byte(GAME_PATH, 0x4E46, 0x51) # This entity often causes softlocks since it's positioned right over the ladder; replace it with a small health pickup so that it falls out of the way
+    edit_nes_byte(GAME_PATH, 0x4E39, 0x52)
+    edit_nes_byte(GAME_PATH, 0x4E41, 0x52)
+    edit_nes_byte(GAME_PATH, 0x4E46, 0x2C) # This entity often causes softlocks since it's positioned right over the ladder; replace it with a Penpen
 
     # Eighth screen with Mechakkeros
     replace_entities(0x4A7E, 0x4E49, 0x4E4B)
@@ -1751,6 +1764,7 @@ def randomize_hard_man_entities():
 
     # First screen with Have "Su" Bees, Wanaans, health pickup
     replace_entities(0x6A70, 0x6E10, 0x6E1A)
+    edit_nes_byte(GAME_PATH, 0x6E16, 0x50)
 
     # Second screen with Hammer Joe
     replace_entities(0x6A72, 0x6E1A, 0x6E1B)
@@ -1769,6 +1783,9 @@ def randomize_hard_man_entities():
 
     # Seventh screen with Metall DXs and health
     replace_entities(0x6A7C, 0x6E24, 0x6E29)
+    edit_nes_byte(GAME_PATH, 0x6E25, 0x51)
+    edit_nes_byte(GAME_PATH, 0x6E26, 0x51)
+    edit_nes_byte(GAME_PATH, 0x6E27, 0x51)
 
     # Eighth screen with Have "Su" Bee and Wanaans
     replace_entities(0x6A7E, 0x6E29, 0x6E34)
@@ -1796,9 +1813,9 @@ def randomize_top_man_entities():
     # Second screen with Komasaburo
     replace_entities(0x8A72, 0x8E1C, 0x8E1D)
 
-    # Third screen with pickups... we don't need this many pickups hehe
-    replace_entities(0x8A74, 0x8E1D, 0x8E21)
-    edit_nes_byte(GAME_PATH, 0x8E1E, 0x52)
+    # Third screen with pickups... fine you can have these
+    #replace_entities(0x8A74, 0x8E1D, 0x8E21)
+    #edit_nes_byte(GAME_PATH, 0x8E1E, 0x52)
 
     # Fourth screen with just a Bolton & Nutton
     replace_entities(0x8A76, 0x8E21, 0x8E22)
@@ -1845,6 +1862,7 @@ def randomize_snake_man_entities():
 
     # Fourth screen with Pottons and Petit Snakeys... leave one health pickup
     replace_entities(0xAA76, 0xAE25, 0xAE2D)
+    edit_nes_byte(GAME_PATH, 0xAE28, 0x50)
     edit_nes_byte(GAME_PATH, 0xAE2A, 0x50)
 
     # Fifth screen with Pottons and Bubukans
@@ -1864,6 +1882,7 @@ def randomize_snake_man_entities():
 
     # Tenth screen with Bubukans
     replace_entities(0xAA82, 0xAE42, 0xAE47)
+    edit_nes_byte(GAME_PATH, 0xAE44, 0x50)
 
     # Eleventh screen with Jamacy
     replace_entities(0xAA84, 0xAE47, 0xAE48)
@@ -1953,6 +1972,7 @@ def randomize_doc_needle_entities():
 
     # Second screen with needle obstacles
     replace_entities(0x10A72, 0x10E13, 0x10E20)
+    edit_nes_byte(GAME_PATH, 0x10E1C, 0x50)
 
     # Third screen with Giant Springer and life
     replace_entities(0x10A74, 0x10E20, 0x10E21)
@@ -2051,12 +2071,12 @@ def randomize_doc_spark_entities():
     # First screen with Peterchy; I've replaced this with a conveyor wheel to prevent softlocks
     # replace_entities(0x14A70, 0x14E10, 0x14E11)
 
-    # Second screen with Jamacy; this needs to be converted into something non-threatening (i.e. health pickup) because in the vast majority of cases it will become impassable
-    # replace_entities(0x14A72, 0x14E11, 0x14E12)
-    edit_nes_byte(GAME_PATH, 0x14E11, 0x51)
+    # Second screen with Jamacy; this needs to be converted into something non-threatening (now changed to Bomb Flier) because in the vast majority of cases it will become impassable
+    replace_entities(0x14A72, 0x14E11, 0x14E12, 0x06)
+    edit_nes_byte(GAME_PATH, 0x14E11, 0x06)
 
     # Third screen with wheels and Elec'ns; this is a very restrictive screen since only one graphics set has the wheel graphics alongside any other enemies
-    replace_entities(0x14A74, 0x14E12, 0x14E1B, 0x39)
+    replace_entities(0x14A74, 0x14E13, 0x14E1B, 0x39)
     edit_nes_byte(GAME_PATH, 0x14E13, 0x59)
     edit_nes_byte(GAME_PATH, 0x14E15, 0x59)
     edit_nes_byte(GAME_PATH, 0x14E17, 0x58)
@@ -2142,7 +2162,7 @@ def randomize_doc_shadow_entities():
     replace_entities(0x16A82, 0x16E32, 0x16E35)
 
     # Eleventh screen with Parasyus and Mechakkeros
-    replace_entities(0x16A84, 0x16E35, 0x16E44)
+    replace_entities(0x16A84, 0x16E35, 0x16E40)
 
     # Twelfth screen with Giant Springer
     replace_entities(0x16A86, 0x16E44, 0x16E45)
@@ -2157,23 +2177,24 @@ def randomize_doc_shadow_entities():
 def randomize_wily_1_entities():
 # Randomizes the entities for the first Wily fortress stage.
 
-    # First screen with 1-up, Komasaburos, E-Tank; I'm removing the free items because I'm evil >:)
-    replace_entities(0x18A70, 0x18E10, 0x18E14)
+    # First screen with 1-up, Komasaburos, E-Tank; No longer removing the free items because of Archipelago :(
+    replace_entities(0x18A70, 0x18E11, 0x18E13)
 
     # Second screen with Penpens
     replace_entities(0x18A72, 0x18E14, 0x18E1E, random.choice([0x03, 0x33, 0x38]))
+    edit_nes_byte(GAME_PATH, 0x18E15, 0x52)
 
     # Third screen with 1-up... this one can stay
     #replace_entities(0x18A74, 0x18E14, 0x18E1E)
 
-    # Fourth screen with a bunch of items; remove the free health that's available after the first wall
-    replace_entities(0x18A76, 0x18E27, 0x18E28, random.choice([0x06, 0x09, 0x19, 0x1B]))
+    # Fourth screen with a bunch of items; leave this all alone
+    #replace_entities(0x18A76, 0x18E27, 0x18E28, random.choice([0x06, 0x09, 0x19, 0x1B]))
 
     # Fifth screen with Hammer Joes
     replace_entities(0x18A78, 0x18E28, 0x18E2C)
 
-    # Sixth screen, only randomize to graphics sets that contain Yoku blocks; also take one health pickup away >:)
-    replace_entities(0x18A7A, 0x18E2C, 0x18E2D, random.choice([0x09, 0x19]))
+    # Sixth screen, leave this alone
+    #replace_entities(0x18A7A, 0x18E2C, 0x18E2D, random.choice([0x09, 0x19]))
 
     # Seventh screen with weapon energy, leave it alone
 
@@ -2191,15 +2212,21 @@ def randomize_wily_2_entities():
     # Second screen with more platforms and weapon energy; leave this alone
     #replace_entities(0x1AA72, 0x1AE13, 0x1AE17)
 
-    # Third screen with 1-up... replace this with an enemy for evil reasons >:)
-    replace_entities(0x1AA74, 0x1AE18, 0x1AE19, random.choice([0x08]))
+    # Third screen with 1-up... leave alone
+    #replace_entities(0x1AA74, 0x1AE18, 0x1AE19, random.choice([0x08]))
 
-    # Fourth screen with Wanaans and Have "Su" Bees; replace these and also most of the items because what is this some sort of charity shop lmao
+    # Fourth screen with Wanaans and Have "Su" Bees; I would love to replace these but Archipelago needs the pickups so...
     replace_entities(0x1AA76, 0x1AE19, 0x1AE33)
     edit_nes_byte(GAME_PATH, 0x1AE28, 0x52)
+    edit_nes_byte(GAME_PATH, 0x1AE2A, 0x51)
     edit_nes_byte(GAME_PATH, 0x1AE2B, 0x51)
+    edit_nes_byte(GAME_PATH, 0x1AE2C, 0x51)
+    edit_nes_byte(GAME_PATH, 0x1AE2D, 0x52)
+    edit_nes_byte(GAME_PATH, 0x1AE2E, 0x54)
     edit_nes_byte(GAME_PATH, 0x1AE2F, 0x54)
+    edit_nes_byte(GAME_PATH, 0x1AE30, 0x52)
     edit_nes_byte(GAME_PATH, 0x1AE31, 0x52)
+    edit_nes_byte(GAME_PATH, 0x1AE32, 0x52)
 
     # What a lengthy stage, am I right... anyways leave Yellow Devil MK-II alone
 
@@ -2216,6 +2243,10 @@ def randomize_wily_3_entities():
     # Third screen with Walking Bombs and Holograns; I'll leave the 1-up here but not the health
     replace_entities(0x1CA74, 0x1CE17, 0x1CE26)
     edit_nes_byte(GAME_PATH, 0x1CE1A, 0x55)
+    edit_nes_byte(GAME_PATH, 0x1CE1F, 0x51)
+    edit_nes_byte(GAME_PATH, 0x1CE20, 0x51)
+    edit_nes_byte(GAME_PATH, 0x1CE21, 0x51)
+    edit_nes_byte(GAME_PATH, 0x1CE22, 0x51)
     edit_nes_byte(GAME_PATH, 0x1CE23, 0x52)
 
     # Fourth screen; this screen pisses me off so bad that I'm making the executive decision to actually move this enemy in the player's way
@@ -3324,6 +3355,16 @@ def rebalance_difficulty():
     edit_nes_byte(GAME_PATH, 0x140B9, 0x04) # Leaf Shield damage (default 08)
 
 
+def archipelago_mode():
+# Makes modifications to make the game compatible with the Archipelago randomizer.
+
+    # Place Robot Masters in original teleporters in Wily 4       
+    for i in range(0x1EE2B, 0x1EE33):
+        edit_nes_byte(GAME_PATH, i, NORMAL_ORDER_ROBOT_MASTERS[i - 0x1EE2B][0])
+    for i in range(0x3DEC1, 0x3DEC9):
+        edit_nes_byte(GAME_PATH, i, NORMAL_ORDER_ROBOT_MASTERS[i - 0x3DEC1][1])
+
+
 def mega_man_2_mode():
 # Places Doc Robots in the Robot Master stages and moves the MM3 Robot Masters to the Doc Robot stages.
 
@@ -3439,7 +3480,7 @@ def activate_sperm_man():
     edit_nes_byte(GAME_PATH, 0x2177, 0x20)
 
 
-def run_randomizer(ui_ref, change_menu_palettes, change_sprite_palettes, change_sprite_health, change_sprite_speed, change_entity_behaviors, change_entity_placement, change_wep_locations, change_wep_behaviors, change_wep_palettes, change_wep_costs, change_enemy_weaknesses, change_rm_names, change_boss_weaknesses, change_music, fix_scanline_enabled, fix_softlocks_enabled, rebalance, mega_man_2, burst_chaser, sperm_man):
+def run_randomizer(ui_ref, change_menu_palettes, change_sprite_palettes, change_sprite_health, change_sprite_speed, change_entity_behaviors, change_entity_placement, change_wep_locations, change_wep_behaviors, change_wep_palettes, change_wep_costs, change_enemy_weaknesses, change_rm_names, change_boss_weaknesses, change_music, fix_scanline_enabled, fix_softlocks_enabled, rebalance, archipelago, mega_man_2, burst_chaser, sperm_man):
 # Mix it all up! These are the core randomizer features; mix and match as you please
 
     # Apply seed if used
@@ -3539,6 +3580,10 @@ def run_randomizer(ui_ref, change_menu_palettes, change_sprite_palettes, change_
         fix_softlocks() # Disable if you want to add the opportunity to be softlocked back into the game
     if rebalance:
         rebalance_difficulty() # Disable for harsher damage values, which might make a randomized playthrough much more challenging
+    if archipelago:
+        # A few things need to be changed for archipelago compatibility, namely the bonus item chance and the robot master teleporters
+        CHANCE_ITEMS_SPAWN = 0
+        archipelago_mode()
     if mega_man_2:
         mega_man_2_mode() # Swaps Doc Robots and Robot Masters
     if burst_chaser:
@@ -3603,7 +3648,7 @@ class RandomizerWindow(QMainWindow):
             "Change Weapon Locations", "Change Weapon Behaviors", "Change Weapon Palettes",
             "Change Weapon Costs", "Change Enemy Weaknesses", "Change RM Names",
             "Change Boss Weaknesses", "Change Music", "Fix Scanline",
-            "Fix Softlocks", "Rebalance Difficulty", "Mega Man 2 Mode", "Burst Chaser Mode", "Sperm Man Mode"
+            "Fix Softlocks", "Rebalance Difficulty", "Archipelago Compatibility Mode", "Mega Man 2 Mode", "Burst Chaser Mode", "Sperm Man Mode"
         ]
         self.tips = [
             "Changes the palettes of the menus (title screen, stage select, cutscenes, etc).",
@@ -3623,6 +3668,7 @@ class RandomizerWindow(QMainWindow):
             "Fixes the bug with the scanline on the stage select menu.",
             "Adds safeguards to prevent softlocks in most relevant places in the game.",
             "Modifies a couple of damage values (looking at you, Doc Wood and Doc Quick).",
+            "Makes a couple of modifications to make the game compatible with Archipelago randomizer.",
             "Swaps the Robot Masters and Doc Robots. It's just like Mega Man 2 all over again!",
             "Speeds up Mega Man and his projectiles for a speedier gameplay experience.",
             "Why did I add this lmao"
