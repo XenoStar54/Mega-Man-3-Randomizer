@@ -177,14 +177,14 @@ ENEMY_GRAPHICS = [
     # [0x53, [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]], # Small weapon energy capsule
     # [0x54, [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]], # E Tank
     # [0x55, [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x37, 0x38, 0x39]], # 1-UP / extra life
-    [0x56, [0x02, 0x03, 0x09, 0x1B, 0x30, 0x38]], # Surprise Box / ? Can
+    # [0x56, [0x02, 0x03, 0x09, 0x1B, 0x30, 0x38]], # Surprise Box / ? Can
     # [0x57] # Giant Metall (don't use this in normal enemy randomization)
     # [0x58] # Doc Spark conveyor wheel (left) (probably shouldn't use)
     # [0x59] # Doc Spark conveyor wheel (right) (probably shouldn't use)
     # [0x5A] # Shadow Man collapsing platform (probably shouldn't use)
     # [0x5B] # No clue what this is (do not use)
     [0x5C, [0x13]], # Giant Springer
-    [0x5D, [0x06, 0x09, 0x19, 0x1B]], # Hard Knuckle destructible wall
+    # [0x5D, [0x06, 0x09, 0x19, 0x1B]], # Hard Knuckle destructible wall
     # [0x5E] # Kamegoro Maker (don't use this in normal enemy randomization)
     # [0x5F] # Kamegoro Maker currents (do not use)
     [0x60, [0x15]], # Petit Snakey
@@ -192,7 +192,7 @@ ENEMY_GRAPHICS = [
     [0x62, [0x31]], # Komasaburo 
     [0x63, [0x32, 0x37]], # Spark Man junk block
     [0x64, [0x02, 0x03, 0x13, 0x1A, 0x22]], # Electric Gabyoall
-    [0x65, [0x02, 0x03, 0x13, 0x1A, 0x22]], # Electric Gabyoall (wider variant)
+    # [0x65, [0x02, 0x03, 0x13, 0x1A, 0x22]], # Electric Gabyoall (wider variant)
     # [0x66 - 0x67] Big Snakey body and init sprites (do not use)
     # [0x68 - 0x6F] The eight Doc Robots (FL, BU, QU, WO, CR, AI, ME, HE) (don't use in normal enemy randomization)
     # [0x70 - 0x71] Big Snakey eye and mouth sprites (do not use)
@@ -3358,6 +3358,8 @@ def rebalance_difficulty():
 def archipelago_mode():
 # Makes modifications to make the game compatible with the Archipelago randomizer.
 
+    edit_nes_byte(GAME_PATH, 0x3B259, 0x01) # Top platform vertical speed; 2 is extremely difficult to cross with Mega Man's normal speed so let's disallow that in Archipelago mode
+
     # Place Robot Masters in original teleporters in Wily 4       
     for i in range(0x1EE2B, 0x1EE33):
         edit_nes_byte(GAME_PATH, i, NORMAL_ORDER_ROBOT_MASTERS[i - 0x1EE2B][0])
@@ -3508,6 +3510,8 @@ def run_randomizer(ui_ref, change_menu_palettes, change_sprite_palettes, change_
         item_spawn_percent = int(p_text)
         if item_spawn_percent != 3 and item_spawn_percent < 101 and item_spawn_percent > -1:
             CHANCE_ITEMS_SPAWN = item_spawn_percent
+        if archipelago: # Disable random item spawns for archipelago mode
+            CHANCE_ITEMS_SPAWN = 0
 
     #scramble_stage_order() # not currently functional
 
@@ -3581,9 +3585,7 @@ def run_randomizer(ui_ref, change_menu_palettes, change_sprite_palettes, change_
     if rebalance:
         rebalance_difficulty() # Disable for harsher damage values, which might make a randomized playthrough much more challenging
     if archipelago:
-        # A few things need to be changed for archipelago compatibility, namely the bonus item chance and the robot master teleporters
-        CHANCE_ITEMS_SPAWN = 0
-        archipelago_mode()
+        archipelago_mode() # A few things need to be changed for archipelago compatibility, namely the bonus item chance and the robot master teleporters
     if mega_man_2:
         mega_man_2_mode() # Swaps Doc Robots and Robot Masters
     if burst_chaser:
