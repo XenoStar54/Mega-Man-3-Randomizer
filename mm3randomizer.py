@@ -207,6 +207,9 @@ ENEMY_GRAPHICS = [
 ]
 ITEM_LIST = [0x50, 0x51, 0x52, 0x53, 0x54, 0x55] # List of items (enumerated above)
 
+# This globally accessible list contains every sound effect that can be randomly implemented for the special weapons.
+SFX_LIST = [0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x89]
+
 # This globally accessible list defines the default base HP of enemies, which ensures that the health of enemies does not become too extreme if the same file is used for randomization multiple times.
 DEFAULT_ENEMY_HEALTH = [
     0x01, 0x01, 0x03, 0x08, 0x04, 0x01, 0x03, 0x03, 0x03, 0x01, 0x03, 
@@ -934,6 +937,11 @@ def randomize_doc_gemini_graphics():
             else:
                 edit_nes_byte(GAME_PATH, i, random.choice(DARK_COLORS_NB))
 
+    # The horrible boss fight palette seems to be tied to the palette used for the ground in the first section, so let's restrict that
+    edit_nes_byte(GAME_PATH, 0x12A9F, random.randint(0x10, 0x1C))
+    edit_nes_byte(GAME_PATH, 0x12AA0, random.randint(0x00, 0x0C))
+    edit_nes_byte(GAME_PATH, 0x12AA1, random.randint(0x00, 0x0C))
+
     # Fix for the ground changing color on the screen with transition underground
     edit_nes_byte(GAME_PATH, 0x12AEF, int(read_nes_byte(GAME_PATH, 0x12A9F), 16))
     edit_nes_byte(GAME_PATH, 0x12AF0, int(read_nes_byte(GAME_PATH, 0x12AA0), 16))
@@ -1386,6 +1394,22 @@ def scramble_weapon_palettes():
     edit_nes_byte(GAME_PATH, 0x4643, ORDERED_WEAPONS[5][1]) # This controls the color of Search Snake and the highlight of Gemini Laser in weapon menu
 
 
+def scramble_weapon_sfx():
+# Scrambles the sound effects used for the weapons.
+    edit_nes_byte(GAME_PATH, 0x3D359, random.choice(SFX_LIST)) # Mega Buster
+    edit_nes_byte(GAME_PATH, 0x3D35A, random.choice(SFX_LIST)) # Gemini Laser
+    edit_nes_byte(GAME_PATH, 0x3D35B, random.choice(SFX_LIST)) # Needle Cannon
+    edit_nes_byte(GAME_PATH, 0x3D35C, random.choice(SFX_LIST)) # Hard Knuckle
+    edit_nes_byte(GAME_PATH, 0x3D35D, random.choice(SFX_LIST)) # Magnet Missile
+    edit_nes_byte(GAME_PATH, 0x3D35E, random.choice(SFX_LIST)) # Top Spin
+    edit_nes_byte(GAME_PATH, 0x3D35F, random.choice(SFX_LIST)) # Search Snake
+    edit_nes_byte(GAME_PATH, 0x3D360, random.choice(SFX_LIST)) # Rush Coil
+    edit_nes_byte(GAME_PATH, 0x3D361, random.choice(SFX_LIST)) # Spark Shock
+    edit_nes_byte(GAME_PATH, 0x3D362, random.choice(SFX_LIST)) # Rush Marine
+    edit_nes_byte(GAME_PATH, 0x3D363, random.choice(SFX_LIST)) # Shadow Blade
+    edit_nes_byte(GAME_PATH, 0x3D364, random.choice(SFX_LIST)) # Rush Jet
+
+
 def scramble_weapon_energy_costs():
 # Scrambles the energy cost for each weapon.
 
@@ -1424,7 +1448,7 @@ def scramble_weapon_behaviors():
     edit_nes_byte(GAME_PATH, 0x3D352, random.choice([0x00])) # Top Spin (default 0, do not recommend changing)
     edit_nes_byte(GAME_PATH, 0x3D353, random.choice([0x02, 0x03, 0x03])) # Search Snake (default 3)
     edit_nes_byte(GAME_PATH, 0x3D354, random.choice([0x02, 0x03, 0x03])) # Rush Coil (default 3)
-    edit_nes_byte(GAME_PATH, 0x3D355, random.choice([0x01, 0x02, 0x02])) # Spark Shock (default 2)
+    edit_nes_byte(GAME_PATH, 0x3D355, random.choice([0x01, 0x02, 0x02, 0x03])) # Spark Shock (default 2)
     edit_nes_byte(GAME_PATH, 0x3D356, random.choice([0x02, 0x03, 0x03])) # Rush Marine (default 3)
     edit_nes_byte(GAME_PATH, 0x3D357, random.choice([0x01, 0x02, 0x02, 0x03])) # Shadow Blade (default 1)
     edit_nes_byte(GAME_PATH, 0x3D358, random.choice([0x02, 0x03, 0x03])) # Rush Jet (default 3)
@@ -3482,7 +3506,7 @@ def activate_sperm_man():
     edit_nes_byte(GAME_PATH, 0x2177, 0x20)
 
 
-def run_randomizer(ui_ref, change_menu_palettes, change_sprite_palettes, change_sprite_health, change_sprite_speed, change_entity_behaviors, change_entity_placement, change_wep_locations, change_wep_behaviors, change_wep_palettes, change_wep_costs, change_enemy_weaknesses, change_rm_names, change_boss_weaknesses, change_music, fix_scanline_enabled, fix_softlocks_enabled, rebalance, archipelago, mega_man_2, burst_chaser, sperm_man):
+def run_randomizer(ui_ref, change_menu_palettes, change_sprite_palettes, change_sprite_health, change_sprite_speed, change_entity_behaviors, change_entity_placement, change_wep_locations, change_wep_behaviors, change_wep_palettes, change_wep_sfx, change_wep_costs, change_enemy_weaknesses, change_rm_names, change_boss_weaknesses, change_music, fix_scanline_enabled, fix_softlocks_enabled, rebalance, archipelago, mega_man_2, burst_chaser, sperm_man):
 # Mix it all up! These are the core randomizer features; mix and match as you please
 
     # Apply seed if used
@@ -3556,6 +3580,10 @@ def run_randomizer(ui_ref, change_menu_palettes, change_sprite_palettes, change_
     # Special weapon palettes
     if change_wep_palettes:
         scramble_weapon_palettes()
+
+    # Special weapon sound effects
+    if change_wep_sfx:
+        scramble_weapon_sfx()
 
     # Special weapon costs
     if change_wep_costs:
@@ -3647,7 +3675,7 @@ class RandomizerWindow(QMainWindow):
         self.labels = [
             "Change Menu Palettes", "Change Sprite Palettes", "Change Sprite Health",
             "Change Sprite Speed", "Change Entity Behaviors", "Change Entity Placement",
-            "Change Weapon Locations", "Change Weapon Behaviors", "Change Weapon Palettes",
+            "Change Weapon Locations", "Change Weapon Behaviors", "Change Weapon Palettes", "Change Weapon SFX",
             "Change Weapon Costs", "Change Enemy Weaknesses", "Change RM Names",
             "Change Boss Weaknesses", "Change Music", "Fix Scanline",
             "Fix Softlocks", "Rebalance Difficulty", "Archipelago Compatibility Mode", "Mega Man 2 Mode", "Burst Chaser Mode", "Sperm Man Mode"
@@ -3662,6 +3690,7 @@ class RandomizerWindow(QMainWindow):
             "Shuffles the weapons around to different stages. Who knows what you'll get?",
             "Alters the behavior of the game's weapons.",
             "Randomizes the colors of the weapons to new palettes.",
+            "Randomizes the sound effects of the weapons. Fun and annoying!",
             "Alters the energy consumption of each weapon.",
             "Changes the amount of damage that each enemy receives from each special weapon.",
             "Gives each Robot Master a new random name.",
@@ -3679,7 +3708,7 @@ class RandomizerWindow(QMainWindow):
         self.checkboxes = []
         for i, text in enumerate(self.labels):
             cb = QCheckBox(text)
-            cb.setChecked(True if i < 17 else False)
+            cb.setChecked(True if i < 18 else False)
             cb.setToolTip(self.tips[i])
             self.checkbox_layout.addWidget(cb)
             self.checkboxes.append(cb)
